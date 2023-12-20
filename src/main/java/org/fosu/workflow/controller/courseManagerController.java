@@ -1,15 +1,12 @@
 package org.fosu.workflow.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.fosu.workflow.entities.Student;
+import org.fosu.workflow.entities.Teacher;
 import org.fosu.workflow.entities.courseManager;
 import org.fosu.workflow.req.courseManagerREQ;
-import org.fosu.workflow.service.ClassService;
-import org.fosu.workflow.service.StudentService;
-import org.fosu.workflow.service.courseManagerService;
-import org.fosu.workflow.utils.DateUtils;
+import org.fosu.workflow.service.*;
 import org.fosu.workflow.utils.Result;
 import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,10 @@ public class courseManagerController {
     private ClassService classService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
+    private SysUserService userService;
 
     @ApiOperation("新增课程管理")
     @PostMapping
@@ -51,7 +52,7 @@ public class courseManagerController {
     @ApiOperation("获取指定教师的课程的所有班级学生")
     @GetMapping("/{courseName}/allStudents")
     public Result getAllStudents(@PathVariable String courseName) {
-        return CourseManagerService.getAllStudents(courseName,UserUtils.getUsername());
+        return CourseManagerService.getAllStudents(courseName, UserUtils.getUsername());
     }
 
     @ApiOperation("获取指定班级的所有学生")
@@ -95,6 +96,7 @@ public class courseManagerController {
     public Result viewClassInfo(@RequestBody courseManagerREQ req) {
         return Result.ok(CourseManagerService.listClassInfoPage(req));
     }
+
     @ApiOperation("查询选修课程信息")
     @PostMapping("/electiveCourse")
     public Result viewelectiveCourse(@RequestBody courseManagerREQ req) {
@@ -104,13 +106,13 @@ public class courseManagerController {
     @ApiOperation("选择选修课程")
     @PostMapping("/selectElectiveCourse/{id}")
     public Result selectElectiveCourse(@PathVariable String id) {
-        return Result.ok(CourseManagerService.selectElectiveCourse(id,UserUtils.getUsername()));
+        return Result.ok(CourseManagerService.selectElectiveCourse(id, UserUtils.getUsername()));
     }
 
     @ApiOperation("删除选修课程")
     @DeleteMapping("/deleteElectiveCourse/{id}")
     public Result deleteElectiveCourse(@PathVariable String id) {
-        return Result.ok(CourseManagerService.deleteElectiveCourse(id,UserUtils.getUsername()));
+        return Result.ok(CourseManagerService.deleteElectiveCourse(id, UserUtils.getUsername()));
     }
 
     @ApiOperation("查询所有课程名称和任课老师和班级唯一的列表")
@@ -123,5 +125,11 @@ public class courseManagerController {
     @PostMapping("/classCourseNameAndTeacherAndClasslist")
     public Result classCourseNameAndTeacherAndClasslist(@RequestBody courseManagerREQ req) {
         return CourseManagerService.classCourseNameAndTeacherAndClasslist(req);
+    }
+
+    @ApiOperation("查询当前教师")
+    @GetMapping("/currentTeacher")
+    public Result currentTeacher() {
+        return Result.ok(teacherService.getOne(new QueryWrapper<Teacher>().eq("name", userService.findByUsername(UserUtils.getUsername()).getUsername())));
     }
 }
