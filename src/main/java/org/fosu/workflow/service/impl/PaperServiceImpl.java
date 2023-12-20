@@ -38,13 +38,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     public Result listPage(PaperREQ req) {
+        req.setCreator(UserUtils.getUsername());
         IPage<Paper> page = baseMapper.getPaperList(req.getPage(), req);
         return Result.ok(page);
     }
 
   @Override
     public Result getStudentPaperList(PaperREQ req) {
-        IPage<Paper> page = baseMapper.getStudentPaperList(req.getPage(), req);
+      req.setCreator(UserUtils.getUsername());
+      IPage<Paper> page = baseMapper.getStudentPaperList(req.getPage(), req);
         return Result.ok(page);
     }
 
@@ -70,6 +72,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     public Result getGrading(PaperREQ req) {
+        req.setCreator(UserUtils.getUsername());
         req.setSize(999999);
         float[] grade = new float[3];
         int testScore = 0;//学生测试得分
