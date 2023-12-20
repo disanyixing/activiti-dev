@@ -3,7 +3,7 @@
     <!-- stripe 带斑马纹 -->
     <el-form :inline="true" :model="query" size="small">
       <el-form-item label="课程名称:">
-        <el-input v-model.trim="query.purpose" placeholder="请输入" />
+        <el-input v-model.trim="query.course" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="状态:">
         <el-select v-model="query.status" clearable placeholder="请选择">
@@ -20,8 +20,9 @@
     </el-row>
     <el-table :data="list" stripe border style="width: 100%">
       <el-table-column align="center" prop="id" label="序号" width="90" />
+      <!--      <el-table-column align="center" prop="tchId" label="用户名" min-width="150" />-->
       <el-table-column align="center" prop="name" label="课程名称" min-width="150" />
-      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="90" />
+      <!--      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="90" />-->
       <el-table-column align="center" prop="room" label="上课地点" min-width="80" />
       <el-table-column align="center" prop="class_name" label="班级名称" min-width="90" />
       <el-table-column align="center" prop="createDateStr" label="建课日期" width="160" />
@@ -64,9 +65,9 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <!-- 借款表单 -->
+    <!-- 表单 -->
     <el-dialog :title="operate" :visible.sync="formVisible" width="1000px" destroy-on-close @close="closeForm(false)">
-      <loan-form :operate="operate" :business-key="row.id" @close="closeForm" />
+      <loan-form :operate="operate" :business-key="row.id" :cont="JSON.parse(JSON.stringify(row))" @close="closeForm" />
     </el-dialog>
     <!-- 提交申请 -->
     <submit-apply v-if="selectdata.length" ref="sumbitApplyRef" :selectdata="selectdata" :row="row" />
@@ -77,15 +78,15 @@
   </div>
 </template>
 <script>
-import api from '@/api/loan'
-import SubmitApply from './components/SubmitApply'
-import CancelApply from './components/CancelApply'
+import api from '@/api/course'
+import SubmitApply from '../../workflow/apply/components/SubmitApply'
+import CancelApply from '../../workflow/apply/components/CancelApply'
 import History from '@/components/Process/History'
-import LoanForm from '@/components/Process/Form/LoanForm.vue'
+import LoanForm from '@/components/Process/Form/CourseForm.vue'
 import { getall } from '@/api/getuser'
 
 export default {
-  name: 'TeacherCourseManagement',
+  name: 'CourseManager',
   components: { SubmitApply, CancelApply, History, LoanForm },
   data() {
     return {
@@ -113,16 +114,16 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getelect()
+    this.getElect()
   },
   methods: {
-    getelect() {
+    getElect() {
       getall().then((res) => {
         this.selectdata = res.data
       })
     },
     async fetchData() {
-      const { data } = await api.getList(this.query, this.page.current, this.page.size)
+      const { data } = await api.listPage(this.query, this.page.current, this.page.size)
       this.list = data.records
       this.page.total = data.total
     },

@@ -45,11 +45,11 @@ export default {
   },
 
   // List page of course management
-  listPage(req) {
+  listPage(data, current, size) {
     return request({
       url: '/courseManager/list',
       method: 'post',
-      data: req
+      data: { ...data, current, size }
     })
   },
 
@@ -68,6 +68,14 @@ export default {
       url: '/courseManager/classCourseNameAndTeacherlist',
       method: 'post',
       data: req
+    })
+  },
+
+  // GetCurrentTeacher
+  getCurrentTeacher() {
+    return request({
+      url: '/courseManager/currentTeacher',
+      method: 'get'
     })
   },
 

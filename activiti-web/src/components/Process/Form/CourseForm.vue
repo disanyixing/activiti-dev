@@ -5,50 +5,48 @@
     :rules="rules"
     :model="formData"
     label-suffix=":"
-    label-width="170px"
+    label-width="100px"
     size="small"
-    align="left"
-    style="max-width:900px"
+    style="max-width:600px;"
   >
-    <el-form-item v-if="operate == '详情'" label="借款人" prop="loanDate">
-      <span>{{ formData.userId }}</span>
+    <!-- 动态显示课程信息 -->
+    <el-form-item label="课程名称" prop="name">
+      <el-input v-model="formData.name" placeholder="请输入课程名称" />
     </el-form-item>
-    <el-row :gutter="20">
-      <el-col :span="8">
-        <el-form-item label="借款金额" prop="money">
-          <el-input-number
-            v-model="formData.money"
-            :precision="2"
-            :min="0"
-            :max="999999999999"
-            size="medium"
-            controls-position="right"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="16">
-        <el-form-item label="金额大写">
-          <span>{{ rmbMinToMax(formData.money) }}</span>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-form-item label="借款日期" prop="loanDate">
-      <el-date-picker v-model="formData.loanDate" type="date" placeholder="选择日期" />
+    <el-form-item label="上课时间" prop="time">
+      <el-input v-model="formData.time" placeholder="请输入上课时间" />
     </el-form-item>
-    <el-form-item label="借款用途" prop="purpose">
-      <el-input v-model="formData.purpose" type="textarea" maxlength="500" :autosize="{minRows: 5}" show-word-limit />
+    <el-form-item label="上课地点" prop="room">
+      <el-input v-model="formData.room" placeholder="请输入上课地点" />
     </el-form-item>
-    <el-form-item label="备注" prop="remark">
-      <el-input v-model="formData.remark" type="textarea" maxlength="500" :autosize="{minRows: 5}" show-word-limit />
+
+    <!-- 选择班级 -->
+    <el-form-item label="选择班级" prop="classId">
+      <el-select v-model="formData.classId" placeholder="请选择班级">
+        <el-option
+          v-for="item in classList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
     </el-form-item>
+
+    <!-- 班级人数 -->
+    <el-form-item label="班级人数">
+      <span>{{ classStudentCount }}</span>
+    </el-form-item>
+
     <el-form-item v-if="operate != '详情'" align="right">
       <el-button type="primary" size="small" @click="submitForm('formData')">确定</el-button>
       <el-button size="small" @click="clickClose()">关闭</el-button>
     </el-form-item>
   </el-form>
 </template>
+
 <script>
-import api from '@/api/loan'
+
+import api from '@/api/course'
 
 export default {
   props: {
@@ -59,52 +57,82 @@ export default {
     businessKey: {
       type: String,
       default: null
-    } // 业务id
+    },
+    cont: {
+      type: Object,
+      default: null
+    }
   },
   data() {
     return {
       loading: false,
       formData: {},
+      classStudentCount: 0,
       rules: {
-        loanDate: [
-
-          { required: true, message: '请选择借款日期', trigger: 'change' }
+        name: [
+          { required: true, message: '请输入课程名称', trigger: 'blur' }
         ],
-        money: [
-          { required: true, message: '请输入借款金额', trigger: 'change' }
+        time: [
+          { required: true, message: '请输入上课时间', trigger: 'blur' }
+        ],
+        room: [
+          { required: true, message: '请输入上课地点', trigger: 'blur' }
+        ],
+        classId: [
+          { required: true, message: '请选择班级', trigger: 'change' }
         ]
-      }
+      },
+      classList: [],
+      studentsList: []
     }
   },
   watch: {
-    businessKey: {
+    // 监听班级ID变化，获取班级学生列表
+    'formData.classId'(newVal) {
+      if (newVal) {
+        this.getStudentsByClass(newVal)
+      }
+    },
+    cont: {
       immediate: true, // 很重要！！！
-      handler(newVal) {
-        if (newVal) {
-          this.getById()
-        }
+      handler(content) {
+        this.formData = content
       }
     }
   },
+  created() {
+    this.initStates()
+  },
   methods: {
-    async getById() {
-      const { data } = await api.getById(this.businessKey)
-      // 格式化时间
-      data.leaveDate = [data.startDate, data.endDate]
-      this.formData = data
+    // 获取所有班级
+    async initStates() {
+      // 假设 getAllClasses 方法返回 Promise
+      const { data } = await api.getAllClasses()
+      this.classList = data
     },
 
-    // 提交表单数据
-    submitForm(formName) {
+    // 获取班级学生列表
+    async getStudentsByClass(classId) {
+      // 假设 getStudentsByClass 方法返回 Promise
+      const { data } = await api.getStudentsByClass(classId)
+      this.studentsList = data
+      this.classStudentCount = data.length
+    },
+    // 提交表单
+    async submitForm(formName) {
+      const { data: { name: tch_id, nickName: nick_name }} = await api.getCurrentTeacher()
+      this.formData.tch_id = tch_id
+      this.formData.nick_name = nick_name
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           // 校验通过，提交表单数据
           this.loading = true
           try {
             let response = {}
-            if (this.operate == '新增') {
+            if (this.operate === '新增') {
+              console.log(this.formData)
               response = await api.add(this.formData)
-            } else if (this.operate == '编辑') {
+            } else if (this.operate === '编辑') {
               response = await api.update(this.formData)
             }
             if (response.code === 20000) {
@@ -121,33 +149,16 @@ export default {
         }
       })
     },
+    // 重置表单
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
+    },
 
     clickClose(refresh = false) {
       // 将表单清空
       this.$refs['formData'].resetFields()
       this.$emit('close', refresh)
-    },
-
-    // 人民币小写转大写
-    rmbMinToMax(number) {
-      if (!number) return
-      // 浏览器默认为整数型,将数字转为2位有效数字的float类型再转为字符串
-      number = parseFloat(number).toFixed(2).toString()
-      var CN_MONEY = ''
-      var CN_UNIT = '仟佰拾亿仟佰拾万仟佰拾元角分'
-      var index = number.indexOf('.')// 将从小数点开始分开
-      if (index >= 0) {
-        number = number.substring(0, index) + number.substr(index + 1, 2)
-        CN_UNIT = CN_UNIT.substr(CN_UNIT.length - number.length)
-        for (var i = 0; i < number.length; i++) {
-          CN_MONEY += '零壹贰叁肆伍陆柒捌玖'.substr(number.substr(i, 1), 1) + CN_UNIT.substr(i, 1)
-        }
-        return CN_MONEY.replace(/零角零分$/, '整').replace(/零[仟佰拾]/g, '零')
-          .replace(/零{2,}/g, '零').replace(/零([亿|万])/g, '$1').replace(/零+元/, '元')
-          .replace(/亿零{0,3}万/, '亿').replace(/^元/, '').replace(/零[角|分]/, '')
-      }
     }
-
   }
 }
 </script>

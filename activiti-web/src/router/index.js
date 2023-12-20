@@ -99,15 +99,15 @@ export const constantRoutes = [
     path: '/course',
     component: Layout,
     redirect: '/course/teacher',
-    name: 'CourseManagement',
+    name: 'Course',
     meta: { title: '课程管理', icon: 'example' },
     children: [
-      // {
-      //   path: 'teacher',
-      //   name: 'TeacherCourseManagement',
-      //   component: () => import('@/views/course/teacher/manage'),
-      //   meta: { title: '课程管理', icon: 'tree' }
-      // },
+      {
+        path: 'teacher',
+        name: 'courseManager', // activiti
+        component: () => import('@/views/course/teacher/manage'),
+        meta: { title: '课程管理', icon: 'tree' }
+      },
       // {
       //   path: 'student',
       //   name: 'StudentCourseInfo',

@@ -6,7 +6,7 @@
         <el-input v-model.trim="query.course" placeholder="请输入课程名称" />
       </el-form-item>
       <el-form-item label="任课老师：">
-        <el-input v-model.trim="query.teacher" placeholder="请输入名称" />
+        <el-input v-model.trim="query.teacher" placeholder="请输入任课老师名称" />
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" @click="queryData">查询</el-button>
@@ -48,16 +48,11 @@
   </div>
 </template>
 <script>
-import api from '@/api/loan'
-import SubmitApply from './components/SubmitApply'
-import CancelApply from './components/CancelApply'
-import History from '@/components/Process/History'
-import LoanForm from '@/components/Process/Form/LoanForm.vue'
-import { getall } from '@/api/getuser'
+import api from '@/api/course'
 
 export default {
-  name: 'Loan',
-  components: { SubmitApply, CancelApply, History, LoanForm },
+  name: 'StudentEnroll',
+  components: {},
   data() {
     return {
       query: {},
@@ -67,35 +62,40 @@ export default {
         total: 0
       },
       list: [],
-      selectdata: [],
       row: {},
       processStatus: [
-        { value: 0, label: '已撤回' },
-        { value: 1, label: '待提交' },
-        { value: 2, label: '处理中' },
-        { value: 3, label: '已完成' },
-        { value: 4, label: '已作废' },
-        { value: 5, label: '已删除' }
-      ],
-      formVisible: false,
-      operate: '新增'
-
+        { value: 0, label: '未选' },
+        { value: 1, label: '已选' }
+      ]
     }
   },
   created() {
     this.fetchData()
-    this.getelect()
   },
   methods: {
-    getelect() {
-      getall().then((res) => {
-        this.selectdata = res.data
-      })
-    },
     async fetchData() {
-      const { data } = await api.getList(this.query, this.page.current, this.page.size)
-      this.list = data.records
-      this.page.total = data.total
+      // eslint-disable-next-line no-unused-vars
+      const { status, ...queryWithoutStatus } = this.query
+      const {
+        data: {
+          data: {
+            records: electiveCourses,
+            total
+          }
+        }
+      } = await api.viewElectiveCourse(queryWithoutStatus, this.page.current, this.page.size)
+      const { data: { data: { records: classInfos }}} = await api.stuClassInfoList('', 1, -1)
+
+      electiveCourses.forEach(course => {
+        if (classInfos.some(classInfo => classInfo.id === course.id)) {
+          course.status = 1
+        } else {
+          course.status = 0
+        }
+      })
+
+      this.list = electiveCourses
+      this.page.total = total
     },
     // 页数
     handleSizeChange(value) {
@@ -118,37 +118,41 @@ export default {
       this.page.size = 10
       this.fetchData()
     },
-    // 新增、编辑、详情
-    clickShowForm(operate, row = {}) {
-      this.operate = operate
-      this.row = row
-      this.formVisible = true
+    getStatusLabel(status) {
+      const statusItem = this.processStatus.find(item => item.value === status)
+      return statusItem ? statusItem.label : '出错'
     },
-    // 关闭表单
-    closeForm(refresh) {
-      // 清空点击数据
-      this.row = {}
-      // 隐藏
-      this.formVisible = false
-      // 刷新列表
-      if (refresh) {
-        this.fetchData()
+    async selectCourse(id) {
+      try {
+        await api.selectElectiveCourse(id)
+        this.fetchData() // Reload data
+      } catch (error) {
+        // Handle error (e.g., display a notification)
       }
     },
-    // 撤回申请
-    clickCancelProcess(row) {
-      this.row = row
-      this.$refs.cancelRef.visible = true
+
+    async deleteCourse(id) {
+      try {
+        await api.deleteElectiveCourse(id)
+        this.fetchData() // Reload data
+      } catch (error) {
+        // Handle error
+      }
     },
-    // 提交申请
-    clickSubmitApply(row) {
-      this.row = row
-      this.$refs.sumbitApplyRef.visible = true
-    },
-    // 审批历史
-    clickProcessHistory(row) {
-      this.row = row
-      this.$refs.historyRef.visible = true
+    confirmSelection(id, isSelect) {
+      this.$confirm(`确定要${isSelect ? '选课' : '退选'}吗？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (isSelect) {
+          this.selectCourse(id)
+        } else {
+          this.deleteCourse(id)
+        }
+      }).catch(() => {
+        // Handle cancel
+      })
     }
   }
 }
