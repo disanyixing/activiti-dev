@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 20/12/2023 23:42:01
+ Date: 21/12/2023 01:12:27
 */
 
 SET NAMES utf8mb4;
@@ -1143,7 +1143,7 @@ CREATE TABLE `mxg_answer`  (
 -- ----------------------------
 -- Records of mxg_answer
 -- ----------------------------
-INSERT INTO `mxg_answer` VALUES ('123', '1', '111', '1', 0, 'xuesheng11');
+INSERT INTO `mxg_answer` VALUES ('1', '1', '123', '4', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1231231123345426123', '3', '123123123', '1', 0, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1735667672115884033', '2', '1735665317794328577', '2', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1735667969479454722', '2', '1735665403739811842', '1', 5, 'xuesheng11');
@@ -1436,8 +1436,8 @@ CREATE TABLE `mxg_paper`  (
 INSERT INTO `mxg_paper` VALUES ('1', '测试卷1', 1, '线性代数', 'zhangsan', '2023-12-10 00:00:00', '2023-12-16 04:51:16', '2023-12-16 04:51:19');
 INSERT INTO `mxg_paper` VALUES ('1733843482219978753', '试卷3', 1, '离散数学', 'lisi', '2023-12-10 00:00:00', NULL, NULL);
 INSERT INTO `mxg_paper` VALUES ('1733843493997584385', '试卷4', 1, '量子力学', 'wangwu', '2023-12-10 00:00:00', NULL, NULL);
-INSERT INTO `mxg_paper` VALUES ('2', '测试卷2', 2, '高等数学', 'zhangsan', '2023-12-10 00:00:00', '2023-12-16 04:51:23', '2023-12-16 04:51:26');
-INSERT INTO `mxg_paper` VALUES ('3', '期末考试', 0, '高等数学', 'zhangsan', '2023-12-16 06:06:00', '2023-12-16 05:50:51', '2023-12-16 05:50:51');
+INSERT INTO `mxg_paper` VALUES ('2', '测试卷2', 1, '高等数学', 'zhangsan', '2023-12-10 00:00:00', '2023-12-16 04:51:23', '2023-12-16 04:51:26');
+INSERT INTO `mxg_paper` VALUES ('3', '期末考试', 2, '高等数学', 'zhangsan', '2023-12-16 06:06:00', '2023-12-16 05:50:51', '2023-12-16 05:50:51');
 
 -- ----------------------------
 -- Table structure for mxg_process_config
@@ -1482,6 +1482,7 @@ CREATE TABLE `mxg_question_choice`  (
 -- ----------------------------
 -- Records of mxg_question_choice
 -- ----------------------------
+INSERT INTO `mxg_question_choice` VALUES ('123', '1', '测试选择题5', '选项A', '选项B', '选项C', '正确选项D', 4, 5, '2023-12-15 00:00:00');
 INSERT INTO `mxg_question_choice` VALUES ('123123123', '3', '测试选择题4', '选项A', '选项B', '正确选项C', '选项D', 3, 5, NULL);
 INSERT INTO `mxg_question_choice` VALUES ('1735665317794328577', '2', '测试选择题1', '选项A', '正确选项B', '选项C', '选项D', 2, 5, '2023-12-15 00:00:00');
 INSERT INTO `mxg_question_choice` VALUES ('1735665403739811842', '2', '测试选择题2', '正确选项A', '选项B', '选项C', '选项D', 1, 5, '2023-12-15 00:00:00');
