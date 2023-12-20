@@ -25,9 +25,9 @@
         AND creator = #{req.creator}
     </select>
     <select id="getScore" resultMap="AnswerScore">
-        SELECT id,paper_id,sum(score) as score,creator
+        SELECT id,paper_id,score,creator
         FROM mxg_answer
         WHERE paper_id = #{req.paperId}
           AND creator = #{req.creator}
-    </select>
+</select>
 </mapper>

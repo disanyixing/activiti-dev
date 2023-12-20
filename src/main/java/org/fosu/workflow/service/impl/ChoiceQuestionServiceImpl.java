@@ -51,12 +51,16 @@ public class ChoiceQuestionServiceImpl extends ServiceImpl<ChoiceQuestionMapper,
     @Override
     public int getTotalScore(String paperId) {
         ArrayList<ChoiceQuestion> list = baseMapper.getTotalScore(paperId);
-        if(list.size() > 0)
+       /* if(list.size() > 0)
         {
             ChoiceQuestion que = list.get(0);
             if(que != null)
                 return que.getScore();
+        }*/
+        int sum=0;
+        for (int i = 0; i < list.size(); i++) {
+            sum+=list.get(i).getScore();
         }
-        return 0;
+        return sum;
     }
 }

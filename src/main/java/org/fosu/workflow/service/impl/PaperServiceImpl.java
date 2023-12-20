@@ -84,15 +84,22 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 answerREQ.setPaperId(paper.getId());//设置试卷id
                 answerREQ.setCreator(req.getCreator());//设置学生用户名
                 int paperType = paper.getType();
+                System.out.println("answerREQ.getPaperId()："+answerREQ.getPaperId());
+                System.out.println("answerREQ.getCreator()："+answerREQ.getCreator());
                 if(paperType == 1)//平时测试试卷
                 {
                     testScore += answerService.getScore(answerREQ);//获取学生在该试卷得分
+                    System.out.println("testScore："+testScore);
                     testTotal += getTotalScore(paper.getId());//获取试卷总分
+                    System.out.println("testTotal："+testTotal);
+
                 }
                 else if(paperType == 2)//考试试卷
                 {
                     examScore += answerService.getScore(answerREQ);//获取学生在该试卷得分
+                    System.out.println("examScore："+examScore);
                     examTotal += getTotalScore(paper.getId());//获取试卷总分
+                    System.out.println("examTotal："+examTotal);
                 }
             }
         }

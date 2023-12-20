@@ -52,12 +52,16 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Override
     public int getScore(AnswerREQ req) {
         ArrayList<Answer> list = baseMapper.getScore(req);
-        if(list.size() > 0)
+        /*if(list.size() > 0)
         {
             Answer answer = list.get(0);
             if(answer != null)
                 return answer.getScore();
+        }*/
+        int sum=0;
+        for (int i = 0; i < list.size(); i++) {
+            sum+=list.get(i).getScore();
         }
-        return 0;
+        return sum;
     }
 }
