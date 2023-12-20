@@ -16,7 +16,14 @@
     <el-row :gutter="20">
       <el-col :span="8">
         <el-form-item label="借款金额" prop="money">
-          <el-input-number v-model="formData.money" :precision="2" :min="0" :max="999999999999" size="medium" controls-position="right" />
+          <el-input-number
+            v-model="formData.money"
+            :precision="2"
+            :min="0"
+            :max="999999999999"
+            size="medium"
+            controls-position="right"
+          />
         </el-form-item>
       </el-col>
       <el-col :span="16">

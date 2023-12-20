@@ -73,50 +73,214 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/apply',
+    component: Layout,
+    redirect: '/apply/leave',
+    name: 'Apply',
+    meta: { title: '业务办理', icon: 'form' },
+    children: [
+      {
+        path: 'leave',
+        name: 'Leave',
+        component: () => import('@/views/workflow/apply/leave'),
+        meta: { title: '请假申请', icon: 'table' }
+      },
+      {
+        path: 'loan',
+        name: 'Loan',
+        component: () => import('@/views/workflow/apply/loan'),
+        meta: { title: '借款申请', icon: 'table' }
+      }
+    ]
+  },
 
   {
     path: '/course',
     component: Layout,
-    redirect: '/course/',
-    name: 'Workflow',
-    meta: { title: '工作流程', icon: 'example' },
+    redirect: '/course/teacher',
+    name: 'CourseManagement',
+    meta: { title: '课程管理', icon: 'example' },
     children: [
+      // {
+      //   path: 'teacher',
+      //   name: 'TeacherCourseManagement',
+      //   component: () => import('@/views/course/teacher/manage'),
+      //   meta: { title: '课程管理', icon: 'tree' }
+      // },
+      // {
+      //   path: 'student',
+      //   name: 'StudentCourseInfo',
+      //   component: () => import('@/views/course/student/info'),
+      //   meta: { title: '课程信息', icon: 'tree' }
+      // },
       {
-        path: 'model',
-        name: 'Model',
-        component: () => import('@/views/workflow/model'),
-        meta: { title: '模型管理', icon: 'tree' }
-      },
-      {
-        path: 'process',
-        name: 'Process',
-        component: () => import('@/views/workflow/process'),
-        meta: { title: '流程管理', icon: 'tree' }
+        path: 'student/enroll',
+        name: 'StudentEnrollCenter',
+        component: () => import('@/views/course/student/enroll'),
+        meta: { title: '选课中心', icon: 'tree' }
       }
     ]
   },
+
+  // // 课程通知 (Course Notification)
   // {
-  //   path: '/apply',
+  //   path: '/course-notification',
   //   component: Layout,
-  //   redirect: '/apply/leave',
-  //   name: 'Apply',
-  //   meta: { title: '业务办理', icon: 'form' },
+  //   redirect: '/course-notification/teacher',
+  //   name: 'CourseNotification',
+  //   meta: { title: '课程通知', icon: 'notification' },
   //   children: [
   //     {
-  //       path: 'leave',
-  //       name: 'Leave',
-  //       component: () => import('@/views/workflow/apply/leave'),
-  //       meta: { title: '请假申请', icon: 'table' }
+  //       path: 'teacher',
+  //       name: 'TeacherCourseNotification',
+  //       component: () => import('@/views/course/notification/teacher'),
+  //       meta: { title: '课程通知', icon: 'message' }
   //     },
   //     {
-  //       path: 'loan',
-  //       name: 'Loan',
-  //       component: () => import('@/views/workflow/apply/loan'),
-  //       meta: { title: '借款申请', icon: 'table' }
-  //     },
+  //       path: 'student',
+  //       name: 'StudentCourseNotification',
+  //       component: () => import('@/views/course/notification/student'),
+  //       meta: { title: '课程通知', icon: 'message' }
+  //     }
   //   ]
   // },
-
+  //
+  // // 课程讨论 (Course Discussion)
+  // {
+  //   path: '/course-discussion',
+  //   component: Layout,
+  //   redirect: '/course-discussion/teacher',
+  //   name: 'CourseDiscussion',
+  //   meta: { title: '课程讨论', icon: 'discussion' },
+  //   children: [
+  //     {
+  //       path: 'teacher',
+  //       name: 'TeacherCourseDiscussion',
+  //       component: () => import('@/views/discussion/teacher/discussion'),
+  //       meta: { title: '课程讨论', icon: 'discussion' }
+  //     },
+  //     {
+  //       path: 'student',
+  //       name: 'StudentCourseDiscussion',
+  //       component: () => import('@/views/discussion/student/discussion'),
+  //       meta: { title: '课程讨论', icon: 'discussion' }
+  //     },
+  //     {
+  //       path: 'student/forum',
+  //       name: 'StudentDiscussionForum',
+  //       component: () => import('@/views/discussion/student/forum'),
+  //       meta: { title: '课程讨论区', icon: 'forum' }
+  //     }
+  //   ]
+  // },
+  //
+  // // 考勤管理 (Attendance Management)
+  // {
+  //   path: '/attendance-management',
+  //   component: Layout,
+  //   redirect: '/attendance-management/teacher',
+  //   name: 'AttendanceManagement',
+  //   meta: { title: '考勤管理', icon: 'attendance' },
+  //   children: [
+  //     {
+  //       path: 'teacher',
+  //       name: 'TeacherAttendanceManagement',
+  //       component: () => import('@/views/attendance/teacher/manage'),
+  //       meta: { title: '考勤管理', icon: 'attendance' }
+  //     },
+  //     {
+  //       path: 'student',
+  //       name: 'StudentLeaveManagement',
+  //       component: () => import('@/views/attendance/student/leave'),
+  //       meta: { title: '请假管理', icon: 'leave' }
+  //     }
+  //   ]
+  // },
+  //
+  // // 作业管理 (Homework Management)
+  // {
+  //   path: '/homework-management',
+  //   component: Layout,
+  //   redirect: '/homework-management/teacher',
+  //   name: 'HomeworkManagement',
+  //   meta: { title: '作业管理', icon: 'homework' },
+  //   children: [
+  //     {
+  //       path: 'teacher',
+  //       name: 'TeacherHomeworkManagement',
+  //       component: () => import('@/views/homework/teacher/manage'),
+  //       meta: { title: '作业管理', icon: 'homework' }
+  //     },
+  //     {
+  //       path: 'student',
+  //       name: 'StudentHomeworkManagement',
+  //       component: () => import('@/views/homework/student/manage'),
+  //       meta: { title: '作业管理', icon: 'homework' }
+  //     }
+  //   ]
+  // },
+  //
+  // // 在线测试 (Online Testing)
+  // {
+  //   path: '/online-testing',
+  //   component: Layout,
+  //   redirect: '/online-testing/teacher',
+  //   name: 'OnlineTesting',
+  //   meta: { title: '在线测试', icon: 'testing' },
+  //   children: [
+  //     {
+  //       path: 'teacher',
+  //       name: 'TeacherOnlineTesting',
+  //       component: () => import('@/views/testing/teacher/testing'),
+  //       meta: { title: '在线测试', icon: 'testing' }
+  //     },
+  //     {
+  //       path: 'student',
+  //       name: 'StudentOnlineTesting',
+  //       component: () => import('@/views/testing/student/testing'),
+  //       meta: { title: '在线测试', icon: 'testing' }
+  //     }
+  //   ]
+  // },
+  //
+  // // 成绩查询 (Grade Inquiry)
+  // {
+  //   path: '/grade-inquiry',
+  //   component: Layout,
+  //   name: 'GradeInquiry',
+  //   meta: { title: '成绩查询', icon: 'grades' },
+  //   children: [
+  //     {
+  //       path: 'student',
+  //       name: 'StudentGradeInquiry',
+  //       component: () => import('@/views/grades/student/inquiry'),
+  //       meta: { title: '成绩查询', icon: 'grades' }
+  //     }
+  //   ]
+  // },
+  //
+  // // 教学反馈 (Teaching Feedback)
+  // {
+  //   path: '/teaching-feedback',
+  //   component: Layout,
+  //   name: 'TeachingFeedback',
+  //   meta: { title: '教学反馈', icon: 'feedback' },
+  //   children: [
+  //     {
+  //       path: 'education-dept',
+  //       name: 'EducationDeptFeedback',
+  //       component: () => import('@/views/feedback/education-dept'),
+  //       meta: { title: '教学反馈', icon: 'feedback' }
+  //     },
+  //     {
+  //       path: 'student',
+  //       name: 'StudentTeachingFeedback',
+  //       component: () => import('@/views/feedback/student'),
+  //       meta: { title: '教学反馈', icon: 'feedback' }
+  //     }
+  //   ]
+  // },
   {
     path: '/task',
     component: Layout,

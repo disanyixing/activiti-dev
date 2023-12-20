@@ -2,8 +2,8 @@
   <div class="app-container">
     <!-- stripe 带斑马纹 -->
     <el-form :inline="true" :model="query" size="small">
-      <el-form-item label="借款用途">
-        <el-input v-model.trim="query.purpose" placeholder="请输入借款用途" />
+      <el-form-item label="课程名称:">
+        <el-input v-model.trim="query.purpose" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="状态:">
         <el-select v-model="query.status" clearable placeholder="请选择">
@@ -19,20 +19,19 @@
       <el-button icon="el-icon-plus" size="small" type="primary" @click="clickShowForm('新增')">新增申请</el-button>
     </el-row>
     <el-table :data="list" stripe border style="width: 100%">
-      <el-table-column align="center" type="index" label="序号" width="50" />
-      <el-table-column align="center" prop="userId" label="借款人" min-width="90" />
-      <el-table-column align="center" prop="money" label="借款金额" width="120" />
-      <el-table-column align="center" prop="loanDateStr" label="借款日期" width="160" />
-      <el-table-column align="center" prop="purpose" label="借款用途" min-width="160" />
-      <el-table-column align="center" prop="remark" label="备注" min-width="160" />
-      <el-table-column align="center" prop="statusStr" label="业务状态" width="90">
+      <el-table-column align="center" prop="id" label="序号" width="90" />
+      <el-table-column align="center" prop="name" label="课程名称" min-width="150" />
+      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="90" />
+      <el-table-column align="center" prop="room" label="上课地点" min-width="80" />
+      <el-table-column align="center" prop="class_name" label="班级名称" min-width="90" />
+      <el-table-column align="center" prop="createDateStr" label="建课日期" width="160" />
+      <el-table-column align="center" prop="statusStr" label="课程状态" width="90">
         <template slot-scope="{row}">
           <el-tag :type="row.status==0?'warning':row.status==3?'success':row.status==4?'danger':''" effect="plain">
             {{ row.statusStr }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="createDateStr" label="创建日期" width="160" />
       <el-table-column align="center" label="操作" fixed="right" width="220">
         <template slot-scope="{row}">
           <!-- 0已撤回，1未提交，2处理中，3已完成 4已作废-->
@@ -86,7 +85,7 @@ import LoanForm from '@/components/Process/Form/LoanForm.vue'
 import { getall } from '@/api/getuser'
 
 export default {
-  name: 'Loan',
+  name: 'TeacherCourseManagement',
   components: { SubmitApply, CancelApply, History, LoanForm },
   data() {
     return {

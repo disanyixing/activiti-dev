@@ -2,57 +2,37 @@
   <div class="app-container">
     <!-- stripe 带斑马纹 -->
     <el-form :inline="true" :model="query" size="small">
-      <el-form-item label="借款用途">
-        <el-input v-model.trim="query.purpose" placeholder="请输入借款用途" />
+      <el-form-item label="课程名称：">
+        <el-input v-model.trim="query.course" placeholder="请输入课程名称" />
       </el-form-item>
-      <el-form-item label="状态:">
-        <el-select v-model="query.status" clearable placeholder="请选择">
-          <el-option v-for="item in processStatus" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
+      <el-form-item label="任课老师：">
+        <el-input v-model.trim="query.teacher" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" @click="queryData">查询</el-button>
         <el-button icon="el-icon-refresh" @click="reload">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-row style="margin-bottom:20px">
-      <el-button icon="el-icon-plus" size="small" type="primary" @click="clickShowForm('新增')">新增申请</el-button>
-    </el-row>
     <el-table :data="list" stripe border style="width: 100%">
-      <el-table-column align="center" type="index" label="序号" width="50" />
-      <el-table-column align="center" prop="userId" label="借款人" min-width="90" />
-      <el-table-column align="center" prop="money" label="借款金额" width="120" />
-      <el-table-column align="center" prop="loanDateStr" label="借款日期" width="160" />
-      <el-table-column align="center" prop="purpose" label="借款用途" min-width="160" />
-      <el-table-column align="center" prop="remark" label="备注" min-width="160" />
-      <el-table-column align="center" prop="statusStr" label="业务状态" width="90">
+      <el-table-column align="center" prop="id" label="序号" width="90" />
+      <el-table-column align="center" prop="name" label="课程名称" min-width="150" />
+      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="90" />
+      <el-table-column align="center" prop="time" label="上课时间" min-width="200" />
+      <el-table-column align="center" prop="room" label="上课地点" min-width="80" />
+      <el-table-column align="center" label="选择状态" min-width="160">
         <template slot-scope="{row}">
-          <el-tag :type="row.status==0?'warning':row.status==3?'success':row.status==4?'danger':''" effect="plain">
-            {{ row.statusStr }}
+          <el-tag
+            :type="row.status === 0 ? 'warning' : row.status === 1 ? 'success' : 'danger'"
+            effect="plain"
+          >
+            {{ getStatusLabel(row.status) }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="createDateStr" label="创建日期" width="160" />
-      <el-table-column align="center" label="操作" fixed="right" width="220">
+      <el-table-column align="center" label="操作" fixed="right" width="120">
         <template slot-scope="{row}">
-          <!-- 0已撤回，1未提交，2处理中，3已完成 4已作废-->
-          <el-button v-if="row.status == 0 || row.status == 1" type="text" @click="clickShowForm('编辑', row)">编辑
-          </el-button>
-          <el-button
-            v-if="row.status == 2 || row.status == 3 || row.status == 5"
-            type="text"
-            @click="clickShowForm('详情', row)"
-          >详情
-          </el-button>
-          <el-button v-if="row.status == 2" type="text" @click="clickCancelProcess(row)">撤回</el-button>
-          <el-button v-if="row.status == 0" type="text" @click="clickSubmitApply(row)">重新申请</el-button>
-          <el-button v-if="row.status == 1" type="text" @click="clickSubmitApply(row)">提交申请</el-button>
-          <el-button
-            v-if="row.status == 2 || row.status == 3 || row.status == 4"
-            type="text"
-            @click="clickProcessHistory(row)"
-          >审批历史
-          </el-button>
+          <el-button v-if="row.status === 0" type="text" @click="confirmSelection(row.id, true)">选课</el-button>
+          <el-button v-if="row.status === 1" type="text" @click="confirmSelection(row.id, false)">退选</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,16 +45,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <!-- 借款表单 -->
-    <el-dialog :title="operate" :visible.sync="formVisible" width="1000px" destroy-on-close @close="closeForm(false)">
-      <loan-form :operate="operate" :business-key="row.id" @close="closeForm" />
-    </el-dialog>
-    <!-- 提交申请 -->
-    <submit-apply v-if="selectdata.length" ref="sumbitApplyRef" :selectdata="selectdata" :row="row" />
-    <!-- 撤回申请 -->
-    <cancel-apply ref="cancelRef" :business-key="row.id" :proc-inst-id="row.processInstanceId" />
-    <!-- 审批历史 -->
-    <history ref="historyRef" :business-key="row.id" :process-instance-id="row.processInstanceId" />
   </div>
 </template>
 <script>
