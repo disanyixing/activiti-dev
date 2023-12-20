@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
+
+Vue.use(Router)
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -17,12 +16,12 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'             the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
+ roles: ['admin','editor']    control the page roles (you can set multiple roles)
+ title: 'title'               the name show in sidebar and breadcrumb (recommend set)
+ icon: 'svg-name'             the icon show in the sidebar
+ breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+ activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+ }
  */
 
 /**
@@ -76,26 +75,47 @@ export const constantRoutes = [
   },
 
   {
-    path: '/apply',
+    path: '/course',
     component: Layout,
-    redirect: '/apply/leave',
-    name: 'Apply',
-    meta: { title: '业务办理', icon: 'form' },
+    redirect: '/course/',
+    name: 'Workflow',
+    meta: { title: '工作流程', icon: 'example' },
     children: [
       {
-        path: 'leave',
-        name: 'Leave',
-        component: () => import('@/views/workflow/apply/leave'),
-        meta: { title: '请假申请', icon: 'table' }
+        path: 'model',
+        name: 'Model',
+        component: () => import('@/views/workflow/model'),
+        meta: { title: '模型管理', icon: 'tree' }
       },
       {
-        path: 'loan',
-        name: 'Loan',
-        component: () => import('@/views/workflow/apply/loan'),
-        meta: { title: '借款申请', icon: 'table' }
-      },
+        path: 'process',
+        name: 'Process',
+        component: () => import('@/views/workflow/process'),
+        meta: { title: '流程管理', icon: 'tree' }
+      }
     ]
   },
+  // {
+  //   path: '/apply',
+  //   component: Layout,
+  //   redirect: '/apply/leave',
+  //   name: 'Apply',
+  //   meta: { title: '业务办理', icon: 'form' },
+  //   children: [
+  //     {
+  //       path: 'leave',
+  //       name: 'Leave',
+  //       component: () => import('@/views/workflow/apply/leave'),
+  //       meta: { title: '请假申请', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'loan',
+  //       name: 'Loan',
+  //       component: () => import('@/views/workflow/apply/loan'),
+  //       meta: { title: '借款申请', icon: 'table' }
+  //     },
+  //   ]
+  // },
 
   {
     path: '/task',
@@ -137,10 +157,9 @@ export const constantRoutes = [
         name: 'Finish',
         component: () => import('@/views/workflow/finish'),
         meta: { title: '已结束流程', icon: 'tree' }
-      },
+      }
     ]
   },
-
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

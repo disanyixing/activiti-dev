@@ -13,11 +13,11 @@ function registerRoutes(app) {
     app[mock.type](mock.url, bodyParser.json(), bodyParser.urlencoded({
       extended: true
     }), mock.response)
-    
+
     mockLastIndex = app._router.stack.length
   }
   const mockRoutesLength = Object.keys(mocks).length
-  
+
   return {
     mockRoutesLength: mockRoutesLength,
     mockStartIndex: mockLastIndex - mockRoutesLength

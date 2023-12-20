@@ -58,7 +58,7 @@ service.interceptors.response.use(
             location.reload()
           })
         })
-      }else {
+      } else {
         Message({
           message: res.message || 'Error',
           type: 'error',

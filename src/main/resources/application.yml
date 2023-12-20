@@ -1,5 +1,6 @@
 server:
   port: 9090
+  address: 127.0.0.1 # port conflict
   servlet:
     context-path: /workflow
     session:
@@ -9,7 +10,7 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql:///activiti?nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+      url: jdbc:mysql:///activiti?nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
       username: root
       password: root
   activiti:

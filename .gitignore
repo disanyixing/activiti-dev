@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+/_mysql_data/
+.tool-versions

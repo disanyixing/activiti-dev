@@ -26,7 +26,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: false, //process.env.NODE_ENV === 'development',
+  lintOnSave: false, // process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -42,11 +42,11 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           [ '^' + process.env.VUE_APP_BASE_API]: '' // /dev-api/test
-        },
-      },
-    },
+        }
+      }
+    }
   },
-  
+
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
