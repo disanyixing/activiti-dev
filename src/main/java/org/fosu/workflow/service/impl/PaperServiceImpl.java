@@ -114,6 +114,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         else
             grade[1] = examScore / (float)examTotal * 100f;
         grade[2] = grade[0] * 0.3f + grade[1] * 0.7f;//最终成绩
+        String str = String.format("%.0f", grade[0]);
+        grade[0] = Float.parseFloat(str);
+        String str1 = String.format("%.0f", grade[1]);
+        grade[1] = Float.parseFloat(str1);
+        String str2 = String.format("%.0f", grade[2]);
+        grade[2] = Float.parseFloat(str2);
         return Result.ok(grade);
     }
 }

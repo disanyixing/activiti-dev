@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 21/12/2023 01:12:27
+ Date: 21/12/2023 01:25:26
 */
 
 SET NAMES utf8mb4;
@@ -1148,6 +1148,8 @@ INSERT INTO `mxg_answer` VALUES ('1231231123345426123', '3', '123123123', '1', 0
 INSERT INTO `mxg_answer` VALUES ('1735667672115884033', '2', '1735665317794328577', '2', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1735667969479454722', '2', '1735665403739811842', '1', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1735668035611045889', '3', '1735665444156125185', '4', 5, 'xuesheng11');
+INSERT INTO `mxg_answer` VALUES ('21', '2', '21', '2', 0, 'xuesheng11');
+INSERT INTO `mxg_answer` VALUES ('31', '3', '31', '3', 0, 'xuesheng11');
 
 -- ----------------------------
 -- Table structure for mxg_attend
@@ -1487,6 +1489,8 @@ INSERT INTO `mxg_question_choice` VALUES ('123123123', '3', '测试选择题4', 
 INSERT INTO `mxg_question_choice` VALUES ('1735665317794328577', '2', '测试选择题1', '选项A', '正确选项B', '选项C', '选项D', 2, 5, '2023-12-15 00:00:00');
 INSERT INTO `mxg_question_choice` VALUES ('1735665403739811842', '2', '测试选择题2', '正确选项A', '选项B', '选项C', '选项D', 1, 5, '2023-12-15 00:00:00');
 INSERT INTO `mxg_question_choice` VALUES ('1735665444156125185', '3', '测试选择题3', '选项A', '选项B', '选项C', '正确选项D', 4, 5, '2023-12-15 00:00:00');
+INSERT INTO `mxg_question_choice` VALUES ('21', '2', '测试选择题2', '正确选项A', '选项B', '选项C', '选项D', 1, 5, '2023-12-15 00:00:00');
+INSERT INTO `mxg_question_choice` VALUES ('31', '3', '测试选择题3', '选项A', '选项B', '选项C', '正确选项D', 4, 5, '2023-12-15 00:00:00');
 
 -- ----------------------------
 -- Table structure for mxg_speak
