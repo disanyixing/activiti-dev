@@ -52,7 +52,7 @@ public class PaperController {
         return Result.ok(paperService.getTotalScore(id));
     }
     @ApiOperation("查询成绩")
-    @GetMapping("/grade")
+    @PostMapping("/grade")
     public Result getGrade(@RequestBody PaperREQ req) {
         return paperService.getGrading(req);
     }
