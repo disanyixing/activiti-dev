@@ -12,4 +12,6 @@ public interface PaperService extends IService<Paper> {
     Result listPage(PaperREQ req);
     Result getStudentPaperList(PaperREQ req);
     Result update(Paper paper);
+    int getTotalScore(String id);
+    Result getGrading(PaperREQ req);
 }

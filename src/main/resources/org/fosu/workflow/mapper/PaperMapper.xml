@@ -37,8 +37,10 @@
         ORDER BY t3.create_date DESC
     </select>
     <select id="getStudentPaperList" resultMap="PaperList">
-        SELECT t3.id,t3.course_id,t3.title,t3.type,t3.creator,t3.create_date,t3.start_date,t3.end_date
+        SELECT t3.id,t3.course_id,t3.title,t3.type,t3.creator,t4.nick_name,t3.create_date,t3.start_date,t3.end_date
         FROM mxg_paper t3
+        LEFT JOIN mxg_teacher t4
+        ON t4.name=t3.creator
                  LEFT JOIN mxg_student t5
                            ON t5.name=#{req.creator}
                  LEFT JOIN mxg_course t6
@@ -50,7 +52,7 @@
         <if test="req.title != null and req.title != ''">
             AND t3.title LIKE CONCAT('%', #{req.title}, '%')
         </if>
-        GROUP BY t3.id,t3.course_id,t3.title,t3.type,t3.creator,t3.create_date,t3.start_date,t3.end_date
+        GROUP BY t3.id,t3.course_id,t3.title,t3.type,t3.creator,t4.nick_name,t3.create_date,t3.start_date,t3.end_date
         ORDER BY t3.create_date DESC
     </select>
 </mapper>

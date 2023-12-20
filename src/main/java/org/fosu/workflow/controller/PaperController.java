@@ -45,4 +45,15 @@ public class PaperController {
         Paper entity = paperService.getById(id);
         return Result.ok(entity);
     }
+
+    @ApiOperation("查询某试卷的选择题总分")
+    @GetMapping("/total/{id}")
+    public Result total(@PathVariable String id) {
+        return Result.ok(paperService.getTotalScore(id));
+    }
+    @ApiOperation("查询成绩")
+    @PostMapping("/grade")
+    public Result getGrade(@RequestBody PaperREQ req) {
+        return paperService.getGrading(req);
+    }
 }
