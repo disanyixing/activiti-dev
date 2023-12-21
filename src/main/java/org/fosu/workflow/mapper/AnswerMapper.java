@@ -12,5 +12,6 @@ import java.util.ArrayList;
 
 public interface AnswerMapper extends BaseMapper<Answer> {
     IPage<Answer> getAnswerList(IPage page, @Param("req") AnswerREQ req);
+    IPage<Answer> getAnswerListsa(IPage page, @Param("req") AnswerREQ req);
     ArrayList<Answer> getScore(@Param("req") AnswerREQ req);
 }

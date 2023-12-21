@@ -36,6 +36,12 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         return Result.ok(page);
     }
 
+   @Override
+    public Result listsaPage(AnswerREQ req) {
+        IPage<Answer> page = baseMapper.getAnswerListsa(req.getPage(), req);
+        return Result.ok(page);
+    }
+
     @Override
     public Result update(Answer answer) {
         if (answer == null || StringUtils.isEmpty(answer.getId())) {

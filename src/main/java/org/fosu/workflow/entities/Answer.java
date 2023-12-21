@@ -1,6 +1,7 @@
 package org.fosu.workflow.entities;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -19,6 +20,9 @@ public class Answer {
     private String paperId;
     @ApiModelProperty("题目id")
     private String questionId;
+    @TableField(exist = false)
+    @ApiModelProperty("题目")
+    private String description;
     @ApiModelProperty("答案")
     private String answer;
     @ApiModelProperty("得分")

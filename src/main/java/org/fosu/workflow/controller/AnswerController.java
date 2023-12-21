@@ -39,10 +39,15 @@ public class AnswerController {
         UpdateScore(answer);
         return answerService.add(answer);
     }
-    @ApiOperation("查询答题请列表")
+    @ApiOperation("查询答题详请列表")
     @PostMapping("/list")
     public Result listPage(@RequestBody AnswerREQ req) {
         return answerService.listPage(req);
+    }
+    @ApiOperation("查询简答题详请列表")
+    @PostMapping("/listsa")
+    public Result listsaPage(@RequestBody AnswerREQ req) {
+        return answerService.listsaPage(req);
     }
     @ApiOperation("更新答题详情信息")
     @PutMapping

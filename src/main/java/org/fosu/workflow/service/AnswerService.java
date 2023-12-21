@@ -10,6 +10,7 @@ import org.fosu.workflow.utils.Result;
 public interface AnswerService extends IService<Answer> {
     Result add(Answer answer);
     Result listPage(AnswerREQ req);
+    Result listsaPage(AnswerREQ req);
     Result update(Answer answer);
     int getScore(AnswerREQ req);
 }
