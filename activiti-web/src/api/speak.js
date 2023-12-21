@@ -16,6 +16,29 @@ export default {
 
   // 查询发言申请列表
   // 方法名: listPage, 接收参数: SpeakREQ
+  // {"talkId": "1","current":"1","size":"1"}
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": {
+  //         "records": [
+  //             {
+  //                 "id": "1732778348219310081",
+  //                 "talkId": "1",
+  //                 "text": "text0",
+  //                 "speaker": "admin",
+  //                 "createDate": "2023-12-06T16:00:00.000+00:00"
+  //             }
+  //         ],
+  //         "total": 2,
+  //         "size": 1,
+  //         "current": 1,
+  //         "orders": [],
+  //         "hitCount": false,
+  //         "searchCount": true,
+  //         "pages": 2
+  //     }
+  // }
   listPage(talkId, current, size) {
     return request({
       url: '/speak/list',

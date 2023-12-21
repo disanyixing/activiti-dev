@@ -14,7 +14,32 @@ export default {
   },
 
   // 查询话题申请列表
+  // 注意区分标题title和内容text
   // 方法名: listPage, 接收参数: TalkREQ
+  // {"courseId": "1", "current":"1", "size":"1"}
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": {
+  //         "records": [
+  //             {
+  //                 "id": "0",
+  //                 "courseId": "1",
+  //                 "title": "title0",
+  //                 "text": "text0",
+  //                 "creator": "admin",
+  //                 "createDate": "2023-12-06T16:00:00.000+00:00"
+  //             }
+  //         ],
+  //         "total": 6,
+  //         "size": 1,
+  //         "current": 1,
+  //         "orders": [],
+  //         "hitCount": false,
+  //         "searchCount": true,
+  //         "pages": 6
+  //     }
+  // }
   listPage(courseId, current, size) {
     return request({
       url: '/talk/list',
