@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.fosu.workflow.service.SysUserService;
 import org.fosu.workflow.utils.Result;
+import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +23,11 @@ public class SysUserController {
     @GetMapping("/all")
     public Result all() {
         return Result.ok(sysUserService.getAllUsers());
+    }
+
+    @ApiOperation("查询当前用户")
+    @GetMapping("/info")
+    public Result current() {
+        return Result.ok(sysUserService.findByUsername(UserUtils.getUsername()));
     }
 }
