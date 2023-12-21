@@ -36,6 +36,9 @@ public class courseManager {
     @TableField(exist = false)
     @ApiModelProperty("学生id")
     private String student_id;
+    @TableField(exist = false)
+    @ApiModelProperty("学生姓名")
+    private String student_name;
     @ApiModelProperty("创建时间")
     private Date createDate;
     @ApiModelProperty("更新时间")

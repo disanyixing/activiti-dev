@@ -72,7 +72,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     public Result getGrading(PaperREQ req) {
-        req.setCreator(UserUtils.getUsername());
         req.setSize(999999);
         float[] grade = new float[3];
         int testScore = 0;//学生测试得分
