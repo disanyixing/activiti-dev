@@ -18,9 +18,10 @@
         from mxg_class
     </select>
     <select id="getTeacherCourse" resultMap="AllClassesList">
-        SELECT t1.id, t1.name
+        SELECT t1.name
         FROM mxg_course t1
         WHERE t1.tch_id = #{username}
+        GROUP BY t1.name
     </select>
     <select id="getTeacherClasses" resultMap="AllClassesList">
         SELECT t1.*, t2.name as class_name
