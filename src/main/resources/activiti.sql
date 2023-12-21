@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 22/12/2023 01:15:00
+ Date: 22/12/2023 01:57:14
 */
 
 SET NAMES utf8mb4;
@@ -1813,6 +1813,23 @@ INSERT INTO `sys_user` VALUES ('40', 'xuesheng52', '$2a$10$EHkq/r6PTCCYEDOQYNi/Z
 INSERT INTO `sys_user` VALUES ('41', 'xuesheng53', '$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS', '学生53', 'group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg');
 INSERT INTO `sys_user` VALUES ('42', 'xuesheng54', '$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS', '学生54', 'group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg');
 INSERT INTO `sys_user` VALUES ('43', 'xuesheng55', '$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS', '学生55', 'group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg');
+
+-- ----------------------------
+-- Triggers structure for table mxg_answer
+-- ----------------------------
+DROP TRIGGER IF EXISTS `update_score`;
+delimiter ;;
+CREATE TRIGGER `update_score` BEFORE INSERT ON `mxg_answer` FOR EACH ROW BEGIN
+  DECLARE correct_score INT;
+  SELECT score INTO correct_score FROM mxg_question_choice WHERE id = NEW.question_id AND answer = NEW.answer;
+  IF correct_score IS NOT NULL THEN
+    SET NEW.score = correct_score;
+  ELSE
+    SET NEW.score = 0;
+  END IF;
+END
+;;
+delimiter ;
 
 -- ----------------------------
 -- Triggers structure for table mxg_student
