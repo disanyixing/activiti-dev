@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 21/12/2023 20:12:03
+ Date: 22/12/2023 01:15:00
 */
 
 SET NAMES utf8mb4;
@@ -1192,6 +1192,8 @@ INSERT INTO `mxg_answer` VALUES ('1735667672115884033', '2', '173566531779432857
 INSERT INTO `mxg_answer` VALUES ('1735667969479454722', '2', '1735665403739811842', '1', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1735668035611045889', '3', '1735665444156125185', '4', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('1737768705057640450', '3', '1737751024241758209', '4', 5, 'xuesheng12');
+INSERT INTO `mxg_answer` VALUES ('1737861028426371073', '3', '1737860272549875713', '我全做对了', 20, 'xuesheng11');
+INSERT INTO `mxg_answer` VALUES ('1737861103303086081', '3', '1737860290375667713', '做对了一半', 5, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('21', '2', '21', '2', 0, 'xuesheng11');
 INSERT INTO `mxg_answer` VALUES ('31', '3', '31', '3', 0, 'xuesheng11');
 
@@ -1367,8 +1369,8 @@ CREATE TABLE `mxg_elective_course`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `fk_elective_course_tch_id`(`tch_id`) USING BTREE,
   INDEX `fk_elective_course_nick_name`(`nick_name`) USING BTREE,
-  CONSTRAINT `fk_elective_course_tch_id` FOREIGN KEY (`tch_id`) REFERENCES `mxg_teacher` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_elective_course_nick_name` FOREIGN KEY (`nick_name`) REFERENCES `mxg_teacher` (`nick_name`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_elective_course_nick_name` FOREIGN KEY (`nick_name`) REFERENCES `mxg_teacher` (`nick_name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_elective_course_tch_id` FOREIGN KEY (`tch_id`) REFERENCES `mxg_teacher` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -1538,6 +1540,27 @@ INSERT INTO `mxg_question_choice` VALUES ('1735665444156125185', '3', '测试选
 INSERT INTO `mxg_question_choice` VALUES ('1737751024241758209', '3', '选择题题目1', '选项A', '选项B', '选项C', '正确选项D', 4, 5, '2023-12-21 16:25:05');
 INSERT INTO `mxg_question_choice` VALUES ('21', '2', '测试选择题2', '正确选项A', '选项B', '选项C', '选项D', 1, 5, '2023-12-15 00:00:00');
 INSERT INTO `mxg_question_choice` VALUES ('31', '3', '测试选择题3', '选项A', '选项B', '选项C', '正确选项D', 4, 5, '2023-12-15 00:00:00');
+
+-- ----------------------------
+-- Table structure for mxg_question_sa
+-- ----------------------------
+DROP TABLE IF EXISTS `mxg_question_sa`;
+CREATE TABLE `mxg_question_sa`  (
+  `id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `paper_id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `score` int NULL DEFAULT NULL,
+  `create_date` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of mxg_question_sa
+-- ----------------------------
+INSERT INTO `mxg_question_sa` VALUES ('1737860234255880194', '2', '测试简答1', 10, '2023-12-21 23:39:02');
+INSERT INTO `mxg_question_sa` VALUES ('1737860272549875713', '3', '测试简答2', 10, '2023-12-21 23:39:12');
+INSERT INTO `mxg_question_sa` VALUES ('1737860290375667713', '3', '测试简答3', 10, '2023-12-21 23:39:16');
+INSERT INTO `mxg_question_sa` VALUES ('1737867517742809090', '3', '简答题31', 10, '2023-12-22 00:07:59');
 
 -- ----------------------------
 -- Table structure for mxg_speak
@@ -1790,24 +1813,6 @@ INSERT INTO `sys_user` VALUES ('40', 'xuesheng52', '$2a$10$EHkq/r6PTCCYEDOQYNi/Z
 INSERT INTO `sys_user` VALUES ('41', 'xuesheng53', '$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS', '学生53', 'group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg');
 INSERT INTO `sys_user` VALUES ('42', 'xuesheng54', '$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS', '学生54', 'group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg');
 INSERT INTO `sys_user` VALUES ('43', 'xuesheng55', '$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS', '学生55', 'group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg');
-
--- ----------------------------
--- View structure for act_id_group
--- ----------------------------
-DROP VIEW IF EXISTS `act_id_group`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `act_id_group` AS select 1 AS `id_`,1 AS `rev_`,1 AS `name_`,1 AS `type_`;
-
--- ----------------------------
--- View structure for act_id_membership
--- ----------------------------
-DROP VIEW IF EXISTS `act_id_membership`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `act_id_membership` AS select 1 AS `user_id_`,1 AS `group_id_`;
-
--- ----------------------------
--- View structure for act_id_user
--- ----------------------------
-DROP VIEW IF EXISTS `act_id_user`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `act_id_user` AS select 1 AS `id_`,1 AS `rev_`,1 AS `first_`,1 AS `last_`,1 AS `email_`,1 AS `pwd_`,1 AS `picture_id_`;
 
 -- ----------------------------
 -- Triggers structure for table mxg_student
