@@ -11,6 +11,7 @@ import org.fosu.workflow.req.PaperREQ;
 import org.fosu.workflow.service.AnswerService;
 import org.fosu.workflow.service.ChoiceQuestionService;
 import org.fosu.workflow.service.PaperService;
+import org.fosu.workflow.service.SaQuestionService;
 import org.fosu.workflow.utils.Result;
 import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +25,8 @@ import java.util.Date;
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements PaperService {
     @Autowired
     ChoiceQuestionService choiceService;
+    @Autowired
+    SaQuestionService saService;
     @Autowired
     AnswerService answerService;
     @Override
@@ -64,9 +67,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public int getTotalScore(String id) {
+    public int getTotalScore(String paperId) {
         int total = 0;
-        total += choiceService.getTotalScore(id);
+        total += choiceService.getTotalScore(paperId);
+        total += saService.getTotalScore(paperId);
         return total;
     }
 
