@@ -50,10 +50,11 @@
         <h2>一、选择题</h2>
         <el-divider />
         <div
-          v-for="question in choiceQuestions"
+          v-for="(question, index) in choiceQuestions"
           :key="question.id"
           :ref="`question_${question.id}`"
           class="question-item"
+          :class="{ 'last-choice-question': index === choiceQuestions.length - 1 }"
           @click="scrollToQuestion(question.id)"
         >
           <p>{{ question.description }}</p>
@@ -244,9 +245,12 @@ export default {
     onEssayBlur(question) {
       this.uploadAnswer(question.id, question.userAnswer)
     },
+    hasUnansweredOrErrorQuestions() {
+      return this.choiceQuestions.some(q => !q.isAnswered || q.isError) ||
+        this.essayQuestions.some(q => !q.isAnswered || q.isError)
+    },
     confirmNavigation(onConfirm, onCancel) {
-      const hasUnansweredQuestions = this.choiceQuestions.some(q => !q.isAnswered || !q.isError) || this.essayQuestions.some(q => !q.isAnswered || !q.isError)
-      if (hasUnansweredQuestions) {
+      if (this.hasUnansweredOrErrorQuestions()) {
         this.$confirm('您有未完成/未保存的题目，确定要离开吗?', '确认信息', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -260,11 +264,11 @@ export default {
       this.confirmNavigation(() => {
         this.$router.go(-1)
       }, () => {
-        // 可以处理取消导航的逻辑
+        // 取消导航的逻辑
       })
     },
     handleBeforeUnload(event) {
-      if (this.isAnyQuestionEditing()) {
+      if (this.hasUnansweredOrErrorQuestions()) {
         const message = '您有未完成/未保存的题目，确定要离开吗?'
         event.returnValue = message
         return message
@@ -285,6 +289,7 @@ export default {
       })
     },
     onEssayInput(question) {
+      // 标记为未回答
       question.isAnswered = false
       // 清除现有的定时器（如果有）
       if (this.debounceTimers[question.id]) {
@@ -293,8 +298,7 @@ export default {
       // 设置新的定时器
       this.debounceTimers[question.id] = setTimeout(() => {
         this.uploadAnswer(question.id, question.userAnswer)
-      }, 5000) // 5秒后触发
-      // 标记为未回答
+      }, 3000) // 3秒后触发
     }
   }
 }
@@ -408,11 +412,6 @@ export default {
   padding-bottom: 0;
 }
 
-/* 为新增按钮添加间隔 */
-.add-question-button {
-  margin-bottom: 20px; /* 例如，顶部间隔为20px */
-}
-
 .question-section {
   height: calc(100vh - 100px); /* 视口高度减去头部高度 */
   overflow-y: auto;
@@ -443,6 +442,12 @@ export default {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 添加文本阴影 */
   margin-left: 5px;
   line-height: 1.25;
+  margin-top: 2px;
+}
+
+/* 选择题最后一项的样式 */
+.last-choice-question {
+  margin-bottom: 50px;
 }
 
 /* 为Webkit浏览器设置滚动条样式 */

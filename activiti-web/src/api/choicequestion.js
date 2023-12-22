@@ -101,13 +101,13 @@ export default {
   },
 
   // 删除选择题
-  // 方法名: deleteChoiceQuestion, 接收参数: question_id (题目ID), paper_id (试卷ID)
+  // 方法名: deleteChoiceQuestion, 接收参数: question_id (题目ID)
   // 参数含义:
   // - question_id: 题目ID
   // - paper_id: 试卷ID
-  deleteChoiceQuestion(question_id, paper_id) {
+  deleteChoiceQuestion(question_id) {
     return request({
-      url: `/deleteChoiceQuestion/${paper_id}/${question_id}`,
+      url: `/choiceQuestion/deleteChoiceQuestion/${question_id}`,
       method: 'delete'
     })
   }

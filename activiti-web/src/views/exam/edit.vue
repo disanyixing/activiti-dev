@@ -377,8 +377,8 @@ export default {
 
     // 删除简答题
     async deleteEssayQuestion(questionId) {
-      //   await saapi.deleteSaQuestion(questionId)
-      //   this.essayQuestions = this.essayQuestions.filter(q => q.id !== questionId)
+      await saapi.deletesaQuestion(questionId)
+      this.essayQuestions = this.essayQuestions.filter(q => q.id !== questionId)
     },
 
     // 设置题目的编辑状态
@@ -448,6 +448,7 @@ export default {
 /* 危险按钮样式 */
 .el-button--danger {
   background-color: #f56c6c; /* 柔和的红色 */
+  margin-left: 0;
 }
 
 /* 鼠标悬停时的样式变化 */
