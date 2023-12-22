@@ -1,7 +1,6 @@
 package org.fosu.workflow.entities;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -11,22 +10,17 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@ApiModel("答题实体类")
-@TableName("mxg_answer")
-public class Answer {
+@ApiModel("简答题实体类")
+@TableName("mxg_question_sa")
+public class SaQuestion {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
-    @ApiModelProperty("试卷id")
+    @ApiModelProperty("所属试卷id")
     private String paperId;
-    @ApiModelProperty("题目id")
-    private String questionId;
-    @TableField(exist = false)
-    @ApiModelProperty("题目")
+    @ApiModelProperty("题目描述")
     private String description;
-    @ApiModelProperty("答案")
-    private String answer;
-    @ApiModelProperty("得分")
+    @ApiModelProperty("分数")
     private int score;
-    @ApiModelProperty("答题人用户名")
-    private String creator;
+    @ApiModelProperty("创建时间")
+    private Date createDate;
 }
