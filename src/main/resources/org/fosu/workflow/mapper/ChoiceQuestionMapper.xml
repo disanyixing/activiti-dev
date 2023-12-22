@@ -31,4 +31,8 @@
         FROM mxg_question_choice
         WHERE paper_id = #{paperId}
     </select>
+    <delete id="deleteChoiceQuestion">
+        DELETE FROM mxg_question_choice
+        WHERE paper_id = #{paper_id} AND id = #{question_id}
+    </delete>
 </mapper>

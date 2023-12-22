@@ -63,4 +63,9 @@ public class ChoiceQuestionServiceImpl extends ServiceImpl<ChoiceQuestionMapper,
         }
         return sum;
     }
+    @Override
+    public Result deleteChoiceQuestion(String question_id,String paper_id) {
+        baseMapper.deleteChoiceQuestion(question_id,paper_id);
+        return Result.ok();
+    }
 }

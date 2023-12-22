@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">佛山技术科技学院 Activiti 流程管理系统项目实战</div>
+    <div class="dashboard-text">课程综合管理系统</div>
   </div>
 </template>
 

@@ -12,4 +12,6 @@ import java.util.ArrayList;
 public interface SaQuestionMapper extends BaseMapper<SaQuestion> {
     IPage<SaQuestion> getQuestionList(IPage page, @Param("req") QuestionREQ req);
     ArrayList<SaQuestion> getTotalScore(String paperId);
+    void deletesaQuestion(String question_id,String paper_id);
+
 }

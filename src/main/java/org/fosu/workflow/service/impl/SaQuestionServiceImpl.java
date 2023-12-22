@@ -61,4 +61,9 @@ public class SaQuestionServiceImpl extends ServiceImpl<SaQuestionMapper, SaQuest
         }
         return sum;
     }
+    @Override
+    public Result deletesaQuestion(String question_id,String paper_id) {
+        baseMapper.deletesaQuestion(question_id,paper_id);
+        return Result.ok();
+    }
 }

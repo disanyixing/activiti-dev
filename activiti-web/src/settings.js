@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '佛科院Activiti流程管理系统',
+  title: '课程综合管理系统',
 
   /**
    * @type {boolean} true | false
