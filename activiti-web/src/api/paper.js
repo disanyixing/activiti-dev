@@ -23,7 +23,7 @@ export default {
   },
 
   /**
-   * 查询试卷列表
+   * 查询老师试卷列表
    * @param {Object} req 分页查询条件
    * 参数含义:
    * - current: 当前页码
@@ -33,7 +33,7 @@ export default {
    * - courseId: 课程ID
    * - creator: 创建人
    */
-  // { "current": 1, "size": 1" }
+  // { "current": "1", "size": "1" }
   // {
   //   "code": 20000,
   //   "message": "操作成功",

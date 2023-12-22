@@ -78,5 +78,17 @@ export default {
       url: `/saQuestion/total/${id}`,
       method: 'get'
     })
+  },
+
+  // 删除简答题
+  // 方法名: deletesaQuestion, 接收参数: question_id (题目ID), paper_id (试卷ID)
+  // 参数含义:
+  // - question_id: 题目ID
+  // - paper_id: 试卷ID
+  deletesaQuestion(question_id, paper_id) {
+    return request({
+      url: `/saQuestion/deletesaQuestion/${paper_id}/${question_id}`,
+      method: 'delete'
+    })
   }
 }
