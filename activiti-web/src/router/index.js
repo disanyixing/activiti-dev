@@ -146,34 +146,34 @@ export const constantRoutes = [
   //   ]
   // },
   //
-  // // 课程讨论 (Course Discussion)
-  // {
-  //   path: '/course-discussion',
-  //   component: Layout,
-  //   redirect: '/course-discussion/teacher',
-  //   name: 'CourseDiscussion',
-  //   meta: { title: '课程讨论', icon: 'discussion' },
-  //   children: [
-  //     {
-  //       path: 'teacher',
-  //       name: 'TeacherCourseDiscussion',
-  //       component: () => import('@/views/discussion/teacher/discussion'),
-  //       meta: { title: '课程讨论', icon: 'discussion' }
-  //     },
-  //     {
-  //       path: 'student',
-  //       name: 'StudentCourseDiscussion',
-  //       component: () => import('@/views/discussion/student/discussion'),
-  //       meta: { title: '课程讨论', icon: 'discussion' }
-  //     },
-  //     {
-  //       path: 'student/forum',
-  //       name: 'StudentDiscussionForum',
-  //       component: () => import('@/views/discussion/student/forum'),
-  //       meta: { title: '课程讨论区', icon: 'forum' }
-  //     }
-  //   ]
-  // },
+  // 课程讨论 (Course Discussion)
+  {
+    path: '/talk',
+    component: Layout,
+    redirect: '/talk/teacher',
+    name: 'CourseDiscussion',
+    meta: { title: '课程讨论', icon: 'discussion' },
+    children: [
+      {
+        path: 'teacher',
+        name: 'TeacherCourseDiscussion',
+        component: () => import('@/views/talk/talklist'),
+        meta: { title: '课程讨论', icon: 'discussion' }
+      },
+      {
+        path: 'student',
+        name: 'StudentCourseDiscussion',
+        component: () => import('@/views/talk/speak'),
+        meta: { title: '讨论', icon: 'discussion' }
+      }
+      // {
+      //   path: 'student/forum',
+      //   name: 'StudentDiscussionForum',
+      //   component: () => import('@/views/discussion/student/forum'),
+      //   meta: { title: '课程讨论区', icon: 'forum' }
+      // }
+    ]
+  },
   //
   // // 考勤管理 (Attendance Management)
   // {
@@ -221,28 +221,28 @@ export const constantRoutes = [
   //   ]
   // },
   //
-  // // 在线测试 (Online Testing)
-  // {
-  //   path: '/online-testing',
-  //   component: Layout,
-  //   redirect: '/online-testing/teacher',
-  //   name: 'OnlineTesting',
-  //   meta: { title: '在线测试', icon: 'testing' },
-  //   children: [
-  //     {
-  //       path: 'teacher',
-  //       name: 'TeacherOnlineTesting',
-  //       component: () => import('@/views/testing/teacher/testing'),
-  //       meta: { title: '在线测试', icon: 'testing' }
-  //     },
-  //     {
-  //       path: 'student',
-  //       name: 'StudentOnlineTesting',
-  //       component: () => import('@/views/testing/student/testing'),
-  //       meta: { title: '在线测试', icon: 'testing' }
-  //     }
-  //   ]
-  // },
+  // 在线测试 (Online Testing)
+  {
+    path: '/online-testing',
+    component: Layout,
+    redirect: '/online-testing/teacher',
+    name: 'OnlineTesting',
+    meta: { title: '在线测试', icon: 'testing' },
+    children: [
+      {
+        path: 'teacher',
+        name: 'TeacherOnlineTesting',
+        component: () => import('@/views/exam/edit'),
+        meta: { title: '在线测试', icon: 'testing' }
+      },
+      {
+        path: 'student',
+        name: 'StudentOnlineTesting',
+        component: () => import('@/views/exam/answer'),
+        meta: { title: '在线测试', icon: 'testing' }
+      }
+    ]
+  },
   //
   // // 成绩查询 (Grade Inquiry)
   // {
