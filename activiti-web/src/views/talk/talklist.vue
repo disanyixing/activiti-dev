@@ -7,29 +7,26 @@
     >
       <el-container>
         <el-header>
-          <el-page-header
-            content="讨论区"
-            @back="handleClose"
-          />
+          <div class="header-content">
+            <el-page-header
+              content="讨论区"
+              @back="handleClose"
+            />
+            <el-button type="primary" @click="clickShowForm('新建话题')">新建话题</el-button>
+          </div>
         </el-header>
 
         <el-main>
-          <el-table
-            :data="discussions.records"
-            style="width: 100%"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          >
+          <el-table :data="this.records" stripe border style="width: 100%">
             <el-table-column
               prop="id"
               label="ID"
               width="80"
-            />
-            <el-table-column
-              prop="title"
-              label="标题"
-              width="180"
-            />
+            >
+              <template slot-scope="scope">
+                <div class="text-ellipsis">{{ scope.row.id }}</div>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="creator"
               label="创建者"
@@ -41,19 +38,64 @@
               width="180"
             />
             <el-table-column
-              prop="text"
-              label="内容"
+              prop="title"
+              label="主题"
+              align="center"
             />
-          </el-table>
+            <el-table-column
+              label="回复总数"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <div class="content-cell">
+                  <div class="content-cell-footer">
+                    <el-button type="text" icon="el-icon-message" />
+                    <span>{{ scope.row.total || 0 }}</span>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="120"
+            >
+              <template slot-scope="scope">
+                <div class="cell-actions">
+                  <!-- 删除按钮 -->
+                  <el-button
+                    type="text"
+                    icon="el-icon-delete"
+                    :disabled="scope.row.speaker !== username"
+                    @click="confirmDelete(scope.row)"
+                  />
+                </div>
+              </template>
+            </el-table-column>
 
-          <el-pagination
-            :total="discussions.total"
-            :page-size="discussions.size"
-            :current-page="discussions.current"
-            layout="total, prev, pager, next"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
+            <el-pagination
+              :total="page.total"
+              :page-size="page.size"
+              :page-sizes="[10, 20, 30, 50]"
+              :current-page="page.current"
+              layout="total, prev, pager, next"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+            <el-dialog
+              :title="operate"
+              :visible.sync="formVisible"
+              width="1000px"
+              destroy-on-close
+              @close="closeForm(false)"
+            >
+              <talk-form
+                :operate="operate"
+                :cont="this.$props"
+                @close="closeForm"
+              />
+            </el-dialog>
+          </el-table>
         </el-main>
       </el-container>
     </el-dialog>
@@ -61,27 +103,40 @@
 </template>
 
 <script>
+import api from '@/api/talk'
+import LoanForm from '@/components/Process/Form/CourseForm.vue'
+import TalkForm from '@/components/Process/Form/TalkForm.vue'
+import speakApi from '@/api/speak'
+import { getInfo } from '@/api/user'
+
 export default {
   name: 'DiscussionBoard',
+  components: { TalkForm, LoanForm },
   props: {
+    courseId: {
+      type: String,
+      default: '1'
+    },
     className: String,
-    courseId: String,
     teacherUsername: String
   },
   data() {
     return {
       isFullScreen: true,
-      discussions: {
-        records: [],
-        total: 6,
+      page: {
+        total: 0,
         size: 10,
         current: 1
-      }
+      },
+      records: [],
+      formVisible: false,
+      operate: '详情',
+      username: ''
     }
   },
   created() {
-    this.discussions.records = this.getMockData()
-    // this.fetchData(); // 实际使用时，您将调用这个函数而不是使用mock数据
+    // this.discussions.records = this.getMockData()
+    this.fetchData()
   },
   methods: {
     handleClose(done) {
@@ -89,50 +144,39 @@ export default {
       done()
     },
     handleSizeChange(newSize) {
-      // 在这里实现更改分页大小的逻辑
-      this.discussions.size = newSize
+      this.page.size = newSize
       this.fetchData()
     },
     handleCurrentChange(newPage) {
-      // 在这里实现更改当前页面的逻辑
-      this.discussions.current = newPage
+      this.page.current = newPage
       this.fetchData()
     },
-    fetchData() {
-      // 在这里实现API请求的逻辑，现在使用mock数据
-      // 实际使用时，您需要替换这部分逻辑以与您的后端API通信
-      console.log(`Fetching data for course ID: ${this.courseId}, Page: ${this.discussions.current}, Size: ${this.discussions.size}`)
+    async fetchData() {
+      const { data: { records, total }} = await api.listPage(this.courseId, this.page.current, this.page.size)
+      const { data: { username }} = await getInfo()
+      this.username = username
+      this.records = records
+      this.page.total = total
+      await Promise.all(this.records.map(record => this.fetchSpeakData(record)))
     },
-    getMockData() {
-      // 实际使用时，您将从后端API获取数据
-      return [
-        // 您提供的数据结构
-        {
-          id: '0',
-          courseId: '1',
-          title: 'title0',
-          text: 'text0',
-          creator: 'admin',
-          createDate: '2023-12-06T16:00:00.000+00:00'
-        },
-        {
-          id: '4123',
-          courseId: '1',
-          title: 'title666',
-          text: 'text666',
-          creator: 'admin',
-          createDate: '2023-12-06T16:00:00.000+00:00'
-        },
-        {
-          id: '1732049547533283329',
-          courseId: '1',
-          title: 'title2',
-          text: 'text2',
-          creator: 'admin',
-          createDate: '2023-12-04T16:00:00.000+00:00'
-        }
-        // ...其余数据
-      ]
+    async fetchSpeakData(record) {
+      const { data } = await speakApi.listPage(record.id, 1, 0)
+      this.$set(record, 'total', data.total)
+    },
+    // 新增、编辑、详情
+    clickShowForm(operate) {
+      this.operate = operate
+      this.formVisible = true
+    },
+    closeForm(refresh) {
+      // 清空点击数据
+      this.row = {}
+      // 隐藏
+      this.formVisible = false
+      // 刷新列表
+      if (refresh) {
+        this.fetchData()
+      }
     }
   }
 }
@@ -141,5 +185,11 @@ export default {
 <style scoped>
 .discussion-container {
   margin: 0;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

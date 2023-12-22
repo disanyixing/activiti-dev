@@ -10,31 +10,8 @@
     style="max-width:600px;"
   >
     <!-- 动态显示课程信息 -->
-    <el-form-item label="课程名称" prop="name">
+    <el-form-item label="主题名" prop="name">
       <el-input v-model="formData.name" placeholder="请输入课程名称" />
-    </el-form-item>
-    <el-form-item label="上课时间" prop="time">
-      <el-input v-model="formData.time" placeholder="请输入上课时间" />
-    </el-form-item>
-    <el-form-item label="上课地点" prop="room">
-      <el-input v-model="formData.room" placeholder="请输入上课地点" />
-    </el-form-item>
-
-    <!-- 选择班级 -->
-    <el-form-item label="选择班级" prop="classId">
-      <el-select v-model="formData.classId" placeholder="请选择班级">
-        <el-option
-          v-for="item in classList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        />
-      </el-select>
-    </el-form-item>
-
-    <!-- 班级人数 -->
-    <el-form-item label="班级人数">
-      <span>{{ classStudentCount }}</span>
     </el-form-item>
 
     <el-form-item v-if="operate != '详情'" align="right">
@@ -70,54 +47,20 @@ export default {
       classStudentCount: 0,
       rules: {
         name: [
-          { required: true, message: '请输入课程名称', trigger: 'blur' }
-        ],
-        time: [
-          { required: true, message: '请输入上课时间', trigger: 'blur' }
-        ],
-        room: [
-          { required: true, message: '请输入上课地点', trigger: 'blur' }
-        ],
-        classId: [
-          { required: true, message: '请选择班级', trigger: 'change' }
+          { required: true, message: '请输入主题名称', trigger: 'blur' }
         ]
-      },
-      classList: [],
-      studentsList: []
+      }
     }
   },
   watch: {
-    // 监听班级ID变化，获取班级学生列表
-    'formData.classId'(newVal) {
-      if (newVal) {
-        this.getStudentsByClass(newVal)
-      }
-    },
     cont: {
       immediate: true, // 很重要！！！
       handler(content) {
-        this.formData = content
+        this.cont = content
       }
     }
   },
-  created() {
-    this.initStates()
-  },
   methods: {
-    // 获取所有班级
-    async initStates() {
-      // 假设 getAllClasses 方法返回 Promise
-      const { data } = await api.getAllClasses()
-      this.classList = data
-    },
-
-    // 获取班级学生列表
-    async getStudentsByClass(classId) {
-      // 假设 getStudentsByClass 方法返回 Promise
-      const { data } = await api.getStudentsByClass(classId)
-      this.studentsList = data
-      this.classStudentCount = data.length
-    },
     // 提交表单
     async submitForm(formName) {
       const { data: { name: tch_id, nickName: nick_name }} = await api.getCurrentTeacher()
