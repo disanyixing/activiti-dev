@@ -51,7 +51,7 @@
           :key="question.id"
           :ref="`question_${question.id}`"
           class="question-item"
-          @click="highlightQuestion(question.id)"
+          @click="scrollToQuestion(question.id)"
         >
           <div v-if="!editingStatus[question.id]">
             <!-- 显示选择题 -->
@@ -121,7 +121,7 @@
           :key="question.id"
           :ref="`question_${question.id}`"
           class="question-item"
-          @click="highlightQuestion(question.id)"
+          @click="scrollToQuestion(question.id)"
         >
           <div v-if="!editingStatus[question.id]">
             <!-- 显示简答题 -->
@@ -392,9 +392,6 @@ export default {
         }
         this.setEditStatus(questionId, false)
       }
-    },
-    highlightQuestion(questionId) {
-      this.currentSelectedQuestionId = questionId // 设置当前选中题目的ID
     },
     // 页面滚动到对应题目
     scrollToQuestion(questionId) {
