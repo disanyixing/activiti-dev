@@ -35,7 +35,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         paper.setCreator(UserUtils.getUsername());
         paper.setCreateDate(new Date());
         if(baseMapper.insert(paper) == 1)
-            return Result.ok();
+            return Result.ok(paper.getId());
         return Result.error("添加新试卷失败");
     }
 
