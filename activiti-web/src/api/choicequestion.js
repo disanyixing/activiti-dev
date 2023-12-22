@@ -26,6 +26,34 @@ export default {
   // - paperId: 试卷ID
   // - current: 当前页码
   // - size: 每页显示数量
+  // {"paperId": "1", "current":"1", "size":"1"}
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": {
+  //         "records": [
+  //             {
+  //                 "id": "123",
+  //                 "paperId": "1",
+  //                 "description": "测试选择题5",
+  //                 "choiceA": "选项A",
+  //                 "choiceB": "选项B",
+  //                 "choiceC": "选项C",
+  //                 "choiceD": "正确选项D",
+  //                 "answer": 4,
+  //                 "score": 5,
+  //                 "createDate": "2023-12-14T16:00:00.000+00:00"
+  //             }
+  //         ],
+  //         "total": 1,
+  //         "size": 1,
+  //         "current": 1,
+  //         "orders": [],
+  //         "hitCount": false,
+  //         "searchCount": true,
+  //         "pages": 1
+  //     }
+  // }
   listChoiceQuestions(req) {
     return request({
       url: '/choiceQuestion/list',

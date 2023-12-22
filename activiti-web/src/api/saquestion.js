@@ -21,6 +21,29 @@ export default {
   // - paperId: 试卷ID
   // - current: 当前页码
   // - size: 每页显示数量
+  // {"paperId": "2", "current":"1", "size":"1"}
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": {
+  //         "records": [
+  //             {
+  //                 "id": "1737860234255880194",
+  //                 "paperId": "2",
+  //                 "description": "测试简答1",
+  //                 "score": 10,
+  //                 "createDate": "2023-12-21T15:39:02.000+00:00"
+  //             }
+  //         ],
+  //         "total": 1,
+  //         "size": 1,
+  //         "current": 1,
+  //         "orders": [],
+  //         "hitCount": false,
+  //         "searchCount": true,
+  //         "pages": 1
+  //     }
+  // }
   listSaQuestions(req) {
     return request({
       url: '/saQuestion/list',
