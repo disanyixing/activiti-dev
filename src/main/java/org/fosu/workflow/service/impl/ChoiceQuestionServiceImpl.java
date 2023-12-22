@@ -4,13 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.fosu.workflow.entities.ChoiceQuestion;
-import org.fosu.workflow.entities.Paper;
 import org.fosu.workflow.mapper.ChoiceQuestionMapper;
-import org.fosu.workflow.req.PaperREQ;
 import org.fosu.workflow.req.QuestionREQ;
 import org.fosu.workflow.service.ChoiceQuestionService;
 import org.fosu.workflow.utils.Result;
-import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +21,7 @@ public class ChoiceQuestionServiceImpl extends ServiceImpl<ChoiceQuestionMapper,
     @Transactional
     public Result add(ChoiceQuestion question) {
         question.setCreateDate(new Date());
-        if(baseMapper.insert(question) == 1) {
+        if (baseMapper.insert(question) == 1) {
             String id = question.getId();
             return Result.ok(id);
         }
@@ -59,15 +56,16 @@ public class ChoiceQuestionServiceImpl extends ServiceImpl<ChoiceQuestionMapper,
             if(que != null)
                 return que.getScore();
         }*/
-        int sum=0;
+        int sum = 0;
         for (int i = 0; i < list.size(); i++) {
-            sum+=list.get(i).getScore();
+            sum += list.get(i).getScore();
         }
         return sum;
     }
+
     @Override
-    public Result deleteChoiceQuestion(String question_id,String paper_id) {
-        baseMapper.deleteChoiceQuestion(question_id,paper_id);
+    public Result deleteChoiceQuestion(String question_id) {
+        baseMapper.deleteChoiceQuestion(question_id);
         return Result.ok();
     }
 }

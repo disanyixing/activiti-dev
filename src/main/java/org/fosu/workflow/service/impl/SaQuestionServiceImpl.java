@@ -3,7 +3,6 @@ package org.fosu.workflow.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.fosu.workflow.entities.ChoiceQuestion;
 import org.fosu.workflow.entities.SaQuestion;
 import org.fosu.workflow.mapper.SaQuestionMapper;
 import org.fosu.workflow.req.QuestionREQ;
@@ -22,7 +21,7 @@ public class SaQuestionServiceImpl extends ServiceImpl<SaQuestionMapper, SaQuest
     @Transactional
     public Result add(SaQuestion question) {
         question.setCreateDate(new Date());
-        if(baseMapper.insert(question) == 1) {
+        if (baseMapper.insert(question) == 1) {
             String id = question.getId();
             return Result.ok(id);
         }
@@ -57,15 +56,16 @@ public class SaQuestionServiceImpl extends ServiceImpl<SaQuestionMapper, SaQuest
             if(que != null)
                 return que.getScore();
         }*/
-        int sum=0;
+        int sum = 0;
         for (int i = 0; i < list.size(); i++) {
-            sum+=list.get(i).getScore();
+            sum += list.get(i).getScore();
         }
         return sum;
     }
+
     @Override
-    public Result deletesaQuestion(String question_id,String paper_id) {
-        baseMapper.deletesaQuestion(question_id,paper_id);
+    public Result deletesaQuestion(String question_id) {
+        baseMapper.deletesaQuestion(question_id);
         return Result.ok();
     }
 }

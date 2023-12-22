@@ -22,12 +22,13 @@
         ORDER BY create_date DESC
     </select>
     <select id="getTotalScore" resultMap="SaQuestionTotalScore">
-        SELECT id,paper_id,score
+        SELECT id, paper_id, score
         FROM mxg_question_sa
         WHERE paper_id = #{paperId}
     </select>
     <delete id="deletesaQuestion">
-        DELETE FROM mxg_question_sa
-        WHERE paper_id = #{paper_id} AND id = #{question_id}
+        DELETE
+        FROM mxg_question_sa
+        WHERE id = #{question_id}
     </delete>
 </mapper>
