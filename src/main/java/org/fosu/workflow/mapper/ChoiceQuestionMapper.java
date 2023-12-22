@@ -14,4 +14,5 @@ import java.util.ArrayList;
 public interface ChoiceQuestionMapper extends BaseMapper<ChoiceQuestion> {
     IPage<ChoiceQuestion> getQuestionList(IPage page, @Param("req") QuestionREQ req);
     ArrayList<ChoiceQuestion> getTotalScore(String paperId);
+    void deleteChoiceQuestion(String question_id,String paper_id);
 }

@@ -11,4 +11,6 @@ public interface SaQuestionService extends IService<SaQuestion> {
     Result listPage(QuestionREQ req);
     Result update(SaQuestion question);
     int getTotalScore(String paperId);
+    Result deletesaQuestion(String question_id,String paper_id);
+
 }

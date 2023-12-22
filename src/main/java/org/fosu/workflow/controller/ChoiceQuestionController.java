@@ -9,6 +9,7 @@ import org.fosu.workflow.req.QuestionREQ;
 import org.fosu.workflow.service.ChoiceQuestionService;
 import org.fosu.workflow.service.PaperService;
 import org.fosu.workflow.utils.Result;
+import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +45,10 @@ public class ChoiceQuestionController {
     @GetMapping("/total/{id}")
     public Result total(@PathVariable String id) {
         return Result.ok(choiceQuestionService.getTotalScore(id));
+    }
+    @ApiOperation("删除选择题")
+    @DeleteMapping("/deleteChoiceQuestion/{paper_id}/{question_id}")
+    public Result deleteChoiceQuestion(@PathVariable String question_id,@PathVariable String paper_id) {
+        return Result.ok(choiceQuestionService.deleteChoiceQuestion(question_id,paper_id));
     }
 }

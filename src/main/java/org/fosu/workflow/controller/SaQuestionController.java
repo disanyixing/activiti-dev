@@ -44,4 +44,9 @@ public class SaQuestionController {
     public Result total(@PathVariable String id) {
         return Result.ok(saQuestionService.getTotalScore(id));
     }
+    @ApiOperation("删除简答题")
+    @DeleteMapping("/deletesaQuestion/{paper_id}/{question_id}")
+    public Result deletesaQuestion(@PathVariable String question_id,@PathVariable String paper_id) {
+        return Result.ok(saQuestionService.deletesaQuestion(question_id,paper_id));
+    }
 }
