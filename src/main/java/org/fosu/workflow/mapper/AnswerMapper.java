@@ -2,8 +2,11 @@ package org.fosu.workflow.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.fosu.workflow.entities.Answer;
+import org.fosu.workflow.entities.ChoiceQuestion;
 import org.fosu.workflow.entities.Paper;
 import org.fosu.workflow.req.AnswerREQ;
 import org.fosu.workflow.req.PaperREQ;
@@ -14,4 +17,7 @@ public interface AnswerMapper extends BaseMapper<Answer> {
     IPage<Answer> getAnswerList(IPage page, @Param("req") AnswerREQ req);
     IPage<Answer> getAnswerListsa(IPage page, @Param("req") AnswerREQ req);
     ArrayList<Answer> getScore(@Param("req") AnswerREQ req);
+    @Insert("INSERT INTO mxg_answer (id, paper_id, question_id, answer, score, creator) VALUES (#{id}, #{paperId}, #{questionId}, #{answer}, #{score}, #{creator})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insert(Answer answer);
 }

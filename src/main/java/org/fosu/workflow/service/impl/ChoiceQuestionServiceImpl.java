@@ -24,8 +24,10 @@ public class ChoiceQuestionServiceImpl extends ServiceImpl<ChoiceQuestionMapper,
     @Transactional
     public Result add(ChoiceQuestion question) {
         question.setCreateDate(new Date());
-        if(baseMapper.insert(question) == 1)
-            return Result.ok();
+        if(baseMapper.insert(question) == 1) {
+            String id = question.getId();
+            return Result.ok(id);
+        }
         return Result.error("添加新选择题失败");
     }
 

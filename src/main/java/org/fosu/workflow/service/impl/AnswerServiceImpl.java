@@ -25,8 +25,10 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Transactional
     public Result add(Answer answer) {
         answer.setCreator(UserUtils.getUsername());
-        if(baseMapper.insert(answer) == 1)
-            return Result.ok();
+        if(baseMapper.insert(answer) == 1) {
+            String id = answer.getId();
+            return Result.ok(id);
+        }
         return Result.error("答题失败");
     }
 
