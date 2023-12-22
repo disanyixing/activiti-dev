@@ -91,7 +91,7 @@
                 <el-input v-model="question.choiceD" placeholder="请输入选项D内容" />
               </el-form-item>
               <el-form-item label="分值" prop="score">
-                <el-input-number v-model="question.score" placeholder="请输入分值" :min="0" />
+                <el-input-number v-model="question.score" placeholder="请输入分值" :min="1" />
               </el-form-item>
               <el-form-item label="正确答案" prop="answer">
                 <el-select v-model="question.answer" placeholder="请选择正确答案">
@@ -163,7 +163,8 @@
 
 <script>
 import capi from '@/api/choicequestion' // 引入API方法
-import saapi from '@/api/saquestion' // 引入API方法
+import saapi from '@/api/saquestion'
+
 export default {
   props: {
     examType: {
@@ -245,13 +246,20 @@ export default {
     },
     confirmNavigation(onConfirm, onCancel) {
       if (this.isAnyQuestionEditing()) {
-        this.$confirm('您有未保存的工作，确定要离开吗?', '确认信息', {
+        this.$confirm('您似乎有编辑未完成，确定要离开吗？', '确认信息', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(onConfirm).catch(onCancel)
       } else {
         onConfirm()
+      }
+    },
+    handleBeforeUnload(event) {
+      if (this.isAnyQuestionEditing()) {
+        const message = '您似乎有编辑未完成，确定要离开吗？'
+        event.returnValue = message
+        return message
       }
     },
     goBack() {
@@ -294,13 +302,6 @@ export default {
       this.choiceQuestions.push(newQuestion)
       this.setEditStatus(newQuestion.id, true)
     },
-    handleBeforeUnload(event) {
-      if (this.isAnyQuestionEditing()) {
-        const message = '您似乎有工作未完成，确定要离开吗？'
-        event.returnValue = message
-        return message
-      }
-    },
     isAnyQuestionEditing() {
       return Object.values(this.editingStatus).some(status => status)
     },
@@ -313,7 +314,9 @@ export default {
           if (valid) {
             if (question.isNew) {
               // 新增题目
-              await capi.addChoiceQuestion(question)
+              const response = await capi.addChoiceQuestion(question)
+              console.log(response)
+              question.id = response.data
               // 移除isNew标记
               delete question.isNew
             } else {
@@ -494,7 +497,7 @@ export default {
   border: 1px solid #dcdfe6; /* 边框颜色 */
   border-radius: 4px;
   cursor: pointer; /* 鼠标悬停手势 */
-  transition: border-color 0.5s; /* 平滑过渡效果 */
+  transition: background-color 0.25s, border-color 0.5s; /* 平滑过渡效果 */
 }
 
 .question-preview:hover {
@@ -502,7 +505,7 @@ export default {
 }
 
 .question-preview.editing {
-  background-color: #eef5fd; /* 编辑状态的背景色 */
+  background-color: #f0f0f0; /* 编辑状态的背景色 */
 }
 
 .question-preview.selected {

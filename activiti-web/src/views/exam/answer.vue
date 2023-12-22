@@ -3,6 +3,9 @@
     <el-aside width="25%">
       <!-- 信息区 -->
       <div class="info-section">
+        <div class="back-section">
+          <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
+        </div>
         <!-- 考试剩余时间和未答题目统计 -->
         <div class="exam-timer">
           <h3>剩余时间： {{ remainingTime }}</h3>
@@ -19,7 +22,8 @@
             :key="question.id"
             :ref="`preview_${question.id}`"
             class="question-preview"
-            :class="{ 'answered': answers[question.id], 'selected': question.id === currentSelectedQuestionId }"
+            :class="{ 'selected': question.id === currentSelectedQuestionId, 'answered': question.isAnswered,
+                      'error': question.isError }"
             @click="scrollToQuestion(question.id)"
           >
             <span>{{ index + 1 }}</span>
@@ -30,7 +34,8 @@
             :key="question.id"
             :ref="`preview_${question.id}`"
             class="question-preview"
-            :class="{ 'answered': answers[question.id], 'selected': question.id === currentSelectedQuestionId }"
+            :class="{ 'selected': question.id === currentSelectedQuestionId, 'answered': question.isAnswered,
+                      'error': question.isError }"
             @click="scrollToQuestion(question.id)"
           >
             <span>{{ index + 1 }}</span>
@@ -75,9 +80,9 @@
             v-model="question.userAnswer"
             type="textarea"
             placeholder="请输入您的答案"
+            @input="onEssayInput(question)"
             @blur="onEssayBlur(question)"
           />
-          <el-button type="primary" @click="onEssaySave(question)">保存</el-button>
         </div>
       </div>
     </el-main>
@@ -105,42 +110,79 @@ export default {
     },
     creator: {
       type: String,
-      default: 'xuesheng11'
+      default: 'zhangsan'
     }
   },
   data() {
     return {
       choiceQuestions: [],
       essayQuestions: [],
-      answers: {},
       remainingTime: '', // 剩余时间
       unansweredChoiceQuestions: 0,
       unansweredEssayQuestions: 0,
-      currentSelectedQuestionId: null
+      currentSelectedQuestionId: null,
+      debounceTimers: {} // 存储防抖定时器的ID
     }
   },
   mounted() {
     this.fetchQuestions()
-    this.fetchAnswers()
     this.calculateRemainingTime()
-    // 每分钟更新剩余时间
+    // 每秒钟更新剩余时间
     setInterval(this.calculateRemainingTime, 1000)
+    window.addEventListener('beforeunload', this.handleBeforeUnload)
+  },
+  beforeDestroy() {
+    // 移除事件监听器
+    window.removeEventListener('beforeunload', this.handleBeforeUnload)
   },
   methods: {
     async fetchQuestions() {
       const choiceResponse = await capi.listChoiceQuestions({ paperId: this.paperId, size: -1 })
-      this.choiceQuestions = choiceResponse.data.records
+      this.choiceQuestions = choiceResponse.data.records.map(q => ({
+        ...q,
+        userAnswer: null,
+        isAnswered: false,
+        isError: false
+      }))
 
       const essayResponse = await saapi.listSaQuestions({ paperId: this.paperId, size: -1 })
-      this.essayQuestions = essayResponse.data.records
+      this.essayQuestions = essayResponse.data.records.map(q => ({
+        ...q,
+        userAnswer: null,
+        isAnswered: false,
+        isError: false
+      }))
 
-      this.calculateUnansweredQuestions()
+      await this.fetchAnswers() // 在获取题目后获取答案
     },
     async fetchAnswers() {
-      const response = await answerApi.listAnswers({ paperId: this.paperId, creator: this.creator, current: 1, size: -1 })
-      response.data.records.forEach(record => {
-        this.$set(this.answers, record.questionId, record.answer)
+      const response = await answerApi.listAnswers({
+        paperId: this.paperId,
+        creator: this.creator,
+        current: 1,
+        size: -1
       })
+
+      response.data.records.forEach(answer => {
+        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === answer.questionId)
+        if (question) {
+          const numAnswer = parseInt(answer.answer, 10)
+          this.$set(question, 'userAnswer', numAnswer)
+          this.$set(question, 'answerId', answer.id)
+          question.isAnswered = true
+        }
+      })
+
+      this.essayQuestions.forEach(question => {
+        const answer = response.data.records.find(a => a.questionId === question.id)
+        if (answer) {
+          this.$set(question, 'userAnswer', answer.answer)
+          this.$set(question, 'answerId', answer.id)
+          question.isAnswered = true
+        }
+      })
+
+      this.calculateUnansweredQuestions()
     },
     calculateRemainingTime() {
       const endTime = new Date(this.endTime).getTime()
@@ -151,6 +193,7 @@ export default {
         this.remainingTime = this.formatTime(timeLeft)
       } else {
         this.remainingTime = '考试时间结束'
+        setInterval(() => this.$router.go(-1), 5000)
       }
     },
     formatTime(time) {
@@ -160,32 +203,51 @@ export default {
       return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
     },
     calculateUnansweredQuestions() {
-      this.unansweredChoiceQuestions = this.choiceQuestions.length - Object.keys(this.answers).filter(id => this.choiceQuestions.some(q => q.id == id)).length
-      this.unansweredEssayQuestions = this.essayQuestions.length - Object.keys(this.answers).filter(id => this.essayQuestions.some(q => q.id == id)).length
+      this.unansweredChoiceQuestions = this.choiceQuestions.filter(q => !q.isAnswered).length
+      this.unansweredEssayQuestions = this.essayQuestions.filter(q => !q.isAnswered).length
     },
     async uploadAnswer(questionId, answer) {
-      await answerApi.addAnswer({
-        paperId: this.paperId,
-        questionId: questionId,
-        answer: answer
-      })
-      this.$set(this.answers, questionId, answer)
-      this.calculateUnansweredQuestions()
+      try {
+        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
+        if (question) {
+          if (question.answerId) {
+            // 更新答案
+            await answerApi.updateAnswer({
+              id: question.answerId,
+              answer: answer
+            })
+          } else {
+            // 新增答案
+            const response = await answerApi.addAnswer({
+              paperId: this.paperId,
+              questionId: questionId,
+              answer: answer
+            })
+            question.id = response.data // 存储答案ID
+          }
+          question.isError = false
+          question.isAnswered = !!answer
+        }
+        this.calculateUnansweredQuestions()
+      } catch (error) {
+        console.error('Error uploading answer:', error)
+        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
+        if (question) {
+          question.isError = true
+        }
+      }
     },
+    // 修改选择题和简答题的交互逻辑
     onChoiceChange(question) {
       this.uploadAnswer(question.id, question.userAnswer)
     },
     onEssayBlur(question) {
-      if (question.userAnswer) {
-        this.uploadAnswer(question.id, question.userAnswer)
-      }
-    },
-    onEssaySave(question) {
       this.uploadAnswer(question.id, question.userAnswer)
     },
     confirmNavigation(onConfirm, onCancel) {
-      if (this.isAnyQuestionEditing()) {
-        this.$confirm('您有未保存的工作，确定要离开吗?', '确认信息', {
+      const hasUnansweredQuestions = this.choiceQuestions.some(q => !q.isAnswered || !q.isError) || this.essayQuestions.some(q => !q.isAnswered || !q.isError)
+      if (hasUnansweredQuestions) {
+        this.$confirm('您有未完成/未保存的题目，确定要离开吗?', '确认信息', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -198,10 +260,15 @@ export default {
       this.confirmNavigation(() => {
         this.$router.go(-1)
       }, () => {
+        // 可以处理取消导航的逻辑
       })
     },
-    isAnyQuestionEditing() {
-      return Object.values(this.editingStatus).some(status => status)
+    handleBeforeUnload(event) {
+      if (this.isAnyQuestionEditing()) {
+        const message = '您有未完成/未保存的题目，确定要离开吗?'
+        event.returnValue = message
+        return message
+      }
     },
     // 页面滚动到对应题目
     scrollToQuestion(questionId) {
@@ -216,6 +283,18 @@ export default {
           previewElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
       })
+    },
+    onEssayInput(question) {
+      question.isAnswered = false
+      // 清除现有的定时器（如果有）
+      if (this.debounceTimers[question.id]) {
+        clearTimeout(this.debounceTimers[question.id])
+      }
+      // 设置新的定时器
+      this.debounceTimers[question.id] = setTimeout(() => {
+        this.uploadAnswer(question.id, question.userAnswer)
+      }, 5000) // 5秒后触发
+      // 标记为未回答
     }
   }
 }
@@ -304,7 +383,7 @@ export default {
   border: 1px solid #dcdfe6; /* 边框颜色 */
   border-radius: 4px;
   cursor: pointer; /* 鼠标悬停手势 */
-  transition: border-color 0.5s; /* 平滑过渡效果 */
+  transition: background-color 0.25s, border-color 0.5s; /* 平滑过渡效果 */
 }
 
 .question-preview:hover {
@@ -320,6 +399,9 @@ export default {
   padding: calc(10px); /* 减去边框宽度保持原有的总大小 */
 }
 
+.question-preview.error {
+  background-color: #f56c6c; /* 错误时的红色背景 */
+}
 /* 题目区域样式 */
 
 .el-main {

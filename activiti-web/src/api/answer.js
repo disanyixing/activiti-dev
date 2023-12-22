@@ -68,7 +68,7 @@ export default {
   // 更新答题详情信息
   // 方法名: updateAnswer, 接收参数: Answer (答题实体类)
   // 参数含义:
-  // - answerId: 答题ID
+  // - id: 答题ID
   // - paperId: 试卷ID
   // - questionId: 题目ID
   // - answer: 答案
