@@ -7,12 +7,13 @@
           <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
         </div>
         <div class="total-score">
-          <h3>试卷批改</h3>
+          <h3>考试监控</h3>
         </div>
         <div class="score-details">
-          <p>试卷批改情况：{{ uncompletedCount }}/{{ students.length }}</p>
+          <p>学生作答情况：{{ uncompletedCount }}/{{ students.length }}</p>
           <p>试卷名称：{{ title }}</p>
           <p>课程名：{{ courseName }}</p>
+          <p>剩余时间：{{ remainingTime }}</p>
         </div>
       </div>
     </el-aside>
@@ -21,7 +22,7 @@
         <!-- 筛选区域 -->
         <el-form :inline="true" size="small">
           <el-form-item>
-            <el-select v-model="filterStatus" placeholder="批改情况">
+            <el-select v-model="filterStatus" placeholder="作答情况">
               <el-option label="未完成" value="uncompleted" />
               <el-option label="已完成" value="completed" />
             </el-select>
@@ -40,16 +41,17 @@
         <el-table :data="filteredStudents" stripe border style="width: 100%">
           <el-table-column prop="classId" label="班级" width="180" />
           <el-table-column prop="nick_name" label="姓名" width="180" />
-          <el-table-column label="批改情况">
+          <el-table-column label="作答情况">
             <template v-slot="{ row }">
-              <el-tag :type="row.gradedAnswers === row.totalQuestions ? 'success' : 'warning'">
-                {{ row.gradedAnswers }}/{{ row.totalQuestions }}
+              <el-tag :type="row.completed ? 'success' : 'warning'">{{ row.answeredQuestions }}/{{
+                totalQuestions
+              }}
               </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template v-slot="{ row }">
-              <el-button type="text" @click="judgePaper(row)">批改试卷</el-button>
+              <el-button type="text" @click="viewDetail(row)">查看答题情况</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -88,6 +90,7 @@ export default {
     } else {
       this.$router.push('/exam/teacher/list')
     }
+    this.calculateRemainingTime()
     this.fetchStudents()
     this.refresh = setInterval(() => {
       this.fetchStudents()
@@ -97,6 +100,17 @@ export default {
     clearTimeout(this.refresh)
   },
   methods: {
+    calculateRemainingTime() {
+      const now = new Date()
+      const timeDiff = this.endDate - now
+      if (timeDiff > 0) {
+        const hours = Math.floor(timeDiff / (1000 * 60 * 60))
+        const minutes = Math.floor((timeDiff / (1000 * 60)) % 60)
+        this.remainingTime = `${hours}小时${minutes}分钟`
+      } else {
+        this.remainingTime = '考试已结束'
+      }
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -104,8 +118,8 @@ export default {
       const response = await capi.getAllStudents(this.courseName)
       this.students = response.data.map(student => ({
         ...student,
-        gradedAnswers: 0, // 初始化已批改的答案数量
-        totalQuestions: 0 // 初始化总题数
+        completed: false, // 初始未完成
+        answeredQuestions: 0
       }))
       this.classes = [...new Set(response.data.map(student => student.classId))]
       await this.checkIfStudentsCompletedPaper()
@@ -113,13 +127,14 @@ export default {
     async checkIfStudentsCompletedPaper() {
       const studentNames = this.students.map(s => s.student_name)
       const results = await checkStudentsPaper(this.paperId, studentNames)
+      this.totalQuestions = results.totalQuestions
       this.students.forEach(student => {
         const result = results.studentResults[student.student_name]
-        student.gradedAnswers = result.gradedAnswers // 更新已批改的答案数量
-        student.totalQuestions = results.totalQuestions // 更新总题数
+        student.answeredQuestions = result.answeredQuestions
+        student.completed = result.answeredQuestions === this.totalQuestions
       })
       this.filteredStudents = this.students
-      this.uncompletedCount = this.students.filter(s => s.gradedAnswers < s.totalQuestions).length
+      this.uncompletedCount = this.students.filter(s => !s.completed).length
     },
     async filterStudents() {
       await this.fetchStudents()
@@ -133,10 +148,10 @@ export default {
       this.filterClass = ''
       this.filteredStudents = this.students
     },
-    judgePaper(row) {
+    viewDetail(row) {
       console.log(row)
       this.$router.push({
-        path: '/exam/paper/score',
+        path: '/exam/paper/result',
         query: {
           id: this.paperId,
           creator: row.student_name

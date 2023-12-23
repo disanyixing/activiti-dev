@@ -15,6 +15,21 @@ export function logout() {
   })
 }
 
+// {
+//     "code": 20000,
+//     "message": "操作成功",
+//     "data": {
+//         "id": "12",
+//         "username": "zhangsan",
+//         "password": "$2a$10$EHkq/r6PTCCYEDOQYNi/ZORb8S.G8yxu4jsxqvjGWEytyrrPx5FVS",
+//         "nickName": "张三",
+//         "imageUrl": "group1/M00/00/00/J2y7ZGA2IheAESCfAABBqgX_-Lk92.jpeg",
+//         "accountNonExpired": true,
+//         "accountNonLocked": true,
+//         "credentialsNonExpired": true,
+//         "enabled": true
+//     }
+// }
 export function getInfo(token) {
   return request({
     url: '/user/info',

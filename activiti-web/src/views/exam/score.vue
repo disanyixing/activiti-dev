@@ -13,6 +13,12 @@
           <p>选择题总分: {{ currentChoiceScore }} / {{ totalChoiceScore }}</p>
           <p>简答题总分: {{ currentEssayScore }} / {{ totalEssayScore }}</p>
         </div>
+        <!-- 未评分题目统计 -->
+        <hr>
+        <div class="unjudged-questions">
+          <p>未评分选择题: {{ unjudgedChoiceQuestions }}</p>
+          <p>未评分简答题: {{ unjudgedEssayQuestions }}</p>
+        </div>
         <hr>
         <!-- 题目预览列表 -->
         <div class="question-preview-list">
@@ -22,11 +28,8 @@
             :key="question.id"
             :ref="`preview_${question.id}`"
             class="question-preview"
-            :class="{
-              'selected': question.id === currentSelectedQuestionId,
-              'full-score': question.score === question.maxScore,
-              'not-full-score': question.score !== question.maxScore && question.isJudged
-            }"
+            :class="{ 'selected': question.id === currentSelectedQuestionId, 'judged': question.isJudged,
+                      'error': question.isError }"
             @click="scrollToQuestion(question.id)"
           >
             <span>{{ index + 1 }}  (分数: {{ question.score }}/{{ question.maxScore }})</span>
@@ -37,11 +40,8 @@
             :key="question.id"
             :ref="`preview_${question.id}`"
             class="question-preview"
-            :class="{
-              'selected': question.id === currentSelectedQuestionId,
-              'full-score': question.score === question.maxScore,
-              'not-full-score': question.score !== question.maxScore && question.isJudged
-            }"
+            :class="{ 'selected': question.id === currentSelectedQuestionId, 'judged': question.isJudged,
+                      'error': question.isError }"
             @click="scrollToQuestion(question.id)"
           >
             <span>{{ index + 1 }}  (分数: {{ question.score }}/{{ question.maxScore }})</span>
@@ -61,6 +61,7 @@
           :ref="`question_${question.id}`"
           class="question-item"
           :class="{
+            'judged': question.isJudged,
             'selected': question.id === currentSelectedQuestionId,
             'last-choice-question': index === choiceQuestions.length - 1 }"
           @click="highlightQuestion(question.id)"
@@ -78,6 +79,15 @@
             <el-radio :label="3">C: {{ question.choiceC }}</el-radio>
             <el-radio :label="4">D: {{ question.choiceD }}</el-radio>
           </el-radio-group>
+          <div class="grading-section">
+            <el-input-number
+              v-model="question.score"
+              :min="0"
+              :max="question.maxScore"
+              @change="onScoreChange(question)"
+            />
+            <el-button type="primary" @click="gradeQuestion(question)">确认评分</el-button>
+          </div>
         </div>
 
         <!-- 简答题区 -->
@@ -89,7 +99,8 @@
           :ref="`question_${question.id}`"
           class="question-item"
           :class="{
-            'selected': question.id === currentSelectedQuestionId,
+            'judged': question.isJudged,
+            'selected': question.id === currentSelectedQuestionId
           }"
           @click="highlightQuestion(question.id)"
         >
@@ -104,6 +115,15 @@
             placeholder=""
             disabled
           />
+          <div class="grading-section">
+            <el-input-number
+              v-model="question.score"
+              :min="0"
+              :max="question.maxScore"
+              @change="onScoreChange(question)"
+            />
+            <el-button type="primary" @click="gradeQuestion(question)">确认评分</el-button>
+          </div>
         </div>
       </div>
     </el-main>
@@ -120,13 +140,14 @@ export default {
     return {
       choiceQuestions: [],
       essayQuestions: [],
+      unjudgedChoiceQuestions: 0,
+      unjudgedEssayQuestions: 0,
       currentSelectedQuestionId: null,
       totalChoiceScore: 0,
       totalEssayScore: 0,
       currentChoiceScore: 0,
       currentEssayScore: 0,
-      paperId: 0,
-      creator: ''
+      animatedTimeout: null
     }
   },
   computed: {
@@ -143,8 +164,11 @@ export default {
   },
   mounted() {
     this.fetchQuestions()
+    window.addEventListener('beforeunload', this.handleBeforeUnload)
   },
   beforeDestroy() {
+    // 移除事件监听器
+    window.removeEventListener('beforeunload', this.handleBeforeUnload)
   },
   methods: {
     async fetchQuestions() {
@@ -187,31 +211,26 @@ export default {
         const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === answer.questionId)
 
         if (question) {
-          // 确定问题是否已回答
-          question.isAnswered = answer && answer.answer && answer.answer !== ''
-
-          // 如果是选择题，则转换答案为整数
-          if (this.choiceQuestions.some(q => q.id === question.id)) {
-            question.userAnswer = question.isAnswered ? parseInt(answer.answer, 10) : null
+          if (!answer || !answer.answer || answer.answer === '') {
           } else {
-            // 对于简答题，直接使用答案字符串
-            question.userAnswer = question.isAnswered ? answer.answer : ''
+            question.isAnswered = true
+            // 检查问题类型并相应地处理答案
+            if (this.choiceQuestions.some(q => q.id === question.id)) {
+              question.userAnswer = parseInt(answer.answer, 10)
+            } else {
+              question.userAnswer = answer.answer
+            }
+            question.isAnswered = true
           }
 
           // 设置其他相关的属性
           question.isJudged = answer.score !== -1
           question.answerId = answer.id
-          question.score = question.isJudged ? answer.score : -1
-        }
-      });
-
-      // 遍历所有问题，设置未判定问题的分数为-1
-      [...this.choiceQuestions, ...this.essayQuestions].forEach(question => {
-        if (!question.isJudged) {
-          question.score = -1
+          question.score = answer.score
         }
       })
 
+      this.calculateUnjudgedQuestions()
       this.calculateAllScores()
     },
     calculateCurrentScores() {
@@ -235,6 +254,8 @@ export default {
       let totalChoiceScore = 0
       let totalEssayScore = 0
 
+      console.log(this.choiceQuestions)
+
       this.choiceQuestions.forEach(question => {
         totalChoiceScore += question.maxScore
       })
@@ -247,8 +268,92 @@ export default {
       this.totalChoiceScore = totalChoiceScore
       this.totalEssayScore = totalEssayScore
     },
+    calculateUnjudgedQuestions() {
+      this.unjudgedChoiceQuestions = this.choiceQuestions.filter(q => !q.isJudged).length
+      this.unjudgedEssayQuestions = this.essayQuestions.filter(q => !q.isJudged).length
+    },
+    gradeQuestion(question) {
+      // 调用uploadAnswer方法来修改分数
+      clearTimeout(this.animatedTimeout)
+      this.uploadAnswer(question.id, question.userAnswer, question.score)
+      this.calculateUnjudgedQuestions()
+    },
+    async uploadAnswer(questionId, answer, score) {
+      try {
+        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
+        question.isJudged = false
+        if (question.answerId) {
+          await answerApi.updateAnswer({
+            id: question.answerId,
+            paperId: this.paperId,
+            creator: this.creator,
+            answer,
+            questionId,
+            score
+          })
+        } else {
+          const response = await answerApi.addAnswer({
+            paperId: this.paperId,
+            creator: this.creator,
+            answer,
+            questionId,
+            score
+          })
+          question.answerId = response.data // 存储答案ID
+        }
+
+        question.isError = false
+        this.animatedTimeout = setTimeout(() => {
+          question.isJudged = true
+          this.calculateAllScores()
+          this.calculateUnjudgedQuestions()
+        }, 300)
+      } catch (error) {
+        console.error('Error uploading answer:', error)
+        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
+        if (question) {
+          question.isError = true
+        }
+      }
+    },
+    onScoreChange(question) {
+      // 当分数输入框的值发生变化时执行
+      this.$set(question, 'isJudged', false)
+      clearTimeout(this.animatedTimeout)
+      // 可以在这里调用其他逻辑，如计算未评分题目数量
+      this.calculateCurrentScores()
+      this.calculateUnjudgedQuestions()
+    },
+    hasUnjudgedQuestions() {
+      return this.choiceQuestions.some(q => !q.isJudged || q.isError) ||
+        this.essayQuestions.some(q => !q.isJudged || q.isError)
+    },
+    confirmNavigation(onConfirm, onCancel) {
+      if (this.hasUnjudgedQuestions()) {
+        // 如果有未评分的题目，提示用户
+        this.$confirm('您有未评分的题目，确定要离开吗?', '确认信息', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(onConfirm).catch(onCancel)
+      } else {
+        onConfirm()
+      }
+    },
     goBack() {
-      this.$router.go(-1)
+      this.confirmNavigation(() => {
+        this.$router.go(-1)
+      }, () => {
+        // 取消导航的逻辑
+      })
+    },
+    handleBeforeUnload(event) {
+      // 修改离开页面前的提示逻辑
+      if (this.hasUnjudgedQuestions()) {
+        const message = '您有未评分的题目，确定要离开吗?'
+        event.returnValue = message
+        return message
+      }
     },
     // 页面滚动到对应题目
     highlightQuestion(questionId) {
@@ -361,20 +466,17 @@ export default {
   background-color: #ecf5ff; /* 鼠标悬停时变色 */
 }
 
+.question-preview.judged {
+  background-color: #e8f5e9; /* 已回答题目的绿色背景 */
+}
+
 .question-preview.selected {
   border: 2px solid #409EFF; /* 设置一个显著的边框 */
   padding: calc(10px); /* 减去边框宽度保持原有的总大小 */
-
 }
 
-/* 满分题目的样式 */
-.question-preview.full-score {
-  background-color: #e8f5e9; /* 绿色背景表示满分 */
-}
-
-/* 非满分题目的样式 */
-.question-preview.not-full-score {
-  background-color: #fff3cd; /* 黄色背景表示非满分 */
+.question-preview.error {
+  background-color: #f56c6c; /* 错误时的红色背景 */
 }
 
 /* 题目区域样式 */
@@ -401,7 +503,7 @@ export default {
   margin-bottom: 20px;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 添加阴影 */
-  transition: box-shadow 0.3s ease; /* 阴影渐变效果 */
+  transition: box-shadow 0.3s ease, background-color 0.3s ease; /* 阴影和背景色渐变效果 */
 }
 
 .question-item h2 {
@@ -421,15 +523,23 @@ export default {
   line-height: 1.25;
 }
 
-/* 当题目被选中时的样式 */
-.question-item.selected {
-  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.2); /* 强阴影效果 */
+.question-item.judged {
+  background-color: #e8f5e9; /* 已回答题目的绿色背景 */
 }
 
 .unanswered-label {
   margin-left: 10px;
-  color: #ff4d4f !important; /* 红色 */
+  color: #ff4d4f !important; /* 红色，表示警告或未完成 */
   font-style: italic;
+}
+
+.grading-section {
+  margin-top: 20px;
+}
+
+/* 当题目被选中时的样式 */
+.question-item.selected {
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.2); /* 强阴影效果 */
 }
 
 /* 选择题最后一项的样式 */

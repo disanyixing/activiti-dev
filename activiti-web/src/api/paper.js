@@ -121,7 +121,7 @@ export default {
    * - title: 试卷名称
    * - type: 试卷类型 (1: 平时测试, 2: 考试)
    * - courseId: 所属课程ID
-   * - creator: 创建人用户名
+   // * - creator: 创建人用户名
    * - nick_name: 创建人姓名
    * - size: 班级总人数
    * - startDate: 开始答题时间

@@ -7,10 +7,10 @@
           <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
         </div>
         <!-- 考试剩余时间和未答题目统计 -->
-        <div class="exam-timer">
+        <div class="total-score">
           <h3>剩余时间： {{ remainingTime }}</h3>
         </div>
-        <div class="unanswered-questions">
+        <div class="score-details">
           <p>未答选择题: {{ unansweredChoiceQuestions }}</p>
           <p>未答简答题: {{ unansweredEssayQuestions }}</p>
         </div>
@@ -99,29 +99,16 @@
 <script>
 import capi from '@/api/choicequestion' // 选择题目的 API 方法
 import saapi from '@/api/saquestion' // 简答题目的 API 方法
-import answerApi from '@/api/answer' // 答案的 API 方法
+import answerApi from '@/api/answer'// 答案的 API 方法
+import { formatTime } from '@/utils/time'
 
 export default {
-  props: {
-    examType: {
-      type: String,
-      default: 'choice'
-    },
-    paperId: {
-      type: Number,
-      default: 3
-    },
-    endTime: {
-      type: String,
-      default: '2023-12-30T21:50:51.000+00:00'
-    },
-    creator: {
-      type: String,
-      default: 'zhangsan'
-    }
-  },
   data() {
     return {
+      paperId: 0,
+      endTime: '',
+      creator: '',
+
       choiceQuestions: [],
       essayQuestions: [],
       remainingTime: '', // 剩余时间
@@ -131,11 +118,17 @@ export default {
       debounceTimers: {} // 存储防抖定时器的ID
     }
   },
-  mounted() {
+  created() {
+    this.paperId = this.$route.query.paperId ? parseInt(this.$route.query.paperId) : null
+    const endTimeString = this.$route.query.endTime
+    this.endTime = endTimeString ? new Date(endTimeString) : null
+    this.creator = this.$route.query.creator || ''
     this.fetchQuestions()
     this.calculateRemainingTime()
     // 每秒钟更新剩余时间
     setInterval(this.calculateRemainingTime, 1000)
+  },
+  mounted() {
     window.addEventListener('beforeunload', this.handleBeforeUnload)
   },
   beforeDestroy() {
@@ -197,17 +190,11 @@ export default {
       const timeLeft = endTime - currentTime
 
       if (timeLeft > 0) {
-        this.remainingTime = this.formatTime(timeLeft)
+        this.remainingTime = formatTime(timeLeft)
       } else {
         this.remainingTime = '考试时间结束'
         setInterval(() => this.$router.go(-1), 5000)
       }
-    },
-    formatTime(time) {
-      const hours = Math.floor(time / (3600 * 1000))
-      const minutes = Math.floor((time % (3600 * 1000)) / 60000)
-      const seconds = Math.floor((time % 60000) / 1000)
-      return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
     },
     calculateUnansweredQuestions() {
       this.unansweredChoiceQuestions = this.choiceQuestions.filter(q => !q.isAnswered).length
@@ -217,25 +204,26 @@ export default {
       try {
         const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
         if (question) {
-          if (question.answerId) {
-            // 更新答案
-            await answerApi.updateAnswer({
-              paperId: this.paperId,
-              questionId: questionId,
-              id: question.answerId,
-              answer: answer,
-              score: -1
-            })
-          } else {
+          if (!question.answerId) {
             // 新增答案
             const response = await answerApi.addAnswer({
               paperId: this.paperId,
               questionId: questionId,
               answer: answer,
-              score: -1
+              score: '-1',
+              creator: this.creator
             })
             question.answerId = response.data // 存储答案ID
           }
+          // 更新答案
+          await answerApi.updateAnswer({
+            paperId: this.paperId,
+            questionId: questionId,
+            id: question.answerId,
+            answer: answer,
+            score: '-1',
+            creator: this.creator
+          })
           question.isError = false
           question.isAnswered = !!answer
         }

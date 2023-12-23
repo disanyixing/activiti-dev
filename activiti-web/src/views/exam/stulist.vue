@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <!-- 搜索表单，用于过滤试卷列表 -->
+    <!-- 搜索表单 -->
     <el-form :inline="true" :model="query" size="small">
       <el-form-item label="试卷名称：">
         <el-input v-model.trim="query.title" placeholder="请输入试卷名称" />
@@ -13,20 +13,12 @@
         <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-row style="margin-bottom:20px">
-      <el-button icon="el-icon-plus" type="primary" size="small" @click="handleNewPaper">新建试卷</el-button>
-    </el-row>
+
     <!-- 试卷列表表格 -->
     <el-table :data="papers" stripe border style="width: 100%">
-      <el-table-column align="center" prop="id" label="ID" width="90" />
-      <el-table-column align="center" prop="title" label="试卷名称" min-width="150" />
+      <el-table-column align="center" prop="title" label="考试名称" min-width="150" />
       <el-table-column align="center" prop="courseId" label="课程名" min-width="120" />
-      <el-table-column align="center" prop="createDate" label="创建时间" min-width="180">
-        <template v-slot="{ row }">
-          {{ formatDate(row.createDate) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="size" label="班级人数" width="120" />
+      <el-table-column align="center" prop="nick_name" label="老师" width="120" />
       <el-table-column align="center" label="考试时间" min-width="180">
         <template v-slot="{ row }">
           {{ formatStartEndDates(row.startDate, row.endDate) }}
@@ -40,30 +32,12 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="180">
-        <template v-slot:default="{row}">
+        <template v-slot:default="{ row }">
           <el-button
-            v-if="isBeforeStart(row.startDate)"
             type="text"
-            @click="handleEditPaper(row)"
-          >修改测试
-          </el-button>
-          <el-button
-            v-if="isBeforeStart(row.startDate)"
-            type="text"
-            @click="editPaper(row)"
-          >编辑试卷
-          </el-button>
-          <el-button
-            v-else-if="isDuringExam(row.startDate, row.endDate)"
-            type="text"
-            @click="monitorPaper(row)"
-          >监控
-          </el-button>
-          <el-button
-            v-else-if="isAfterEnd(row.endDate)"
-            type="text"
-            @click="gradePaper(row)"
-          >评分
+            :disabled="!isDuringExam(row.startDate, row.endDate)"
+            @click="enterExam(row)"
+          >进入考试
           </el-button>
         </template>
       </el-table-column>
@@ -85,8 +59,9 @@
   </div>
 </template>
 <script>
-import api from '@/api/paper'
 import Examform from '@/views/exam/Form/examform.vue'
+import { getInfo } from '@/api/user'
+import api from '@/api/paper'
 
 export default {
   name: 'TeacherPapers',
@@ -106,7 +81,8 @@ export default {
       papers: [],
       isDialogVisible: false,
       currentPaper: {},
-      formType: {}
+      formType: {},
+      username: ''
     }
   },
   created() {
@@ -114,14 +90,16 @@ export default {
   },
   methods: {
     async fetchData() {
-      const response = await api.listPage({
+      // 使用getStudentPaperList API获取数据
+      const response = await api.getStudentPaperList({
         ...this.query,
         current: this.page.current,
         size: this.page.size,
-        type: 2 // 假设 type: 2 表示特定的试卷类型
+        type: 2
       })
       this.papers = response.data.records
       this.page.total = response.data.total
+      this.username = (await getInfo()).data.username
     },
     handleSizeChange(value) {
       this.page.size = value
@@ -217,28 +195,17 @@ export default {
 
       return { label, type }
     },
-    // 编辑试卷的逻辑
-    editPaper(row) {
-      this.$router.push({
-        path: '/exam/paper/edit',
-        query: { id: row.id }
-      })
-    },
 
-    // 监控试卷的逻辑
-    monitorPaper(row) {
-      this.$router.push({
-        path: '/exam/paper/monitor',
-        query: { ...row }
-      })
-    },
-
-    // 评分试卷的逻辑
-    gradePaper(row) {
-      this.$router.push({
-        path: '/exam/paper/judge',
-        query: { ...row }
-      })
+    enterExam(row) {
+      this.$router.push(
+        {
+          path: '/exam/paper/answer',
+          query: {
+            paperId: row.id,
+            creator: this.username,
+            endTime: row.endDate
+          }
+        })
     }
   }
 }

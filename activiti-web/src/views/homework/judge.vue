@@ -7,11 +7,11 @@
           <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
         </div>
         <div class="total-score">
-          <h3>试卷批改</h3>
+          <h3>作业批改</h3>
         </div>
         <div class="score-details">
-          <p>试卷批改情况：{{ uncompletedCount }}/{{ students.length }}</p>
-          <p>试卷名称：{{ title }}</p>
+          <p>作业批改情况：{{ uncompletedCount }}/{{ students.length }}</p>
+          <p>作业名称：{{ title }}</p>
           <p>课程名：{{ courseName }}</p>
         </div>
       </div>
@@ -49,7 +49,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template v-slot="{ row }">
-              <el-button type="text" @click="judgePaper(row)">批改试卷</el-button>
+              <el-button type="text" @click="judgePaper(row)">批改作业</el-button>
             </template>
           </el-table-column>
         </el-table>

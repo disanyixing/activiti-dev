@@ -223,35 +223,71 @@ export const constantRoutes = [
   //
   // 在线测试 (Online Testing)
   {
-    path: '/online-testing',
+    path: '/exam',
     component: Layout,
-    redirect: '/online-testing/teacher',
+    redirect: '',
     name: 'exam',
     meta: { title: '在线测试', icon: 'testing' },
     children: [
       {
-        path: 'teacher/edit',
-        name: 'ExamEdit',
-        component: () => import('@/views/exam/edit'),
-        meta: { title: '在线编辑', icon: 'testing' }
-      },
-      {
-        path: 'teacher/test',
-        name: 'ExamJudge',
-        component: () => import('@/views/exam/judge'),
-        meta: { title: '在线评分', icon: 'testing' }
-      },
-      {
-        path: 'student/exam',
-        name: 'OnlineTest',
-        component: () => import('@/views/exam/answer'),
+        path: 'teacher/list',
+        name: 'ListExam',
+        component: () => import('@/views/exam/list'),
         meta: { title: '在线测试', icon: 'testing' }
       },
       {
-        path: 'student/result',
+        path: 'student/list',
+        name: 'ListStuExam',
+        component: () => import('@/views/exam/stulist'),
+        meta: { title: '在线测试', icon: 'testing' }
+      },
+      {
+        path: 'paper/edit',
+        name: 'ExamEdit',
+        component: () => import('@/views/exam/edit'),
+        meta: { title: '试卷编辑', icon: 'testing' },
+        hidden: true
+      },
+      {
+        path: 'paper/answer',
+        name: 'OnlineTest',
+        component: () => import('@/views/exam/answer'),
+        meta: { title: '考试', icon: 'testing' },
+        hidden: true
+      },
+      {
+        path: 'paper/result',
         name: 'TestResult',
         component: () => import('@/views/exam/detail'),
-        meta: { title: '测试结果', icon: 'testing' }
+        meta: { title: '试卷结果', icon: 'testing' },
+        hidden: true
+      },
+      {
+        path: 'paper/score',
+        name: 'ExamScore',
+        component: () => import('@/views/exam/score'),
+        meta: { title: '试卷评分', icon: 'testing' },
+        hidden: true
+      },
+      {
+        path: 'paper/monitor',
+        name: 'ExamMonitor',
+        component: () => import('@/views/exam/monitor'),
+        meta: {
+          title: '考试监控',
+          icon: 'testing'
+        },
+        hidden: true
+      },
+      {
+        path: 'paper/judge',
+        name: 'ExamJudge',
+        component: () => import('@/views/exam/judge'),
+        meta: {
+          title: '考试评分',
+          icon: 'testing'
+        },
+        hidden: true
       }
     ]
   },

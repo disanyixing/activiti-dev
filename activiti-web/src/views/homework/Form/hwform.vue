@@ -1,6 +1,6 @@
 <template>
   <el-form ref="paperForm" :model="paperForm" :rules="rules" label-width="100px">
-    <el-form-item label="测试名称" prop="title">
+    <el-form-item label="作业名称" prop="title">
       <el-input v-model="paperForm.title" />
     </el-form-item>
 
