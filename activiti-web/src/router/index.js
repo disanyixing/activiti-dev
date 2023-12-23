@@ -226,20 +226,32 @@ export const constantRoutes = [
     path: '/online-testing',
     component: Layout,
     redirect: '/online-testing/teacher',
-    name: 'OnlineTesting',
+    name: 'exam',
     meta: { title: '在线测试', icon: 'testing' },
     children: [
       {
-        path: 'teacher',
-        name: 'TeacherOnlineTesting',
+        path: 'teacher/edit',
+        name: 'ExamEdit',
         component: () => import('@/views/exam/edit'),
+        meta: { title: '在线编辑', icon: 'testing' }
+      },
+      {
+        path: 'teacher/test',
+        name: 'ExamJudge',
+        component: () => import('@/views/exam/judge'),
+        meta: { title: '在线评分', icon: 'testing' }
+      },
+      {
+        path: 'student/exam',
+        name: 'OnlineTest',
+        component: () => import('@/views/exam/answer'),
         meta: { title: '在线测试', icon: 'testing' }
       },
       {
-        path: 'student',
-        name: 'StudentOnlineTesting',
-        component: () => import('@/views/exam/answer'),
-        meta: { title: '在线测试', icon: 'testing' }
+        path: 'student/result',
+        name: 'TestResult',
+        component: () => import('@/views/exam/detail'),
+        meta: { title: '测试结果', icon: 'testing' }
       }
     ]
   },

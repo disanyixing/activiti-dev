@@ -16,27 +16,31 @@
         <hr>
         <div class="question-preview-list">
           <h4>选择题列表</h4>
-          <div
-            v-for="(question, index) in choiceQuestions"
-            :key="question.id"
-            :ref="`preview_${question.id}`"
-            class="question-preview"
-            :class="{ 'editing': editingStatus[question.id], 'selected': question.id === currentSelectedQuestionId }"
-            @click="scrollToQuestion(question.id)"
-          >
-            <span>{{ index + 1 }}</span>
-          </div>
+          <transition-group name="list" tag="div">
+            <div
+              v-for="(question, index) in choiceQuestions"
+              :key="question.id"
+              :ref="`preview_${question.id}`"
+              class="question-preview"
+              :class="{ 'editing': editingStatus[question.id], 'selected': question.id === currentSelectedQuestionId }"
+              @click="scrollToQuestion(question.id)"
+            >
+              <span>{{ index + 1 }} (分值: {{ question.score }}) </span>
+            </div>
+          </transition-group>
           <h4>简答题列表</h4>
-          <div
-            v-for="(question, index) in essayQuestions"
-            :key="question.id"
-            :ref="`preview_${question.id}`"
-            class="question-preview"
-            :class="{ 'editing': editingStatus[question.id], 'selected': question.id === currentSelectedQuestionId }"
-            @click="scrollToQuestion(question.id)"
-          >
-            <span>{{ index + 1 }}</span>
-          </div>
+          <transition-group name="list" tag="div">
+            <div
+              v-for="(question, index) in essayQuestions"
+              :key="question.id"
+              :ref="`preview_${question.id}`"
+              class="question-preview"
+              :class="{ 'editing': editingStatus[question.id], 'selected': question.id === currentSelectedQuestionId }"
+              @click="scrollToQuestion(question.id)"
+            >
+              <span>{{ index + 1 }} (分值: {{ question.score }}) </span>
+            </div>
+          </transition-group>
         </div>
       </div>
     </el-aside>
@@ -46,66 +50,76 @@
         <!-- 选择题区 -->
         <h2>一、选择题</h2>
         <el-divider />
-        <div
-          v-for="question in choiceQuestions"
-          :key="question.id"
-          :ref="`question_${question.id}`"
-          class="question-item"
-          @click="scrollToQuestion(question.id)"
-        >
-          <div v-if="!editingStatus[question.id]">
-            <!-- 显示选择题 -->
-            <p>{{ question.description }}</p>
-            <p>A: {{ question.choiceA }}</p>
-            <p>B: {{ question.choiceB }}</p>
-            <p>C: {{ question.choiceC }}</p>
-            <p>D: {{ question.choiceD }}</p>
-            <p>分值: {{ question.score }}</p>
-            <p v-if="question.answer">答案: {{ answerLabel(question.answer) }}</p>
-            <el-button type="primary" @click="setEditStatus(question.id, true)">编辑</el-button>
-            <el-button type="danger" @click="deleteChoiceQuestion(question.id)">删除</el-button>
+        <transition-group name="list" tag="div">
+          <div
+            v-for="(question, index) in choiceQuestions"
+            :key="question.id"
+            :ref="`question_${question.id}`"
+            class="question-item"
+            :class="{
+              'last-choice-question': index === choiceQuestions.length - 1,
+              'selected': question.id === currentSelectedQuestionId
+            }"
+            @click="scrollToQuestion(question.id)"
+          >
+            <transition name="fade">
+              <div v-show="!editingStatus[question.id]">
+                <!-- 显示选择题 -->
+                <p>{{ question.description }}</p>
+                <p>A: {{ question.choiceA }}</p>
+                <p>B: {{ question.choiceB }}</p>
+                <p>C: {{ question.choiceC }}</p>
+                <p>D: {{ question.choiceD }}</p>
+                <p>分值: {{ question.score }}</p>
+                <p v-if="question.answer">答案: {{ answerLabel(question.answer) }}</p>
+                <el-button type="primary" @click="setEditStatus(question.id, true)">编辑</el-button>
+                <el-button type="danger" @click="deleteChoiceQuestion(question.id)">删除</el-button>
+              </div>
+            </transition>
+            <!-- 编辑选择题 -->
+            <transition name="fade">
+              <div v-show="editingStatus[question.id]" class="editing-container">
+                <el-form
+                  :key="question.id"
+                  :ref="`questionForm-${question.id}`"
+                  :model="question"
+                  :rules="rules"
+                  label-position="left"
+                  label-width="100px"
+                >
+                  <el-form-item label="题目描述" prop="description">
+                    <el-input v-model="question.description" placeholder="请输入题目描述" />
+                  </el-form-item>
+                  <el-form-item label="选项A" prop="choiceA">
+                    <el-input v-model="question.choiceA" placeholder="请输入选项A内容" />
+                  </el-form-item>
+                  <el-form-item label="选项B" prop="choiceB">
+                    <el-input v-model="question.choiceB" placeholder="请输入选项B内容" />
+                  </el-form-item>
+                  <el-form-item label="选项C" prop="choiceC">
+                    <el-input v-model="question.choiceC" placeholder="请输入选项C内容" />
+                  </el-form-item>
+                  <el-form-item label="选项D" prop="choiceD">
+                    <el-input v-model="question.choiceD" placeholder="请输入选项D内容" />
+                  </el-form-item>
+                  <el-form-item label="分值" prop="score">
+                    <el-input-number v-model="question.score" placeholder="请输入分值" :min="1" />
+                  </el-form-item>
+                  <el-form-item label="正确答案" prop="answer">
+                    <el-select v-model="question.answer" placeholder="请选择正确答案">
+                      <el-option label="A" :value="1" />
+                      <el-option label="B" :value="2" />
+                      <el-option label="C" :value="3" />
+                      <el-option label="D" :value="4" />
+                    </el-select>
+                  </el-form-item>
+                  <el-button type="success" @click="saveChoiceQuestion(question)">保存</el-button>
+                  <el-button type="danger" @click="cancelEdit(question.id)">取消</el-button>
+                </el-form>
+              </div>
+            </transition>
           </div>
-          <!-- 编辑选择题 -->
-          <div v-else class="editing-container">
-            <el-form
-              :key="question.id"
-              :ref="`questionForm-${question.id}`"
-              :model="question"
-              :rules="rules"
-              label-position="left"
-              label-width="100px"
-            >
-              <el-form-item label="题目描述" prop="description">
-                <el-input v-model="question.description" placeholder="请输入题目描述" />
-              </el-form-item>
-              <el-form-item label="选项A" prop="choiceA">
-                <el-input v-model="question.choiceA" placeholder="请输入选项A内容" />
-              </el-form-item>
-              <el-form-item label="选项B" prop="choiceB">
-                <el-input v-model="question.choiceB" placeholder="请输入选项B内容" />
-              </el-form-item>
-              <el-form-item label="选项C" prop="choiceC">
-                <el-input v-model="question.choiceC" placeholder="请输入选项C内容" />
-              </el-form-item>
-              <el-form-item label="选项D" prop="choiceD">
-                <el-input v-model="question.choiceD" placeholder="请输入选项D内容" />
-              </el-form-item>
-              <el-form-item label="分值" prop="score">
-                <el-input-number v-model="question.score" placeholder="请输入分值" :min="1" />
-              </el-form-item>
-              <el-form-item label="正确答案" prop="answer">
-                <el-select v-model="question.answer" placeholder="请选择正确答案">
-                  <el-option label="A" :value="1" />
-                  <el-option label="B" :value="2" />
-                  <el-option label="C" :value="3" />
-                  <el-option label="D" :value="4" />
-                </el-select>
-              </el-form-item>
-              <el-button type="success" @click="saveChoiceQuestion(question)">保存</el-button>
-              <el-button type="danger" @click="cancelEdit(question.id)">取消</el-button>
-            </el-form>
-          </div>
-        </div>
+        </transition-group>
         <el-button
           type="primary"
           class="add-question-button"
@@ -116,40 +130,49 @@
         <!-- 简答题区 -->
         <h2>二、简答题</h2>
         <el-divider />
-        <div
-          v-for="question in essayQuestions"
-          :key="question.id"
-          :ref="`question_${question.id}`"
-          class="question-item"
-          @click="scrollToQuestion(question.id)"
-        >
-          <div v-if="!editingStatus[question.id]">
-            <!-- 显示简答题 -->
-            <p>{{ question.description }}</p>
-            <p>分值: {{ question.score }}</p>
-            <el-button type="primary" @click="setEditStatus(question.id, true)">编辑</el-button>
-            <el-button type="danger" @click="deleteEssayQuestion(question.id)">删除</el-button>
+        <transition-group name="list" tag="div">
+          <div
+            v-for="question in essayQuestions"
+            :key="question.id"
+            :ref="`question_${question.id}`"
+            class="question-item"
+            :class="{
+              'selected': question.id === currentSelectedQuestionId
+            }"
+            @click="scrollToQuestion(question.id)"
+          >
+            <transition name="fade">
+              <div v-show="!editingStatus[question.id]">
+                <!-- 显示简答题 -->
+                <p>{{ question.description }}</p>
+                <p>分值: {{ question.score }}</p>
+                <el-button type="primary" @click="setEditStatus(question.id, true)">编辑</el-button>
+                <el-button type="danger" @click="deleteEssayQuestion(question.id)">删除</el-button>
+              </div>
+            </transition>
+            <transition name="fade">
+              <div v-show="editingStatus[question.id]" class="editing-container">
+                <el-form
+                  :key="question.id"
+                  :ref="`questionForm-${question.id}`"
+                  :model="question"
+                  :rules="rules"
+                  label-position="left"
+                  label-width="100px"
+                >
+                  <el-form-item label="题目描述" prop="description">
+                    <el-input v-model="question.description" placeholder="题目内容" />
+                  </el-form-item>
+                  <el-form-item label="分值" prop="score">
+                    <el-input-number v-model="question.score" placeholder="请输入分值" :min="0" />
+                  </el-form-item>
+                  <el-button type="success" @click="saveEssayQuestion(question)">保存</el-button>
+                  <el-button type="danger" @click="cancelEdit(question.id)">取消</el-button>
+                </el-form>
+              </div>
+            </transition>
           </div>
-          <div v-else class="editing-container">
-            <el-form
-              :key="question.id"
-              :ref="`questionForm-${question.id}`"
-              :model="question"
-              :rules="rules"
-              label-position="left"
-              label-width="100px"
-            >
-              <el-form-item label="题目描述" prop="description">
-                <el-input v-model="question.description" placeholder="题目内容" />
-              </el-form-item>
-              <el-form-item label="分值" prop="score">
-                <el-input-number v-model="question.score" placeholder="请输入分值" :min="0" />
-              </el-form-item>
-              <el-button type="success" @click="saveEssayQuestion(question)">保存</el-button>
-              <el-button type="danger" @click="cancelEdit(question.id)">取消</el-button>
-            </el-form>
-          </div>
-        </div>
+        </transition-group>
         <el-button
           type="primary"
           class="add-question-button"
@@ -538,6 +561,7 @@ export default {
   margin-bottom: 20px;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  transition: box-shadow 0.3s ease; /* 阴影渐变效果 */
 }
 
 .question-item h2 {
@@ -569,6 +593,11 @@ export default {
   margin-bottom: 20px; /* 增加表单项间距 */
 }
 
+/* 当题目被选中时的样式 */
+.question-item.selected {
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.2); /* 强阴影效果 */
+}
+
 /* 为Webkit浏览器设置滚动条样式 */
 .info-section::-webkit-scrollbar,
 .question-section::-webkit-scrollbar {
@@ -590,4 +619,27 @@ export default {
   background: #555; /* 滚动条hover时的颜色 */
 }
 
+/* 列表动画 */
+.list-enter-active, .list-leave-active {
+  transition: all 0.5s;
+}
+
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* 编辑容器的淡入淡出动画 */
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+/* 淡出动画 */
+.fade-leave-active {
+  transition: all 0s; /* 无动画效果 */
+}
 </style>

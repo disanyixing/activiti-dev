@@ -6,15 +6,15 @@
         <div class="back-section">
           <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
         </div>
-        <!-- 考试剩余时间和未答题目统计 -->
-        <div class="exam-timer">
-          <h3>剩余时间： {{ remainingTime }}</h3>
+        <div class="total-score">
+          <h3>当前评分：{{ currentTotalScore }} / {{ totalScore }} </h3>
         </div>
-        <div class="unanswered-questions">
-          <p>未答选择题: {{ unansweredChoiceQuestions }}</p>
-          <p>未答简答题: {{ unansweredEssayQuestions }}</p>
+        <div class="score-details">
+          <p>选择题总分: {{ currentChoiceScore }} / {{ totalChoiceScore }}</p>
+          <p>简答题总分: {{ currentEssayScore }} / {{ totalEssayScore }}</p>
         </div>
         <hr>
+        <!-- 题目预览列表 -->
         <div class="question-preview-list">
           <h4>选择题列表</h4>
           <div
@@ -22,11 +22,14 @@
             :key="question.id"
             :ref="`preview_${question.id}`"
             class="question-preview"
-            :class="{ 'selected': question.id === currentSelectedQuestionId, 'answered': question.isAnswered,
-                      'error': question.isError }"
+            :class="{
+              'selected': question.id === currentSelectedQuestionId,
+              'full-score': question.score === question.maxScore,
+              'not-full-score': question.score !== question.maxScore && question.isJudged
+            }"
             @click="scrollToQuestion(question.id)"
           >
-            <span>{{ index + 1 }}</span>
+            <span>{{ index + 1 }}  (分数: {{ question.score }}/{{ question.maxScore }})</span>
           </div>
           <h4>简答题列表</h4>
           <div
@@ -34,11 +37,14 @@
             :key="question.id"
             :ref="`preview_${question.id}`"
             class="question-preview"
-            :class="{ 'selected': question.id === currentSelectedQuestionId, 'answered': question.isAnswered,
-                      'error': question.isError }"
+            :class="{
+              'selected': question.id === currentSelectedQuestionId,
+              'full-score': question.score === question.maxScore,
+              'not-full-score': question.score !== question.maxScore && question.isJudged
+            }"
             @click="scrollToQuestion(question.id)"
           >
-            <span>{{ index + 1 }}</span>
+            <span>{{ index + 1 }}  (分数: {{ question.score }}/{{ question.maxScore }})</span>
           </div>
         </div>
       </div>
@@ -55,13 +61,18 @@
           :ref="`question_${question.id}`"
           class="question-item"
           :class="{
-            'last-choice-question': index === choiceQuestions.length - 1,
-            'selected': question.id === currentSelectedQuestionId
-          }"
-          @click="scrollToQuestion(question.id)"
+            'selected': question.id === currentSelectedQuestionId,
+            'last-choice-question': index === choiceQuestions.length - 1 }"
+          @click="highlightQuestion(question.id)"
         >
-          <p>{{ question.description }}</p>
-          <el-radio-group v-model="question.userAnswer" @change="onChoiceChange(question)">
+          <p>
+            {{ question.description }}
+            <span class="score-info"> (正确答案: {{ formatAnswer(question.answer) }}, 分值: {{
+              question.maxScore
+            }})</span>
+            <span v-if="!question.isAnswered" class="unanswered-label">用户未作答</span> <!-- 未作答的提示 -->
+          </p>
+          <el-radio-group v-model="question.userAnswer" disabled>
             <el-radio :label="1">A: {{ question.choiceA }}</el-radio>
             <el-radio :label="2">B: {{ question.choiceB }}</el-radio>
             <el-radio :label="3">C: {{ question.choiceC }}</el-radio>
@@ -78,17 +89,20 @@
           :ref="`question_${question.id}`"
           class="question-item"
           :class="{
-            'selected': question.id === currentSelectedQuestionId
+            'selected': question.id === currentSelectedQuestionId,
           }"
-          @click="scrollToQuestion(question.id)"
+          @click="highlightQuestion(question.id)"
         >
-          <p>{{ question.description }}</p>
+          <p>
+            {{ question.description }}
+            <span class="score-info"> (分值: {{ question.maxScore }})</span>
+            <span v-if="!question.isAnswered" class="unanswered-label">用户未作答</span> <!-- 未作答的提示 -->
+          </p>
           <el-input
             v-model="question.userAnswer"
             type="textarea"
-            placeholder="请输入您的答案"
-            @input="onEssayInput(question)"
-            @blur="onEssayBlur(question)"
+            placeholder=""
+            disabled
           />
         </div>
       </div>
@@ -111,10 +125,6 @@ export default {
       type: Number,
       default: 3
     },
-    endTime: {
-      type: String,
-      default: '2023-12-30T21:50:51.000+00:00'
-    },
     creator: {
       type: String,
       default: 'zhangsan'
@@ -124,23 +134,25 @@ export default {
     return {
       choiceQuestions: [],
       essayQuestions: [],
-      remainingTime: '', // 剩余时间
-      unansweredChoiceQuestions: 0,
-      unansweredEssayQuestions: 0,
       currentSelectedQuestionId: null,
-      debounceTimers: {} // 存储防抖定时器的ID
+      totalChoiceScore: 0,
+      totalEssayScore: 0,
+      currentChoiceScore: 0,
+      currentEssayScore: 0
+    }
+  },
+  computed: {
+    totalScore() {
+      return this.totalChoiceScore + this.totalEssayScore
+    },
+    currentTotalScore() {
+      return this.currentChoiceScore + this.currentEssayScore
     }
   },
   mounted() {
     this.fetchQuestions()
-    this.calculateRemainingTime()
-    // 每秒钟更新剩余时间
-    setInterval(this.calculateRemainingTime, 1000)
-    window.addEventListener('beforeunload', this.handleBeforeUnload)
   },
   beforeDestroy() {
-    // 移除事件监听器
-    window.removeEventListener('beforeunload', this.handleBeforeUnload)
   },
   methods: {
     async fetchQuestions() {
@@ -149,7 +161,9 @@ export default {
         ...q,
         userAnswer: null,
         isAnswered: false,
-        isError: false
+        isError: false,
+        isJudged: false,
+        maxScore: q.score
       }))
 
       const essayResponse = await saapi.listSaQuestions({ paperId: this.paperId, size: -1 })
@@ -157,10 +171,16 @@ export default {
         ...q,
         userAnswer: null,
         isAnswered: false,
-        isError: false
+        isError: false,
+        isJudged: false,
+        maxScore: q.score
       }))
 
       await this.fetchAnswers() // 在获取题目后获取答案
+    },
+    formatAnswer(answer) {
+      const answersMap = { 1: 'A', 2: 'B', 3: 'C', 4: 'D' }
+      return answersMap[answer] || ''
     },
     async fetchAnswers() {
       const response = await answerApi.listAnswers({
@@ -171,122 +191,73 @@ export default {
       })
 
       response.data.records.forEach(answer => {
-        // 合并选择题和论述题数组
-        const combinedQuestions = [...this.choiceQuestions, ...this.essayQuestions]
+        // 合并选择题和论述题数组，然后查找相应的问题
+        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === answer.questionId)
 
-        // 在合并后的数组中查找对应的问题
-        const question = combinedQuestions.find(q => q.id === answer.questionId)
+        console.log(question)
 
         if (question) {
-          // 检查问题是否是选择题，以确定是否需要将答案解析为整数
-          const isChoiceQuestion = this.choiceQuestions.some(q => q.id === question.id)
-          const processedAnswer = isChoiceQuestion ? parseInt(answer.answer, 10) : answer.answer
+          if (!answer || !answer.answer || answer.answer === '') {
+          } else {
+            question.isAnswered = true
+            // 检查问题类型并相应地处理答案
+            if (this.choiceQuestions.some(q => q.id === question.id)) {
+              question.userAnswer = parseInt(answer.answer, 10)
+            } else {
+              question.userAnswer = answer.answer
+            }
+            question.isAnswered = true
+          }
 
-          // 设置问题的用户答案和答案ID
-          this.$set(question, 'userAnswer', processedAnswer)
-          this.$set(question, 'answerId', answer.id)
-          question.isAnswered = true
+          // 设置其他相关的属性
+          question.isJudged = answer.score !== -1
+          question.answerId = answer.id
+          question.score = answer.score
         }
       })
 
-      this.calculateUnansweredQuestions()
+      this.calculateAllScores()
     },
-    calculateRemainingTime() {
-      const endTime = new Date(this.endTime).getTime()
-      const currentTime = new Date().getTime()
-      const timeLeft = endTime - currentTime
+    calculateCurrentScores() {
+      let currentChoiceScore = 0
+      let currentEssayScore = 0
 
-      if (timeLeft > 0) {
-        this.remainingTime = this.formatTime(timeLeft)
-      } else {
-        this.remainingTime = '考试时间结束'
-        setInterval(() => this.$router.go(-1), 5000)
-      }
-    },
-    formatTime(time) {
-      const hours = Math.floor(time / (3600 * 1000))
-      const minutes = Math.floor((time % (3600 * 1000)) / 60000)
-      const seconds = Math.floor((time % 60000) / 1000)
-      return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
-    },
-    calculateUnansweredQuestions() {
-      this.unansweredChoiceQuestions = this.choiceQuestions.filter(q => !q.isAnswered).length
-      this.unansweredEssayQuestions = this.essayQuestions.filter(q => !q.isAnswered).length
-    },
-    async uploadAnswer(questionId, answer) {
-      try {
-        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
-        if (question) {
-          if (question.answerId) {
-            // 更新答案
-            await answerApi.updateAnswer({
-              paperId: this.paperId,
-              questionId: questionId,
-              id: question.answerId,
-              answer: answer,
-              score: -1
-            })
-          } else {
-            // 新增答案
-            const response = await answerApi.addAnswer({
-              paperId: this.paperId,
-              questionId: questionId,
-              answer: answer,
-              score: -1
-            })
-            question.answerId = response.data // 存储答案ID
-          }
-          question.isError = false
-          question.isAnswered = !!answer
+      this.choiceQuestions.forEach(question => {
+        if (question.isJudged) {
+          currentChoiceScore += question.score
         }
-        this.calculateUnansweredQuestions()
-      } catch (error) {
-        console.error('Error uploading answer:', error)
-        const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
-        if (question) {
-          question.isError = true
+      })
+      this.essayQuestions.forEach(question => {
+        if (question.isJudged) {
+          currentEssayScore += question.score
         }
-      }
+      })
+      this.currentChoiceScore = currentChoiceScore
+      this.currentEssayScore = currentEssayScore
     },
-    // 修改选择题和简答题的交互逻辑
-    onChoiceChange(question) {
-      this.uploadAnswer(question.id, question.userAnswer)
-    },
-    onEssayBlur(question) {
-      // 防止重复提交
-      clearTimeout(this.debounceTimers[question.id])
-      this.uploadAnswer(question.id, question.userAnswer)
-    },
-    hasUnansweredOrErrorQuestions() {
-      return this.choiceQuestions.some(q => !q.isAnswered || q.isError) ||
-        this.essayQuestions.some(q => !q.isAnswered || q.isError)
-    },
-    confirmNavigation(onConfirm, onCancel) {
-      if (this.hasUnansweredOrErrorQuestions()) {
-        this.$confirm('您有未完成/未保存的题目，确定要离开吗?', '确认信息', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(onConfirm).catch(onCancel)
-      } else {
-        onConfirm()
-      }
+    calculateAllScores() {
+      let totalChoiceScore = 0
+      let totalEssayScore = 0
+
+      this.choiceQuestions.forEach(question => {
+        totalChoiceScore += question.maxScore
+      })
+      this.essayQuestions.forEach(question => {
+        totalEssayScore += question.maxScore
+      })
+
+      this.calculateCurrentScores()
+
+      this.totalChoiceScore = totalChoiceScore
+      this.totalEssayScore = totalEssayScore
     },
     goBack() {
-      this.confirmNavigation(() => {
-        this.$router.go(-1)
-      }, () => {
-        // 取消导航的逻辑
-      })
-    },
-    handleBeforeUnload(event) {
-      if (this.hasUnansweredOrErrorQuestions()) {
-        const message = '您有未完成/未保存的题目，确定要离开吗?'
-        event.returnValue = message
-        return message
-      }
+      this.$router.go(-1)
     },
     // 页面滚动到对应题目
+    highlightQuestion(questionId) {
+      this.currentSelectedQuestionId = questionId // 设置当前选中题目的 ID
+    },
     scrollToQuestion(questionId) {
       this.$nextTick(() => {
         this.currentSelectedQuestionId = questionId // 设置当前选中题目的 ID
@@ -299,18 +270,6 @@ export default {
           previewElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
       })
-    },
-    onEssayInput(question) {
-      // 标记为未回答
-      question.isAnswered = false
-      // 清除现有的定时器（如果有）
-      if (this.debounceTimers[question.id]) {
-        clearTimeout(this.debounceTimers[question.id])
-      }
-      // 设置新的定时器
-      this.debounceTimers[question.id] = setTimeout(() => {
-        this.uploadAnswer(question.id, question.userAnswer)
-      }, 3000) // 3秒后触发
     }
   }
 }
@@ -406,22 +365,31 @@ export default {
   background-color: #ecf5ff; /* 鼠标悬停时变色 */
 }
 
-.question-preview.answered {
-  background-color: #e8f5e9; /* 已回答题目的绿色背景 */
-}
-
 .question-preview.selected {
   border: 2px solid #409EFF; /* 设置一个显著的边框 */
   padding: calc(10px); /* 减去边框宽度保持原有的总大小 */
+
 }
 
-.question-preview.error {
-  background-color: #f56c6c; /* 错误时的红色背景 */
+/* 满分题目的样式 */
+.question-preview.full-score {
+  background-color: #e8f5e9; /* 绿色背景表示满分 */
 }
+
+/* 非满分题目的样式 */
+.question-preview.not-full-score {
+  background-color: #fff3cd; /* 黄色背景表示非满分 */
+}
+
 /* 题目区域样式 */
 
 .el-main {
   padding-bottom: 0;
+}
+
+/* 题目评分标签 */
+.score-info {
+  color: #333;
 }
 
 .question-section {
@@ -455,12 +423,17 @@ export default {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 添加文本阴影 */
   margin-left: 5px;
   line-height: 1.25;
-  margin-top: 2px;
 }
 
 /* 当题目被选中时的样式 */
 .question-item.selected {
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.2); /* 强阴影效果 */
+}
+
+.unanswered-label {
+  margin-left: 10px;
+  color: #ff4d4f !important; /* 红色 */
+  font-style: italic;
 }
 
 /* 选择题最后一项的样式 */
