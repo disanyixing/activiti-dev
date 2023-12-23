@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 @ApiModel("答题实体类")
 @TableName("mxg_answer")
@@ -26,7 +24,7 @@ public class Answer {
     @ApiModelProperty("答案")
     private String answer;
     @ApiModelProperty("得分")
-    private int score;
+    private Integer score;
     @ApiModelProperty("答题人用户名")
     private String creator;
 }
