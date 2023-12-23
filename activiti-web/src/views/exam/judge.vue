@@ -160,7 +160,8 @@ export default {
       totalChoiceScore: 0,
       totalEssayScore: 0,
       currentChoiceScore: 0,
-      currentEssayScore: 0
+      currentEssayScore: 0,
+      animatedTimeout: null
     }
   },
   computed: {
@@ -218,8 +219,6 @@ export default {
       response.data.records.forEach(answer => {
         // 合并选择题和论述题数组，然后查找相应的问题
         const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === answer.questionId)
-
-        console.log(question)
 
         if (question) {
           if (!answer || !answer.answer || answer.answer === '') {
@@ -285,6 +284,7 @@ export default {
     },
     gradeQuestion(question) {
       // 调用uploadAnswer方法来修改分数
+      clearTimeout(this.animatedTimeout)
       this.uploadAnswer(question.id, question.userAnswer, question.score)
       this.calculateUnjudgedQuestions()
     },
@@ -313,7 +313,7 @@ export default {
         }
 
         question.isError = false
-        setInterval(() => {
+        this.animatedTimeout = setTimeout(() => {
           question.isJudged = true
           this.calculateAllScores()
           this.calculateUnjudgedQuestions()
@@ -329,6 +329,7 @@ export default {
     onScoreChange(question) {
       // 当分数输入框的值发生变化时执行
       this.$set(question, 'isJudged', false)
+      clearTimeout(this.animatedTimeout)
       // 可以在这里调用其他逻辑，如计算未评分题目数量
       this.calculateCurrentScores()
       this.calculateUnjudgedQuestions()
