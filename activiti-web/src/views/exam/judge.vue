@@ -315,9 +315,9 @@ export default {
         question.isError = false
         setInterval(() => {
           question.isJudged = true
+          this.calculateAllScores()
+          this.calculateUnjudgedQuestions()
         }, 300)
-        this.calculateAllScores()
-        this.calculateUnjudgedQuestions()
       } catch (error) {
         console.error('Error uploading answer:', error)
         const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
