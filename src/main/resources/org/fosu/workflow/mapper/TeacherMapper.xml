@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fosu.workflow.mapper.TeacherMapper">
+
+    <resultMap id="TeacherList" type="org.fosu.workflow.entities.Teacher">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="nick_name" property="nick_name"/>
+        <result column="post" property="post"/>
+    </resultMap>
+    <select id="getNickNameByTeacherName" resultMap="TeacherList">
+        SELECT t1.nick_name
+        FROM mxg_teacher t1
+        WHERE t1.name = #{name}
+    </select>
+</mapper>

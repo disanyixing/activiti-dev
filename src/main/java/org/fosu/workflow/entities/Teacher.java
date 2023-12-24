@@ -16,7 +16,7 @@ public class Teacher {
     @ApiModelProperty("教师用户名")
     private String name;
     @ApiModelProperty("教师姓名")
-    private String nickName;
+    private String nick_name;
     @ApiModelProperty("角色")
     private String post;
 }
