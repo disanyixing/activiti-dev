@@ -196,14 +196,6 @@ export const constantRoutes = [
       }
     ]
   },
-  // 考勤管理
-  {
-    path: 'attendance',
-    name: 'Attendance',
-    component: () =>
-      import ('@/views/workflow/apply/attendance/index.vue'),
-    meta: { title: '考勤管理', icon: 'table' }
-  },
   // // 考勤管理 (Attendance Management)
   // {
   //   path: '/attendance-management',
