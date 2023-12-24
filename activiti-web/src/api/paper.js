@@ -190,6 +190,17 @@ export default {
    * - courseId: 课程ID
    * - creator: 创建人
    */
+  // {"current": 1, "size": -1, "creator": "xuesheng11", "courseId": "高等数学" }
+  // 第一个值是平时成绩，第二个值是考试成绩，第三个是总成绩
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": [
+  //         0.0,
+  //         -2.0,
+  //         -1.0
+  //     ]
+  // }
   getGrade(req) {
     return request({
       url: '/paper/grade',
