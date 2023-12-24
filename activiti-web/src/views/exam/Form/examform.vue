@@ -96,7 +96,7 @@ export default {
     'paperForm.endDate'(newValue) {
       this.calculateExamDuration()
     },
-    formType: {
+    cont: {
       immediate: true,
       handler(newVal) {
         if (newVal === '添加') {

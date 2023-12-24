@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.fosu.workflow.entities.TeacherScore;
-import org.fosu.workflow.entities.courseManager;
 import org.fosu.workflow.mapper.TeacherScoreMapper;
 import org.fosu.workflow.req.courseManagerREQ;
 import org.fosu.workflow.service.TeacherScoreService;
@@ -16,18 +15,27 @@ import org.springframework.stereotype.Service;
 public class TeacherScoreServiceimpl extends ServiceImpl<TeacherScoreMapper, TeacherScore> implements TeacherScoreService {
 
     @Override
-    public Result add(TeacherScore teacherScore){
+    public Result add(TeacherScore teacherScore) {
         teacherScore.setTch_id(UserUtils.getUsername());
         baseMapper.insert(teacherScore);
         return Result.ok();
     }
+
     @Override
-    public Result listPage(courseManagerREQ req){
+    public Result listPage(courseManagerREQ req) {
         if (StringUtils.isEmpty(req.getUsername())) {
             req.setUsername(UserUtils.getUsername());
         }
         IPage<TeacherScore> page = baseMapper.listPage(req.getPage(), req);
         return Result.ok(page);
-    };
+    }
 
+    @Override
+    public Result listStuPage(courseManagerREQ req) {
+        if (StringUtils.isEmpty(req.getUsername())) {
+            req.setUsername(UserUtils.getUsername());
+        }
+        IPage<TeacherScore> page = baseMapper.listStuPage(req.getPage(), req);
+        return Result.ok(page);
+    }
 }

@@ -18,7 +18,11 @@
           <div class="info-badge" :style="{ backgroundColor: badgeColor }">
             {{ item.speaker }} | 楼层 {{ calculateFloor(index) }}
           </div>
-          <div class="speaker-badge" :style="{ backgroundColor: getBadgeColor(item.speaker) }">
+          <div
+            v-if="getBadgeText(item.speaker)"
+            class="speaker-badge"
+            :style="{ backgroundColor: getBadgeColor(item.speaker) }"
+          >
             {{ getBadgeText(item.speaker) }}
           </div>
           <div class="time-badge">{{ formatTime(item.createDate) }}</div>
@@ -42,36 +46,21 @@
 import userApi from '@/api/speak'
 import { getInfo } from '@/api/user' // 引入API接口
 export default {
-  props: {
-    talkid: {
-      type: String,
-      default: '1'
-    },
-    teacherId: {
-      type: String,
-      default: '1'
-    },
-    width: {
-      type: String,
-      default: '30%'
-    },
-    badgeColor: {
-      type: String,
-      default: '#409EFF' // 默认蓝色
-    },
-    bubbleColor: {
-      type: String,
-      default: '#FFFFFF' // 默认白色
-    }
-  },
   data() {
     return {
-      dialogVisible: true,
+      talkid: null,
+      teacherId: null,
+
+      width: '30%',
+      badgeColor: '#409EFF',
+      bubbleColor: '#FFFFFF',
+
+      dialogVisible: false,
       message: '',
       messages: [],
       currentPage: 1,
       total: 0,
-      pageSize: 10,
+      pageSize: 5,
       userInfo: null
     }
   },
@@ -80,9 +69,15 @@ export default {
     this.fetchMessages()
   },
   methods: {
+    openDialog(data) {
+      this.talkid = data.talkId
+      this.teacherId = data.teacherId
+
+      this.dialogVisible = true
+      this.fetchMessages()
+    },
     fetchMessages() {
       userApi.listPage(this.talkid, this.currentPage, this.pageSize).then(response => {
-        console.log(response.data.records)
         this.messages = response.data.records
         this.total = response.data.total
       })
@@ -172,7 +167,7 @@ export default {
   color: white;
   padding: 5px 10px;
   border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
   display: inline-block;
   margin-top: 10px;
 }
@@ -193,10 +188,11 @@ export default {
   background-color: #FFFFFF; /* 设置为白色 */
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   display: block; /* 修改为块级元素 */
   margin-top: 5px; /* 添加顶部外边距 */
   width: 100%; /* 占满容器宽度 */
+  margin-bottom: 5px;
 }
 
 /* 时间badge样式 */

@@ -117,23 +117,11 @@ export default {
       }
       this.fetchData()
     },
-    formatDate(isoString) {
-      const date = new Date(isoString)
-      return date.toLocaleString('zh-CN', { hour12: false })
-    },
-    isBeforeStart(startDate) {
-      return new Date() < new Date(startDate)
-    },
-
     // 判断当前时间是否在试卷进行中（开始时间和结束时间之间）
     isDuringExam(startDate, endDate) {
       const now = new Date()
       return new Date(startDate) <= now && now <= new Date(endDate)
     },
-    isAfterEnd(endDate) {
-      return new Date() > new Date(endDate)
-    },
-
     // 打开新建/编辑试卷的弹窗
     openPaperDialog(paper = {}, formType = '添加') {
       this.currentPaper = paper
@@ -145,15 +133,6 @@ export default {
       this.isDialogVisible = false
       this.currentPaper = {}
       this.fetchData() // 刷新数据
-    },
-    // 处理新建试卷按钮点击
-    handleNewPaper() {
-      this.openPaperDialog({}, '添加')
-    },
-
-    // 处理编辑试卷按钮点击
-    handleEditPaper(paper) {
-      this.openPaperDialog(paper, '修改')
     },
     // 格式化开始和结束时间
     formatStartEndDates(startDate, endDate) {
