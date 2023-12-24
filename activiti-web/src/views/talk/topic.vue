@@ -320,11 +320,9 @@ export default {
         this.$message.error('删除失败')
       }
     },
-    closeForm(refresh) {
+    closeForm() {
       this.formVisible = false
-      if (refresh) {
-        this.fetchData()
-      }
+      this.fetchData()
     }
   }
 }
