@@ -29,6 +29,8 @@ public class Attend {
     private String time;
     @ApiModelProperty("学生总人数")
     private String student_num;
+   @ApiModelProperty("考勤状态")
+    private String status;
     @ApiModelProperty("创建时间")
     private Date createDate;
     @ApiModelProperty("更新时间")

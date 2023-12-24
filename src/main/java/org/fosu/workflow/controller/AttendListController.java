@@ -24,8 +24,8 @@ public class AttendListController {
 
     @ApiOperation("新增考勤详情")
     @PostMapping
-    public Result add(@RequestBody AttendList[] attendList) {
-        return attendListService.add(attendList);
+    public Result add(@RequestBody AttendList[] attendList,@RequestParam String attend_id) {
+        return attendListService.add(attendList,attend_id);
     }
     @ApiOperation("查询考勤详情列表")
     @PostMapping("/list")

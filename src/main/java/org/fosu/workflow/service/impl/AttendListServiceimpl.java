@@ -13,6 +13,7 @@ import org.fosu.workflow.service.AttendService;
 import org.fosu.workflow.utils.Result;
 import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,9 +22,18 @@ import java.util.Date;
 
 @Service
 public class AttendListServiceimpl extends ServiceImpl<AttendListMapper, AttendList> implements AttendListService {
+
+    @Autowired
+    private AttendService attendService;
     @Override
-    public Result add(AttendList[] attendList){
+    public Result add(AttendList[] attendList,String attend_id){
         baseMapper.insertAttendList(Arrays.asList(attendList));
+        Attend attend=attendService.getById(attend_id);
+        if (attend != null && "0".equals(attend.getStatus())) {
+            // 如果status为0，将status改为1
+            attend.setStatus("1");
+            attendService.updateById(attend);
+        }
         return Result.ok();
     };
     @Override

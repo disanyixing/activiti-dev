@@ -8,7 +8,7 @@ import org.fosu.workflow.utils.Result;
 import org.springframework.stereotype.Service;
 
 public interface AttendListService extends IService<AttendList> {
-    Result add(AttendList[] attendList);
+    Result add(AttendList[] attendList,String attend_id);
     Result getAttendList(String id);
     Result update(AttendList[] attendList);
 
