@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel("考勤管理实体类")
+@ApiModel("考勤详情实体类")
 @TableName("mxg_attend_list")
 public class AttendList {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
