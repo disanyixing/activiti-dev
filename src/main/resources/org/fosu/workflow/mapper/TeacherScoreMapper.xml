@@ -26,5 +26,20 @@
         </if>
         GROUP BY name, nick_name
     </select>
+    <select id="listStuPage" resultMap="listPage">
+        SELECT id, name, nick_name, ROUND(AVG(score1 + score2 + score3 + score4), 2) as average_score
+        FROM mxg_teacher_score t1
+        where 1=1
+        <if test="req.course != null and req.course != ''">
+            AND t1.name LIKE CONCAT('%', #{req.course}, '%')
+        </if>
+        <if test="req.teacher != null and req.teacher != ''">
+            AND t1.nick_name LIKE CONCAT('%', #{req.teacher}, '%')
+        </if>
+        <if test="req.username != null and req.username != ''">
+            AND t1.tch_id=#{req.username}
+        </if>
+        GROUP BY id, name, nick_name
+    </select>
 </mapper>
 
