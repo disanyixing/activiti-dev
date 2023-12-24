@@ -114,7 +114,7 @@ export default {
             if (this.operate === '提交考勤') {
               const data = this.list.map((item, index) => {
                 return {
-                  attend_id: '1',
+                  attend_id: this.formData.id,
                   status: this.formData.formList[index],
                   student_id: item.student_id,
                   student_name: item.nick_name
