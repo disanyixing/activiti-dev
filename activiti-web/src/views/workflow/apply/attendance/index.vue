@@ -224,8 +224,10 @@ export default {
     },
     // 关闭表单
     closeForm(refresh) {
+      // const data = this.row.fetchList
       // 清空点击数据
-      this.row = {}
+      // this.row = {}
+      // this.row.fetchList = data
       // 隐藏
       this.attendFormVisible = false
       this.attendListFormVisible = false

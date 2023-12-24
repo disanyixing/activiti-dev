@@ -11,7 +11,7 @@
   >
     <el-form-item v-for="(item,index) in list" :key="index">
       <span style="margin-right:10px">{{ item.student_id }}</span>
-      <sapn style="margin-right:10px">{{ item.student_name }}</sapn>
+      <sapn style="margin-right:10px">{{ item.nick_name }}</sapn>
       <el-select v-model="formData.formList[index]" filterable>
         <el-option
           v-for="option in options"
@@ -70,7 +70,6 @@ export default {
         label: '旷课',
         value: '5'
       }],
-      student_num: '',
       loading: false,
       formData: {},
       list: [],
@@ -81,19 +80,28 @@ export default {
     cont: {
       immediate: true, // 很重要！！！
       handler(content) {
-        console.log(content)
         this.formData = content
       }
     }
   },
   created() {
     this.getStudentNum(this.formData.name)
+    this.getListDetail()
   },
   methods: {
+    // 获取当前课程的考勤列表(提交考勤)
     async getStudentNum(prop) {
+      this.courseName = prop
       const { data } = await api.getStudentNum(prop)
-      console.log(data)
       this.list = data
+    },
+    // 获取当前课程的考勤列表(编辑考勤)
+    async getListDetail() {
+      if (this.operate === '编辑考勤') {
+        const params = this.formData.id
+        const { data } = await api.getListDetail(params)
+        console.log(data)
+      }
     },
     // 提交表单数据
     submitForm(formName) {
@@ -109,13 +117,14 @@ export default {
                   attend_id: '1',
                   status: this.formData.formList[index],
                   student_id: item.student_id,
-                  student_name: item.student_name
+                  student_name: item.nick_name
                 }
               })
-              response = await api.addList(data)
-            } else if (this.operate === '编辑') {
-              const data = { student_num: this.student_num, ...this.formData }
-              response = await api.update(data)
+              const params = this.formData.id
+              response = await api.addList(data, params)
+            } else if (this.operate === '编辑考勤') {
+              const params = this.formData.id
+              response = await api.getListDetail({}, params)
             }
             if (response.code === 20000) {
               // 将表单清空

@@ -194,11 +194,20 @@ export default {
     })
   },
   // 新增考勤列表
-  addList(data) {
+  addList(data, params) {
     return request({
       url: '/attendList',
+      params: { attend_id: params },
       method: 'post',
       data
+    })
+  },
+  // 获取考勤列表详情
+  getListDetail(params) {
+    return request({
+      url: '/attendList/list',
+      params: { id: params },
+      method: 'post'
     })
   }
 }
