@@ -25,6 +25,7 @@ public class AttendServiceimpl extends ServiceImpl<AttendMapper, Attend> impleme
     @Override
     public Result add(Attend attend){
         attend.setTchId(UserUtils.getUsername());
+        attend.setStatus("0");
         baseMapper.insert(attend);
         return Result.ok();
     };
