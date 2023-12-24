@@ -20,14 +20,13 @@
     </el-row>
     <el-table :data="list" stripe border style="width: 100%">
       <el-table-column align="center" prop="id" label="序号" width="90" />
-      <!--      <el-table-column align="center" prop="tchId" label="用户名" min-width="150" />-->
-      <el-table-column align="center" prop="name" label="课程名称" min-width="80" />
-      <!--      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="90" />-->
-      <el-table-column align="center" prop="room" label="上课地点" min-width="80" />
+      <el-table-column align="center" prop="name" label="学生姓名" min-width="80" />
+      <el-table-column align="center" prop="course_name" label="课程名称" min-width="120" />
+      <el-table-column align="center" prop="teacher_nick_name" label="任课老师" min-width="100" />
       <el-table-column align="center" prop="time" label="上课时间" min-width="120" />
-      <el-table-column align="center" prop="class_name" label="班级名称" min-width="80" />
-      <el-table-column align="center" prop="createDateStr" label="建课日期" min-width="120" />
-      <el-table-column align="center" prop="statusStr" label="课程状态" min-width="60">
+      <el-table-column align="center" prop="reason" label="请假理由" min-width="120" />
+      <el-table-column align="center" prop="createDateStr" label="创建日期" min-width="120" />
+      <el-table-column align="center" prop="statusStr" label="请假状态" min-width="60">
         <template slot-scope="{row}">
           <el-tag :type="row.status==0?'warning':row.status==3?'success':row.status==4?'danger':''" effect="plain">
             {{ row.statusStr }}
@@ -68,7 +67,7 @@
     />
     <!-- 表单 -->
     <el-dialog :title="operate" :visible.sync="formVisible" width="1000px" destroy-on-close>
-      <loan-form :operate="operate" :business-key="row.id" :cont="JSON.parse(JSON.stringify(row))" @close="closeForm" />
+      <leave-form :operate="operate" :business-key="row.id" :cont="JSON.parse(JSON.stringify(row))" @close="closeForm" />
     </el-dialog>
     <!-- 提交申请 -->
     <submit-apply v-if="selectdata.length" ref="sumbitApplyRef" :selectdata="selectdata" :row="row" />
@@ -80,15 +79,15 @@
 </template>
 <script>
 import api from '@/api/course'
-import SubmitApply from '../../workflow/apply/components/SubmitApply'
-import CancelApply from '../../workflow/apply/components/CancelApply'
+import SubmitApply from '../workflow/apply/components/SubmitApply'
+import CancelApply from '../workflow/apply/components/CancelApply'
 import History from '@/components/Process/History'
-import courseManagerForm from '@/components/Process/Form/courseManagerForm.vue'
+import courseLeaveForm from '@/components/Process/Form/studentLeaveForm.vue.vue'
 import { getall } from '@/api/getuser'
 
 export default {
   name: 'CourseManager',
-  components: { SubmitApply, CancelApply, History, LoanForm: courseManagerForm },
+  components: { SubmitApply, CancelApply, History, leaveForm: courseLeaveForm },
   data() {
     return {
       query: {},
@@ -124,7 +123,12 @@ export default {
       })
     },
     async fetchData() {
-      const { data } = await api.listPage(this.query, this.page.current, this.page.size)
+      const { data } = await api.listStudentLeaves({
+        course: this.query.course,
+        createtime: this.query.createtime,
+        current: this.page.current,
+        size: this.page.size
+      })
       this.list = data.records
       this.page.total = data.total
     },

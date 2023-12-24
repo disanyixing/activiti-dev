@@ -57,10 +57,6 @@ export default {
     businessKey: {
       type: String,
       default: null
-    },
-    cont: {
-      type: Object,
-      default: null
     }
   },
   data() {
@@ -93,10 +89,15 @@ export default {
         this.getStudentsByClass(newVal)
       }
     },
-    cont: {
-      immediate: true, // 很重要！！！
-      handler(content) {
-        this.formData = content
+
+    businessKey: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal && this.operate !== '新增') {
+          this.getById(newVal)
+        } else {
+          this.initStates()
+        }
       }
     }
   },
@@ -110,7 +111,11 @@ export default {
       const { data } = await api.getAllClasses()
       this.classList = data
     },
-
+    async getById(id) {
+      const response = await api.viewById(id)
+      this.formData = response.data.data[0]
+      console.log(response)
+    },
     // 获取班级学生列表
     async getStudentsByClass(classId) {
       // 假设 getStudentsByClass 方法返回 Promise

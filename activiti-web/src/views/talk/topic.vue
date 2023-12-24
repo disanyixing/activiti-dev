@@ -29,7 +29,7 @@
         </div>
       </div>
       <el-table
-        :data="this.records"
+        :data="records"
         stripe
         border
         style="width: 100%"
@@ -135,7 +135,7 @@
               <el-popconfirm
                 title="确定要删除这条记录吗？"
                 placement="bottom"
-                @confirm="confirmDelete(scope.row)"
+                @onConfirm="confirmDelete(scope.row)"
               >
                 <el-button
                   slot="reference"
@@ -222,7 +222,7 @@ export default {
     },
     // 讨论区对话框
     handleRowClick(row, column, event) {
-      if (column.property === '操作') return
+      if (column.label === '操作') return
       // 显示 speak 对话框
       this.$refs.speakDialog.openDialog({ talkId: row.id, teacherId: this.teacherUsername })
     },
@@ -284,8 +284,11 @@ export default {
         return dateB - dateA
       })
 
-      // 更新表格数据
-      this.records = filteredData
+      // 计算当前页的记录
+      const startIndex = (this.page.current - 1) * this.page.size
+      const endIndex = startIndex + this.page.size
+      this.records = filteredData.slice(startIndex, endIndex)
+
       this.page.total = filteredData.length // 更新总记录数
     },
     // 新增、编辑、详情
@@ -312,6 +315,7 @@ export default {
       this.fetchData()
     },
     async confirmDelete(row) {
+      console.log(row)
       const response = await api.delete(row.id)
       if (response.code === 20000) {
         this.$message.success('话题删除成功')
@@ -319,6 +323,9 @@ export default {
       } else {
         this.$message.error('删除失败')
       }
+    },
+    simpleConfirmTest() {
+      console.log('简化确认测试')
     },
     closeForm() {
       this.formVisible = false

@@ -1,7 +1,7 @@
 <template>
   <el-form ref="courseMessageForm" :model="courseMessageForm" :rules="rules" label-width="100px">
-    <el-form-item label="课程名称" prop="courseName">
-      <el-select v-model="courseMessageForm.courseName" placeholder="请选择课程" @change="onCourseChange">
+    <el-form-item label="课程名称" prop="course_name">
+      <el-select v-model="courseMessageForm.course_name" placeholder="请选择课程" @change="onCourseChange">
         <el-option
           v-for="course in uniqueCourses"
           :key="course.id"
@@ -11,8 +11,8 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="班级名称" prop="classId">
-      <el-select v-model="courseMessageForm.classId" placeholder="请选择班级">
+    <el-form-item label="班级名称" prop="class_id">
+      <el-select v-model="courseMessageForm.class_id" placeholder="请选择班级">
         <el-option
           v-for="classInfo in classes"
           :key="classInfo.classId"
@@ -57,15 +57,16 @@ export default {
       uniqueCourses: [],
       classes: [],
       courseMessageForm: {
-        courseName: '',
-        classId: '',
-        message: ''
+        course_name: '',
+        class_id: '',
+        message: '',
+        teacher_nick_name: ''
       },
       rules: {
-        courseName: [
+        course_name: [
           { required: true, message: '请选择课程名称', trigger: 'change' }
         ],
-        classId: [
+        class_id: [
           { required: true, message: '请选择班级名称', trigger: 'change' }
         ],
         message: [
@@ -75,19 +76,29 @@ export default {
     }
   },
   watch: {
+    formType(newType) {
+      if (newType === '新建') {
+        this.resetForm()
+      }
+    },
     cont: {
       immediate: true,
       handler(newVal) {
-        if (newVal && Object.keys(newVal).length > 0) {
-          this.courseMessageForm = { ...newVal }
-          if (newVal.courseName) {
-            this.onCourseChange(newVal.courseName)
+        if (this.formType === '编辑') {
+          this.courseMessageForm = {
+            id: newVal.id,
+            course_name: newVal.course_name,
+            class_id: newVal.class_id,
+            message: newVal.message
+          }
+          if (newVal.course_name) {
+            this.onCourseChange(newVal.course_name)
           }
         }
       }
     },
-    'courseMessageForm.courseName'(newVal, oldVal) {
-      if (newVal !== oldVal) {
+    'courseMessageForm.course_name'(newVal, oldVal) {
+      if (this.formType === '编辑' && newVal !== oldVal) {
         this.onCourseChange(newVal)
       }
     }
@@ -97,6 +108,7 @@ export default {
   },
   methods: {
     async loadCourses() {
+      this.courseMessageForm.teacher_nick_name = (await capi.getCurrentTeacher()).data.nickName
       const response = await capi.listPage({}, 1, -1)
       this.courses = response.data.records
       this.uniqueCourses = [...new Map(this.courses.map(course => [course['name'], course])).values()]
@@ -108,6 +120,14 @@ export default {
 
       this.classes = [...new Map(sortedClasses.map(cls => [cls.class_name, cls])).values()]
         .map(course => ({ classId: course.classId, class_name: course.class_name }))
+
+      // 如果是编辑模式且当前选中的班级ID已存在，确保班级下拉列表正确显示
+      if (this.formType === '编辑' && this.courseMessageForm.class_id) {
+        const selectedClass = this.classes.find(c => c.classId === this.courseMessageForm.class_id)
+        if (selectedClass) {
+          this.courseMessageForm.class_id = selectedClass.classId
+        }
+      }
     },
     submitForm() {
       this.$refs.courseMessageForm.validate(async(valid) => {
@@ -115,16 +135,26 @@ export default {
           const apiFunc = this.formType === '新建' ? mapi.add : mapi.update
           const response = await apiFunc(this.courseMessageForm)
           if (response.code === 20000) {
-            this.$message.success('新建通知成功')
+            const successMessage = this.formType === '新建' ? '新建通知成功' : '编辑通知成功'
+            this.$message.success(successMessage)
             this.$emit('close')
           }
+        }
+      })
+    },
+    resetForm() {
+      this.courseMessageForm = {
+        course_name: '',
+        class_id: '',
+        message: ''
+      }
+
+      this.$nextTick(() => {
+        if (this.$refs.courseMessageForm) {
+          this.$refs.courseMessageForm.clearValidate()
         }
       })
     }
   }
 }
 </script>
-
-<style>
-/* 样式内容 */
-</style>

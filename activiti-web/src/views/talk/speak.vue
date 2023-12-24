@@ -106,6 +106,7 @@ export default {
       }
       userApi.add(speak).then(() => {
         this.message = ''
+        this.$message.success('回复成功')
         this.fetchMessages()
       })
     },

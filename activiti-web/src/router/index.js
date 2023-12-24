@@ -132,23 +132,17 @@ export const constantRoutes = [
     meta: { title: '课程通知', icon: 'notification' },
     children: [
       {
-        path: 'mform',
+        path: 'manage',
         name: 'TeacherCourseNotification',
-        component: () => import('@/views/message/Form/mform.vue'),
+        component: () => import('@/views/message/list'),
+        meta: { title: '课程通知', icon: 'message' }
+      },
+      {
+        path: 'list',
+        name: 'StudentCourseNotification',
+        component: () => import('@/views/message/stulist'),
         meta: { title: '课程通知', icon: 'message' }
       }
-      // {
-      //   path: 'teacher',
-      //   name: 'TeacherCourseNotification',
-      //   component: () => import('@/views/message/teacher'),
-      //   meta: { title: '课程通知', icon: 'message' }
-      // },
-      // {
-      //   path: 'student',
-      //   name: 'StudentCourseNotification',
-      //   component: () => import('@/views/notification/student'),
-      //   meta: { title: '课程通知', icon: 'message' }
-      // }
     ]
   },
 
@@ -156,7 +150,7 @@ export const constantRoutes = [
   {
     path: '/talk',
     component: Layout,
-    redirect: '/talk/teacher',
+    redirect: 'teacher',
     name: 'Talk',
     meta: { title: '课程讨论', icon: 'discussion' },
     children: [
