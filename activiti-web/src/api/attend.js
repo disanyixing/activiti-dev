@@ -131,11 +131,11 @@ export default {
   //         "pages": 1
   //     }
   // }
-  attendPage(req) {
+  attendPage(data, current, size) {
     return request({
       url: '/attend/list',
       method: 'post',
-      data: req
+      data: { ...data, current, size }
     })
   },
 
@@ -161,6 +161,44 @@ export default {
     return request({
       url: `/attend/${id}`,
       method: 'get'
+    })
+  },
+  // 获取所有课程
+  getCourse() {
+    return request({
+      url: `/courseManager/teacherCourse`,
+      method: 'post'
+    })
+  },
+  // 根据课程名获取学生列表
+  getStudentNum(courseName) {
+    return request({
+      url: `/courseManager/${courseName}/allStudents`,
+      method: 'get'
+    })
+  },
+  // 新增考勤
+  add(data) {
+    return request({
+      url: '/attend',
+      method: 'post',
+      data
+    })
+  },
+  // 编辑考勤
+  update(data) {
+    return request({
+      url: '/attend',
+      method: 'put',
+      data
+    })
+  },
+  // 新增考勤列表
+  addList(data) {
+    return request({
+      url: '/attendList',
+      method: 'post',
+      data
     })
   }
 }
