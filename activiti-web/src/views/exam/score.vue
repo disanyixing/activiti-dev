@@ -282,16 +282,7 @@ export default {
       try {
         const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
         question.isJudged = false
-        if (question.answerId) {
-          await answerApi.updateAnswer({
-            id: question.answerId,
-            paperId: this.paperId,
-            creator: this.creator,
-            answer,
-            questionId,
-            score
-          })
-        } else {
+        if (!question.answerId) {
           const response = await answerApi.addAnswer({
             paperId: this.paperId,
             creator: this.creator,
@@ -302,6 +293,14 @@ export default {
           question.answerId = response.data // 存储答案ID
         }
 
+        await answerApi.updateAnswer({
+          id: question.answerId,
+          paperId: this.paperId,
+          creator: this.creator,
+          answer,
+          questionId,
+          score
+        })
         question.isError = false
         this.animatedTimeout = setTimeout(() => {
           question.isJudged = true

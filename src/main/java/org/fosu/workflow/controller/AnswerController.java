@@ -34,7 +34,7 @@ public class AnswerController {
     @ApiOperation("新增答题申请")
     @PostMapping
     public Result add(@RequestBody Answer answer) {
-        if (isTimeEnd(answer))
+        if (isTimeEnd(answer) && studentService.isStudent(UserUtils.getUsername()))
             return Result.error("试卷已经截止");
         if (studentService.isStudent(UserUtils.getUsername())) {
             UpdateScore(answer);

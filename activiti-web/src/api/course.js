@@ -143,6 +143,38 @@ export default {
   // - status: 流程状态
   // - current: 当前页码
   // - size: 每页显示数量
+  // {"current":1,"size":1}
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": {
+  //         "records": [
+  //             {
+  //                 "id": "1737762817609584642",
+  //                 "name": "线性代数",
+  //                 "tchId": "zhangsan",
+  //                 "nick_name": "张三",
+  //                 "time": "1-8周 周三 8:00-9:25",
+  //                 "room": "C4-116",
+  //                 "classId": "202003101",
+  //                 "class_name": "20计科1班",
+  //                 "createDate": "2023-12-21T09:11:56.000+00:00",
+  //                 "updateDate": "2023-12-21T09:11:56.000+00:00",
+  //                 "status": 1,
+  //                 "createDateStr": "2023-12-21 17:11:56",
+  //                 "updateDateStr": "2023-12-21 17:11:56",
+  //                 "statusStr": "待提交"
+  //             },
+  //         ],
+  //         "total": 5,
+  //         "size": 1,
+  //         "current": 1,
+  //         "orders": [],
+  //         "hitCount": false,
+  //         "searchCount": true,
+  //         "pages": 1
+  //     }
+  // }
   listPage(data, current, size) {
     return request({
       url: '/courseManager/list',
@@ -352,7 +384,7 @@ export default {
   },
 
   // 查询班级的课程名称和任课老师和班级唯一的列表
-  // 通过查班级的课程列表
+  // 查班级的课程列表
   // 方法名: classCourseNameAndTeacherAndClasslist, 接收参数: req (分页请求基础类扩展)
   // - current: 当前页码
   // - size: 每页显示数量
