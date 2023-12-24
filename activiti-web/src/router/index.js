@@ -104,16 +104,16 @@ export const constantRoutes = [
     children: [
       {
         path: 'teacher',
-        name: 'courseManager', // activiti
+        name: 'courseManager',
         component: () => import('@/views/course/teacher/manage'),
         meta: { title: '课程管理', icon: 'tree' }
       },
-      // {
-      //   path: 'student',
-      //   name: 'StudentCourseInfo',
-      //   component: () => import('@/views/course/student/info'),
-      //   meta: { title: '课程信息', icon: 'tree' }
-      // },
+      {
+        path: 'student/info',
+        name: 'StudentCourseInfo',
+        component: () => import('@/views/course/student/info'),
+        meta: { title: '课程信息', icon: 'tree' }
+      },
       {
         path: 'student/enroll',
         name: 'StudentEnrollCenter',
@@ -123,55 +123,62 @@ export const constantRoutes = [
     ]
   },
 
-  // // 课程通知 (Course Notification)
-  // {
-  //   path: '/course-notification',
-  //   component: Layout,
-  //   redirect: '/course-notification/teacher',
-  //   name: 'CourseNotification',
-  //   meta: { title: '课程通知', icon: 'notification' },
-  //   children: [
-  //     {
-  //       path: 'teacher',
-  //       name: 'TeacherCourseNotification',
-  //       component: () => import('@/views/course/notification/teacher'),
-  //       meta: { title: '课程通知', icon: 'message' }
-  //     },
-  //     {
-  //       path: 'student',
-  //       name: 'StudentCourseNotification',
-  //       component: () => import('@/views/course/notification/student'),
-  //       meta: { title: '课程通知', icon: 'message' }
-  //     }
-  //   ]
-  // },
-  //
+  // 课程通知 (Course Notification)
+  {
+    path: '/message',
+    component: Layout,
+    redirect: '/message',
+    name: 'message',
+    meta: { title: '课程通知', icon: 'notification' },
+    children: [
+      {
+        path: 'mform',
+        name: 'TeacherCourseNotification',
+        component: () => import('@/views/message/Form/mform.vue'),
+        meta: { title: '课程通知', icon: 'message' }
+      }
+      // {
+      //   path: 'teacher',
+      //   name: 'TeacherCourseNotification',
+      //   component: () => import('@/views/message/teacher'),
+      //   meta: { title: '课程通知', icon: 'message' }
+      // },
+      // {
+      //   path: 'student',
+      //   name: 'StudentCourseNotification',
+      //   component: () => import('@/views/notification/student'),
+      //   meta: { title: '课程通知', icon: 'message' }
+      // }
+    ]
+  },
+
   // 课程讨论 (Course Discussion)
   {
     path: '/talk',
     component: Layout,
     redirect: '/talk/teacher',
-    name: 'CourseDiscussion',
+    name: 'Talk',
     meta: { title: '课程讨论', icon: 'discussion' },
     children: [
       {
-        path: 'teacher',
-        name: 'TeacherCourseDiscussion',
-        component: () => import('@/views/talk/talklist'),
+        path: 'topic',
+        name: 'CourseTopic',
+        component: () => import('@/views/talk/topic'),
+        meta: { title: '讨论主题', icon: 'discussion' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        name: 'CourseList',
+        component: () => import('@/views/talk/list'),
         meta: { title: '课程讨论', icon: 'discussion' }
       },
       {
-        path: 'student',
-        name: 'StudentCourseDiscussion',
-        component: () => import('@/views/talk/speak'),
-        meta: { title: '讨论', icon: 'discussion' }
+        path: 'liststu',
+        name: 'CourseList',
+        component: () => import('@/views/talk/liststu'),
+        meta: { title: '课程讨论', icon: 'discussion' }
       }
-      // {
-      //   path: 'student/forum',
-      //   name: 'StudentDiscussionForum',
-      //   component: () => import('@/views/discussion/student/forum'),
-      //   meta: { title: '课程讨论区', icon: 'forum' }
-      // }
     ]
   },
   //
@@ -292,43 +299,49 @@ export const constantRoutes = [
     ]
   },
   //
-  // // 成绩查询 (Grade Inquiry)
-  // {
-  //   path: '/grade-inquiry',
-  //   component: Layout,
-  //   name: 'GradeInquiry',
-  //   meta: { title: '成绩查询', icon: 'grades' },
-  //   children: [
-  //     {
-  //       path: 'student',
-  //       name: 'StudentGradeInquiry',
-  //       component: () => import('@/views/grades/student/inquiry'),
-  //       meta: { title: '成绩查询', icon: 'grades' }
-  //     }
-  //   ]
-  // },
+  // 成绩查询 (Grade Inquiry)
+  {
+    path: '/grade',
+    component: Layout,
+    name: 'GradeInquiry',
+    meta: { title: '成绩查询', icon: 'grades' },
+    children: [
+      {
+        path: 'grade/stu',
+        name: 'StudentGrade',
+        component: () => import('@/views/grade/stu'),
+        meta: { title: '成绩查询', icon: 'grades' }
+      }
+    ]
+  },
   //
-  // // 教学反馈 (Teaching Feedback)
-  // {
-  //   path: '/teaching-feedback',
-  //   component: Layout,
-  //   name: 'TeachingFeedback',
-  //   meta: { title: '教学反馈', icon: 'feedback' },
-  //   children: [
-  //     {
-  //       path: 'education-dept',
-  //       name: 'EducationDeptFeedback',
-  //       component: () => import('@/views/feedback/education-dept'),
-  //       meta: { title: '教学反馈', icon: 'feedback' }
-  //     },
-  //     {
-  //       path: 'student',
-  //       name: 'StudentTeachingFeedback',
-  //       component: () => import('@/views/feedback/student'),
-  //       meta: { title: '教学反馈', icon: 'feedback' }
-  //     }
-  //   ]
-  // },
+  // 教学反馈 (Teaching Feedback)
+  {
+    path: '/feedback',
+    component: Layout,
+    name: 'TeachingFeedback',
+    meta: { title: '教学反馈', icon: 'feedback' },
+    children: [
+      {
+        path: 'director',
+        name: 'ListFeedback',
+        component: () => import('@/views/teacherscore/director.vue'),
+        meta: { title: '评教结果', icon: 'feedback' }
+      },
+      {
+        path: 'student',
+        name: 'ListFeedbackStu',
+        component: () => import('@/views/teacherscore/stu.vue'),
+        meta: { title: '学生评教', icon: 'feedback' }
+      }
+      // {
+      //   path: 'student',
+      //   name: 'StudentTeachingFeedback',
+      //   component: () => import('@/views/feedback/student'),
+      //   meta: { title: '教学反馈', icon: 'feedback' }
+      // }
+    ]
+  },
   {
     path: '/task',
     component: Layout,

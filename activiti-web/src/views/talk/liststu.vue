@@ -3,19 +3,7 @@
     <!-- 查询组件 -->
     <el-form :inline="true" :model="query" size="small">
       <el-form-item label="课程名称：">
-        <el-select v-model="query.course" placeholder="请选择课程" @change="fetchAllCourses">
-          <el-option v-for="course in courseList" :key="course.id" :label="course.name" :value="course.name" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="任课老师：">
-        <el-select v-model="query.teacher" placeholder="请选择老师" @change="fetchAllCourses">
-          <el-option
-            v-for="teacher in teacherList"
-            :key="teacher.tchId"
-            :label="teacher.nick_name"
-            :value="teacher.tchId"
-          />
-        </el-select>
+        <el-input v-model="query.course" placeholder="请输入课程名称" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchAllCourses">查询</el-button>
@@ -26,10 +14,13 @@
     <!-- 课程讨论区表格 -->
     <el-table :data="courses" border stripe style="width: 100%">
       <el-table-column align="center" type="index" label="序号" min-width="80px" />
-      <el-table-column align="center" prop="name" label="课程名称" min-width="100px" />
-      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="80px" />
-      <el-table-column align="center" prop="time" label="上课时间" min-width="150px" />
-      <el-table-column align="center" prop="room" label="上课地点" min-width="100px" />
+      <el-table-column align="center" prop="name" label="课程名称" min-width="150px" />
+      <el-table-column align="center" prop="nick_name" label="任课老师" min-width="150px" />
+      <el-table-column align="center" label="操作" min-width="100px">
+        <template v-slot="{row}">
+          <el-button type="text" @click="enterDiscussionBoard(row)">进入课程讨论区</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 分页器 -->
@@ -58,9 +49,7 @@ export default {
       },
       query: {
         course: ''
-      },
-      teacherList: '',
-      courseList: ''
+      }
     }
   },
   created() {
@@ -68,25 +57,17 @@ export default {
   },
   methods: {
     async fetchAllCourses() {
-      const response = await courseApi.stuClassInfoList(this.query, this.page.current, this.page.size)
+      const response = await courseApi.stuClassInfoList({}, this.page.current, this.page.size)
 
-      // 解析课程和老师的信息
-      const teacherSet = new Set()
-      const courseSet = new Set()
+      // 选择id最小的记录去重显示
+      const coursesMap = new Map()
       for (const record of response.data.data.records) {
-        if (record.nick_name) {
-          teacherSet.add({ tchId: record.tchId, nick_name: record.nick_name })
-        }
-        if (record.name) {
-          courseSet.add({ id: record.id, name: record.name })
+        if (!coursesMap.has(record.name) || coursesMap.get(record.name).id > record.id) {
+          coursesMap.set(record.name, record)
         }
       }
 
-      this.teacherList = Array.from(teacherSet)
-      this.courseList = Array.from(courseSet)
-
-      // 更新课程列表
-      this.courses = response.data.data.records
+      this.courses = Array.from(coursesMap.values())
       this.page.total = response.data.data.total
     },
 
@@ -105,8 +86,17 @@ export default {
     handleCurrentChange(data) {
       this.page.current = data
       this.fetchAllCourses()
-    }
+    },
 
+    enterDiscussionBoard(row) {
+      this.$router.push({
+        path: '/talk/topic',
+        query: {
+          courseId: row.id,
+          teacherUsername: row.tchId
+        }
+      })
+    }
   }
 }
 </script>

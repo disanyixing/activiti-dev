@@ -3,7 +3,7 @@ import capi from '@/api/choicequestion'
 import aapi from '@/api/answer'
 
 // 示例使用:
-// 假设我们有一个试卷ID为 "1001"，我们想要检查三名学生 "studentA", "studentB", "studentC" 的作答情况，
+// 有一个试卷ID为 "1001"，我们想要检查三名学生 "studentA", "studentB", "studentC" 的作答情况，
 // 我们将返回总题数，和每个学生被批改的题数和已作答的题数。
 // example input:
 // checkStudentsPaper("1001", ["studentA", "studentB", "studentC"]).then(results => {
