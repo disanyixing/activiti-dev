@@ -10,6 +10,7 @@
         <result column="teacher_name" property="teacher_name"/>
         <result column="time" property="time"/>
         <result column="student_num" property="student_num"/>
+        <result column="status" property="status"/>
         <result column="create_date" property="createDate"/>
         <result column="update_date" property="updateDate"/>
     </resultMap>
