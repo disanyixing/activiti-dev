@@ -56,7 +56,8 @@
   </el-form>
 </template>
 <script>
-import api from '@/api/course'
+import api from '@/api/studentleave'
+import capi from '@/api/course'
 
 export default {
   props: {
@@ -88,6 +89,7 @@ export default {
       immediate: true,
       async handler(newVal) {
         if (newVal && this.operate !== '新增') {
+          await this.initStates()
           await this.getById(newVal)
         } else {
           await this.initStates()
@@ -95,50 +97,53 @@ export default {
       }
     }
   },
-  created() {
-    this.initStates()
-  },
   methods: {
     async initStates() {
-      try {
-        const response = await api.stuClassInfoList({}, 1, -1)
-        if (response && response.data && response.data.data) {
-          this.coursesList = response.data.data.records.map(record => ({
-            id: record.id,
-            name: record.name
-          }))
-        }
-      } catch (error) {
-        console.error('初始化状态失败:', error)
-      }
-    },
-    async getById(id) {
-      try {
-        const response = await api.viewStudentLeave(id)
-        if (response && response.data && response.data.data) {
-          this.formData = response.data.data
-          this.onCourseChange(this.formData.course_name)
-          this.onTeacherChange(this.formData.teacher_nick_name)
-        }
-      } catch (error) {
-        console.error('获取请假信息失败:', error)
-      }
-    },
-    onCourseChange(courseName) {
-      // 当课程变化时，更新教师列表
-      this.teachersList = this.coursesList
-        .filter(course => course.name === courseName)
-        .map(course => ({ id: course.tchId, nick_name: course.nick_name }))
+      const response = await capi.stuClassInfoList({}, 1, -1)
+      this.uniqueCourses = {}
+      this.teacherTimeMap = {}
 
-      // 重置教师和时间
+      response.data.data.records.forEach(course => {
+        if (!this.uniqueCourses[course.name]) {
+          this.uniqueCourses[course.name] = new Set()
+        }
+        this.uniqueCourses[course.name].add(course.nick_name)
+
+        if (!this.teacherTimeMap[course.nick_name]) {
+          this.teacherTimeMap[course.nick_name] = new Set()
+        }
+        this.teacherTimeMap[course.nick_name].add(course.time)
+      })
+
+      this.coursesList = Object.keys(this.uniqueCourses).map(courseName => ({
+        name: courseName
+      }))
+    },
+
+    onCourseChange(courseName) {
+      const teachers = this.uniqueCourses[courseName] || new Set()
+      this.teachersList = Array.from(teachers).map(nick_name => ({
+        nick_name
+      }))
+
       this.formData.teacher_nick_name = ''
       this.formData.time = ''
     },
+
     onTeacherChange(teacherName) {
-      // 当教师变化时，更新上课时间列表
-      this.timeList = this.coursesList
-        .filter(course => course.nick_name === teacherName)
-        .map(course => ({ id: course.id, time: course.time }))
+      const times = this.teacherTimeMap[teacherName] || new Set()
+      this.timeList = Array.from(times).map(time => ({
+        time
+      }))
+
+      this.formData.time = ''
+    },
+
+    async getById(id) {
+      const response = await api.viewStudentLeave(id)
+      this.formData = response.data.data[0]
+      // this.onCourseChange(this.formData.course_name)
+      // this.onTeacherChange(this.formData.teacher_nick_name)
     },
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
@@ -150,9 +155,10 @@ export default {
           } else if (this.operate === '编辑') {
             response = await api.updateStudentLeave(this.formData)
           }
-          if (response && response.data && response.data.code === 20000) {
+          if (response.code === 20000) {
+            this.loading = false
             this.$message.success('操作成功')
-            this.resetForm(formName)
+            this.$emit('close')
           } else {
             this.$message.error('操作失败')
           }
@@ -161,6 +167,21 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+
+    clickClose() {
+      // 重置表单数据
+      this.formData = {
+        course_name: '',
+        teacher_nick_name: '',
+        time: '',
+        reason: ''
+      }
+      this.teachersList = []
+      this.timeList = []
+
+      // 关闭表单
+      this.$emit('close')
     }
   }
 }

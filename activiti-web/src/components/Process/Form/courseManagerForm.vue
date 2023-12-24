@@ -94,6 +94,7 @@ export default {
       immediate: true,
       handler(newVal) {
         if (newVal && this.operate !== '新增') {
+          this.initStates()
           this.getById(newVal)
         } else {
           this.initStates()

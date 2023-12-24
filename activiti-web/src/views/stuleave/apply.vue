@@ -78,11 +78,11 @@
   </div>
 </template>
 <script>
-import api from '@/api/course'
+import api from '@/api/studentleave'
 import SubmitApply from '../workflow/apply/components/SubmitApply'
 import CancelApply from '../workflow/apply/components/CancelApply'
 import History from '@/components/Process/History'
-import courseLeaveForm from '@/components/Process/Form/studentLeaveForm.vue.vue'
+import courseLeaveForm from '@/components/Process/Form/studentLeaveForm.vue'
 import { getall } from '@/api/getuser'
 
 export default {

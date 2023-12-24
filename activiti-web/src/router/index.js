@@ -123,6 +123,27 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/stuleave',
+    component: Layout,
+    name: 'stuLeave',
+    meta: { title: '业务办理', icon: 'form' },
+    children: [
+      {
+        path: 'apply',
+        name: 'Leave',
+        component: () => import('@/views/stuleave/apply.vue'),
+        meta: { title: '请假申请', icon: 'table' }
+      },
+      {
+        path: 'attendance',
+        name: 'Attendance',
+        component: () =>
+          import ('@/views/workflow/apply/attendance'),
+        meta: { title: '考勤管理', icon: 'table' }
+      }
+    ]
+  },
   // 课程通知 (Course Notification)
   {
     path: '/message',
@@ -175,7 +196,14 @@ export const constantRoutes = [
       }
     ]
   },
-  //
+  // 考勤管理
+  {
+    path: 'attendance',
+    name: 'Attendance',
+    component: () =>
+      import ('@/views/workflow/apply/attendance/index.vue'),
+    meta: { title: '考勤管理', icon: 'table' }
+  },
   // // 考勤管理 (Attendance Management)
   // {
   //   path: '/attendance-management',
