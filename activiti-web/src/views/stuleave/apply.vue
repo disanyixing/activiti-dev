@@ -66,7 +66,7 @@
       @current-change="handleCurrentChange"
     />
     <!-- 表单 -->
-    <el-dialog :title="operate" :visible.sync="formVisible" width="1000px" destroy-on-close>
+    <el-dialog :title="operate" :visible.sync="formVisible" width="30%" destroy-on-close>
       <leave-form :operate="operate" :business-key="row.id" :cont="JSON.parse(JSON.stringify(row))" @close="closeForm" />
     </el-dialog>
     <!-- 提交申请 -->
@@ -82,11 +82,11 @@ import api from '@/api/studentleave'
 import SubmitApply from '../workflow/apply/components/SubmitApply'
 import CancelApply from '../workflow/apply/components/CancelApply'
 import History from '@/components/Process/History'
-import courseLeaveForm from '@/components/Process/Form/studentLeaveForm.vue'
+import courseLeaveForm from '@/components/Process/Form/StudentLeaveForm.vue'
 import { getall } from '@/api/getuser'
 
 export default {
-  name: 'CourseManager',
+  name: 'StudentLeave',
   components: { SubmitApply, CancelApply, History, leaveForm: courseLeaveForm },
   data() {
     return {
@@ -160,15 +160,11 @@ export default {
       this.formVisible = true
     },
     // 关闭表单
-    closeForm(refresh) {
-      // 清空点击数据
-      this.row = {}
+    closeForm() {
       // 隐藏
       this.formVisible = false
       // 刷新列表
-      if (refresh) {
-        this.fetchData()
-      }
+      this.fetchData()
     },
     // 撤回申请
     clickCancelProcess(row) {

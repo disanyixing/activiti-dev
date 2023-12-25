@@ -33,6 +33,7 @@ Vue.use(Router)
 const student = 0b001
 const teacher = 0b010
 const admin = 0b100
+
 export const constantRoutes = [
   {
     path: '/login',
@@ -71,13 +72,13 @@ export const constantRoutes = [
         path: 'model',
         name: 'Model',
         component: () => import('@/views/workflow/model'),
-        meta: { title: '模型管理' }
+        meta: { title: '模型管理', icon: 'suitcase' }
       },
       {
         path: 'process',
         name: 'Process',
         component: () => import('@/views/workflow/process'),
-        meta: { title: '流程管理' }
+        meta: { title: '流程管理', icon: 'suitcase' }
       }
     ]
   },
@@ -93,13 +94,13 @@ export const constantRoutes = [
         path: 'leave',
         name: 'Leave',
         component: () => import('@/views/workflow/apply/leave'),
-        meta: { title: '请假申请' }
+        meta: { title: '请假申请', icon: 'form' }
       },
       {
         path: 'loan',
         name: 'Loan',
         component: () => import('@/views/workflow/apply/loan'),
-        meta: { title: '借款申请' }
+        meta: { title: '借款申请', icon: 'form' }
       }
     ]
   },
@@ -114,21 +115,21 @@ export const constantRoutes = [
         path: 'teacher',
         name: 'courseManager',
         component: () => import('@/views/course/teacher/manage'),
-        meta: { title: '课程管理' },
+        meta: { title: '课程管理', icon: 'notebook' },
         perm: teacher
       },
       {
         path: 'student/info',
         name: 'StudentCourseInfo',
         component: () => import('@/views/course/student/info'),
-        meta: { title: '课程信息' },
+        meta: { title: '课程信息', icon: 'notebook' },
         perm: student
       },
       {
         path: 'student/enroll',
         name: 'StudentEnrollCenter',
         component: () => import('@/views/course/student/enroll'),
-        meta: { title: '选课中心' },
+        meta: { title: '选课中心', icon: 'notebook' },
         perm: student
       }
     ]
@@ -144,14 +145,14 @@ export const constantRoutes = [
         path: 'manage',
         name: 'TeacherCourseNotification',
         component: () => import('@/views/message/list'),
-        meta: { title: '课程通知' },
+        meta: { title: '课程通知', icon: 'message-box' },
         perm: teacher
       },
       {
         path: 'list',
         name: 'StudentCourseNotification',
         component: () => import('@/views/message/stulist'),
-        meta: { title: '课程通知' },
+        meta: { title: '课程通知', icon: 'message-box' },
         perm: student
       }
     ]
@@ -167,21 +168,21 @@ export const constantRoutes = [
         path: 'topic',
         name: 'CourseTopic',
         component: () => import('@/views/talk/topic'),
-        meta: { title: '讨论主题' },
+        meta: { title: '讨论主题', icon: 'data-analysis' },
         hidden: true
       },
       {
         path: 'list',
         name: 'CourseList',
         component: () => import('@/views/talk/list'),
-        meta: { title: '课程讨论' },
+        meta: { title: '课程讨论', icon: 'data-analysis' },
         perm: teacher
       },
       {
         path: 'liststu',
         name: 'CourseList',
         component: () => import('@/views/talk/liststu'),
-        meta: { title: '课程讨论' },
+        meta: { title: '课程讨论', icon: 'data-analysis' },
         perm: student
       }
     ]
@@ -195,16 +196,16 @@ export const constantRoutes = [
     children: [
       {
         path: 'stuleave/apply',
-        name: 'LeaveApply',
+        name: 'StudentLeave',
         component: () => import('@/views/stuleave/apply.vue'),
-        meta: { title: '请假申请' },
+        meta: { title: '请假申请', icon: 'checked' },
         perm: student
       },
       {
         path: 'list',
         name: 'Attend',
         component: () => import('@/views/workflow/apply/attendance'),
-        meta: { title: '考勤管理' },
+        meta: { title: '考勤管理', icon: 'checked' },
         perm: teacher
       }
     ]
@@ -220,49 +221,49 @@ export const constantRoutes = [
         path: 'teacher/list',
         name: 'Listhomework',
         component: () => import('@/views/homework/list'),
-        meta: { title: '作业管理' },
+        meta: { title: '作业管理', icon: 'tickets' },
         perm: teacher
       },
       {
         path: 'student/list',
         name: 'ListStuhomework',
         component: () => import('@/views/homework/stulist'),
-        meta: { title: '作业管理' },
+        meta: { title: '作业管理', icon: 'tickets' },
         perm: student
       },
       {
         path: 'paper/edit',
         name: 'homeworkEdit',
         component: () => import('@/views/homework/edit'),
-        meta: { title: '作业编辑' },
+        meta: { title: '作业编辑', icon: 'tickets' },
         hidden: true
       },
       {
         path: 'paper/answer',
         name: 'OnlineTest',
         component: () => import('@/views/homework/answer'),
-        meta: { title: '作业' },
+        meta: { title: '作业', icon: 'tickets' },
         hidden: true
       },
       {
         path: 'paper/result',
         name: 'TestResult',
         component: () => import('@/views/homework/detail'),
-        meta: { title: '作业结果' },
+        meta: { title: '作业结果', icon: 'tickets' },
         hidden: true
       },
       {
         path: 'paper/score',
         name: 'homeworkScore',
         component: () => import('@/views/homework/score'),
-        meta: { title: '作业批改' },
+        meta: { title: '作业批改', icon: 'tickets' },
         hidden: true
       },
       {
         path: 'paper/monitor',
         name: 'homeworkMonitor',
         component: () => import('@/views/homework/monitor'),
-        meta: { title: '作业情况' },
+        meta: { title: '作业情况', icon: 'tickets' },
         hidden: true
       }
     ]
@@ -278,56 +279,56 @@ export const constantRoutes = [
         path: 'teacher/list',
         name: 'ListExam',
         component: () => import('@/views/exam/list'),
-        meta: { title: '在线测试' },
+        meta: { title: '在线测试', icon: 'toilet-paper' },
         perm: teacher
       },
       {
         path: 'student/list',
         name: 'ListStuExam',
         component: () => import('@/views/exam/stulist'),
-        meta: { title: '在线测试' },
+        meta: { title: '在线测试', icon: 'toilet-paper' },
         perm: student
       },
       {
         path: 'paper/edit',
         name: 'ExamEdit',
         component: () => import('@/views/exam/edit'),
-        meta: { title: '试卷编辑' },
+        meta: { title: '试卷编辑', icon: 'toilet-paper' },
         hidden: true
       },
       {
         path: 'paper/answer',
         name: 'OnlineTest',
         component: () => import('@/views/exam/answer'),
-        meta: { title: '考试' },
+        meta: { title: '考试', icon: 'toilet-paper' },
         hidden: true
       },
       {
         path: 'paper/result',
         name: 'TestResult',
         component: () => import('@/views/exam/detail'),
-        meta: { title: '试卷结果' },
+        meta: { title: '试卷结果', icon: 'toilet-paper' },
         hidden: true
       },
       {
         path: 'paper/score',
         name: 'ExamScore',
         component: () => import('@/views/exam/score'),
-        meta: { title: '试卷评分' },
+        meta: { title: '试卷评分', icon: 'toilet-paper' },
         hidden: true
       },
       {
         path: 'paper/monitor',
         name: 'ExamMonitor',
         component: () => import('@/views/exam/monitor'),
-        meta: { title: '考试监控' },
+        meta: { title: '考试监控', icon: 'toilet-paper' },
         hidden: true
       },
       {
         path: 'paper/judge',
         name: 'ExamJudge',
         component: () => import('@/views/exam/judge'),
-        meta: { title: '考试评分' },
+        meta: { title: '考试评分', icon: 'toilet-paper' },
         hidden: true
       }
     ]
@@ -344,7 +345,7 @@ export const constantRoutes = [
         path: 'grade/stu',
         name: 'StudentGrade',
         component: () => import('@/views/grade/stu'),
-        meta: { title: '成绩查询' }
+        meta: { title: '成绩查询', icon: 'paperclip' }
       }
     ]
   },
@@ -359,14 +360,14 @@ export const constantRoutes = [
         path: 'director',
         name: 'ListFeedback',
         component: () => import('@/views/teacherscore/director.vue'),
-        meta: { title: '评教结果' },
+        meta: { title: '评教结果', icon: 'histogram' },
         perm: admin
       },
       {
         path: 'student',
         name: 'ListFeedbackStu',
         component: () => import('@/views/teacherscore/stu.vue'),
-        meta: { title: '学生评教' },
+        meta: { title: '学生评教', icon: 'histogram' },
         perm: student
       }
     ]
@@ -383,13 +384,13 @@ export const constantRoutes = [
         path: 'await',
         name: 'Await',
         component: () => import('@/views/workflow/await'),
-        meta: { title: '待办任务' }
+        meta: { title: '待办任务', icon: 'stamp' }
       },
       {
         path: 'complete',
         name: 'Complete',
         component: () => import('@/views/workflow/complete'),
-        meta: { title: '已办任务' }
+        meta: { title: '已办任务', icon: 'stamp' }
       }
     ]
   },
@@ -405,13 +406,13 @@ export const constantRoutes = [
         path: 'running',
         name: 'Running',
         component: () => import('@/views/workflow/running'),
-        meta: { title: '运行中流程' }
+        meta: { title: '运行中流程', icon: 'promotion' }
       },
       {
         path: 'finish',
         name: 'Finish',
         component: () => import('@/views/workflow/finish'),
-        meta: { title: '已结束流程' }
+        meta: { title: '已结束流程', icon: 'promotion' }
       }
     ]
   },

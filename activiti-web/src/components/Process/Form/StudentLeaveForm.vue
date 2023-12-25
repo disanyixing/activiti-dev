@@ -49,7 +49,7 @@
       <el-input v-model="formData.reason" type="textarea" placeholder="请输入请假理由" />
     </el-form-item>
 
-    <el-form-item align="right">
+    <el-form-item align="center">
       <el-button type="primary" size="small" @click="submitForm('formData')">提交</el-button>
       <el-button size="small" @click="clickClose()">关闭</el-button>
     </el-form-item>
