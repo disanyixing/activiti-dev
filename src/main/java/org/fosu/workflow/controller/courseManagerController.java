@@ -1,15 +1,12 @@
 package org.fosu.workflow.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.fosu.workflow.entities.Student;
 import org.fosu.workflow.entities.Teacher;
 import org.fosu.workflow.entities.courseManager;
 import org.fosu.workflow.req.courseManagerREQ;
 import org.fosu.workflow.service.*;
-import org.fosu.workflow.utils.DateUtils;
 import org.fosu.workflow.utils.Result;
 import org.fosu.workflow.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +52,7 @@ public class courseManagerController {
     @ApiOperation("获取指定教师的课程的所有班级学生")
     @GetMapping("/{courseName}/allStudents")
     public Result getAllStudents(@PathVariable String courseName) {
-        return CourseManagerService.getAllStudents(courseName,UserUtils.getUsername());
+        return CourseManagerService.getAllStudents(courseName, UserUtils.getUsername());
     }
 
     @ApiOperation("获取指定班级的所有学生")
@@ -99,6 +96,7 @@ public class courseManagerController {
     public Result viewClassInfo(@RequestBody courseManagerREQ req) {
         return Result.ok(CourseManagerService.listClassInfoPage(req));
     }
+
     @ApiOperation("查询选修课程信息")
     @PostMapping("/electiveCourse")
     public Result viewelectiveCourse(@RequestBody courseManagerREQ req) {
@@ -108,13 +106,13 @@ public class courseManagerController {
     @ApiOperation("选择选修课程")
     @PostMapping("/selectElectiveCourse/{id}")
     public Result selectElectiveCourse(@PathVariable String id) {
-        return Result.ok(CourseManagerService.selectElectiveCourse(id,UserUtils.getUsername()));
+        return Result.ok(CourseManagerService.selectElectiveCourse(id, UserUtils.getUsername()));
     }
 
     @ApiOperation("删除选修课程")
     @DeleteMapping("/deleteElectiveCourse/{id}")
     public Result deleteElectiveCourse(@PathVariable String id) {
-        return Result.ok(CourseManagerService.deleteElectiveCourse(id,UserUtils.getUsername()));
+        return Result.ok(CourseManagerService.deleteElectiveCourse(id, UserUtils.getUsername()));
     }
 
     @ApiOperation("查询所有课程名称和任课老师和班级唯一的列表")
@@ -131,8 +129,8 @@ public class courseManagerController {
 
     @ApiOperation("判断用户是否为学生")
     @PostMapping("/isStudent")
-    public Boolean isStudent() {
-        return studentService.isStudent(UserUtils.getUsername());
+    public Result isStudent() {
+        return Result.ok(studentService.isStudent(UserUtils.getUsername()));
     }
 
     @ApiOperation("查询当前教师")
