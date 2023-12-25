@@ -52,7 +52,8 @@ export default {
       required: true
     },
     cont: {
-      type: Object
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -69,13 +70,14 @@ export default {
       },
       rules: {
         title: [
-          { required: true, message: '请输入测试名称', trigger: 'blur' }
+          { required: true, message: '请输入作业名称', trigger: 'blur' }
         ],
         courseId: [
           { required: true, message: '请选择课程名称', trigger: 'change' }
         ],
         startDate: [
-          { type: 'date', required: true, message: '请选择开始时间', trigger: 'change' }
+          { type: 'date', required: true, message: '请选择开始时间', trigger: 'change' },
+          { validator: this.validateStartDate, trigger: 'change' }
         ],
         endDate: [
           { type: 'date', required: true, message: '请选择结束时间', trigger: 'change' },
@@ -96,12 +98,12 @@ export default {
     'paperForm.endDate'(newValue) {
       this.calculateExamDuration()
     },
-    formType: {
+    cont: {
       immediate: true,
       handler(newVal) {
-        if (newVal === '添加') {
-          this.resetForm()
-        } else if (newVal === '修改' && this.cont) {
+        this.resetForm()
+        this.loadCourses()
+        if (this.formType === '修改' && this.cont) {
           this.initializeForm(this.cont)
         }
       }
@@ -109,6 +111,7 @@ export default {
   },
   methods: {
     initializeForm(data) {
+      console.log(data)
       // 使用对象展开运算符复制 cont 对象到 paperForm
       this.paperForm = { ...data }
 
@@ -128,9 +131,18 @@ export default {
     async calculateClassSize(courseName) {
       const response = await course.getAllStudents(courseName)
       this.paperForm.size = response.data.length
-    }, validateEndDate(rule, value, callback) {
+    },
+    validateEndDate(rule, value, callback) {
       if (value && this.paperForm.startDate && value < this.paperForm.startDate) {
         callback(new Error('结束时间不得早于开始时间'))
+      } else {
+        callback()
+      }
+    },
+    // 验证开始时间
+    validateStartDate(rule, value, callback) {
+      if (value && value < new Date()) {
+        callback(new Error('开始时间不得早于当前时间'))
       } else {
         callback()
       }

@@ -10,7 +10,7 @@
           <h3>作业批改</h3>
         </div>
         <div class="score-details">
-          <p>作业批改情况：{{ uncompletedCount }}/{{ students.length }}</p>
+          <p>作业批改情况：{{ completedCount }}/{{ students.length }}</p>
           <p>作业名称：{{ title }}</p>
           <p>课程名：{{ courseName }}</p>
         </div>
@@ -67,7 +67,7 @@ export default {
       title: '',
       courseName: '',
       endDate: new Date(),
-      paperId: 0,
+      paperId: '',
 
       remainingTime: '',
       classes: [],
@@ -76,7 +76,7 @@ export default {
       filterStatus: '',
       filterClass: '',
       totalQuestions: 0,
-      uncompletedCount: 0
+      completedCount: 0
     }
   },
   created() {
@@ -119,7 +119,7 @@ export default {
         student.totalQuestions = results.totalQuestions // 更新总题数
       })
       this.filteredStudents = this.students
-      this.uncompletedCount = this.students.filter(s => s.gradedAnswers < s.totalQuestions).length
+      this.completedCount = this.students.filter(s => s.gradedAnswers === s.totalQuestions).length
     },
     async filterStudents() {
       await this.fetchStudents()

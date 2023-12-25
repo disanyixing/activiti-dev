@@ -7,13 +7,13 @@
           <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
         </div>
         <div class="total-score">
-          <h3>作业统计</h3>
+          <h3>答题监控</h3>
         </div>
         <div class="score-details">
-          <p>作业提交情况：{{ uncompletedCount }}/{{ students.length }}</p>
+          <p>学生作答情况：{{ completedCount }}/{{ students.length }}</p>
           <p>作业名称：{{ title }}</p>
           <p>课程名：{{ courseName }}</p>
-          <p>距离截止时间：{{ remainingTime }}</p>
+          <p>剩余时间：{{ remainingTime }}</p>
         </div>
       </div>
     </el-aside>
@@ -22,7 +22,7 @@
         <!-- 筛选区域 -->
         <el-form :inline="true" size="small">
           <el-form-item>
-            <el-select v-model="filterStatus" placeholder="全部完成情况">
+            <el-select v-model="filterStatus" placeholder="作答情况">
               <el-option label="未完成" value="uncompleted" />
               <el-option label="已完成" value="completed" />
             </el-select>
@@ -41,7 +41,7 @@
         <el-table :data="filteredStudents" stripe border style="width: 100%">
           <el-table-column prop="classId" label="班级" width="180" />
           <el-table-column prop="nick_name" label="姓名" width="180" />
-          <el-table-column label="完成情况">
+          <el-table-column label="作答情况">
             <template v-slot="{ row }">
               <el-tag :type="row.completed ? 'success' : 'warning'">{{ row.answeredQuestions }}/{{
                 totalQuestions
@@ -51,7 +51,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template v-slot="{ row }">
-              <el-button type="text" @click="viewDetail(row)">查看作业</el-button>
+              <el-button type="text" @click="viewDetail(row)">查看答题情况</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -69,7 +69,6 @@ export default {
       title: '',
       courseName: '',
       endDate: new Date(),
-      paperId: 0,
 
       remainingTime: '',
       classes: [],
@@ -78,7 +77,7 @@ export default {
       filterStatus: '',
       filterClass: '',
       totalQuestions: 0,
-      uncompletedCount: 0
+      completedCount: 0
     }
   },
   created() {
@@ -108,7 +107,7 @@ export default {
         const minutes = Math.floor((timeDiff / (1000 * 60)) % 60)
         this.remainingTime = `${hours}小时${minutes}分钟`
       } else {
-        this.remainingTime = '作业已截止'
+        this.remainingTime = '答题已结束'
       }
     },
     goBack() {
@@ -133,8 +132,9 @@ export default {
         student.answeredQuestions = result.answeredQuestions
         student.completed = result.answeredQuestions === this.totalQuestions
       })
+      console.log(this.students)
       this.filteredStudents = this.students
-      this.uncompletedCount = this.students.filter(s => !s.completed).length
+      this.completedCount = this.students.filter(s => s.completed).length
     },
     async filterStudents() {
       await this.fetchStudents()

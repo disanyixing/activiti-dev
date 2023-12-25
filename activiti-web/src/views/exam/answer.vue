@@ -105,7 +105,6 @@ import { formatTime } from '@/utils/time'
 export default {
   data() {
     return {
-      paperId: 0,
       endTime: '',
       creator: '',
 

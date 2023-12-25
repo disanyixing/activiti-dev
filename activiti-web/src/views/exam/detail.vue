@@ -125,7 +125,6 @@ export default {
       totalEssayScore: 0,
       currentChoiceScore: 0,
       currentEssayScore: 0,
-      paperId: 0,
       creator: ''
     }
   },

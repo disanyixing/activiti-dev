@@ -6,6 +6,7 @@
         <div class="back-section">
           <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
         </div>
+        <!-- 答题剩余时间和未答题目统计 -->
         <div class="total-score">
           <h3>剩余时间： {{ remainingTime }}</h3>
         </div>
@@ -102,26 +103,11 @@ import answerApi from '@/api/answer'// 答案的 API 方法
 import { formatTime } from '@/utils/time'
 
 export default {
-  props: {
-    examType: {
-      type: String,
-      default: 'choice'
-    },
-    paperId: {
-      type: Number,
-      default: 3
-    },
-    endTime: {
-      type: String,
-      default: '2023-12-30T21:50:51.000+00:00'
-    },
-    creator: {
-      type: String,
-      default: 'zhangsan'
-    }
-  },
   data() {
     return {
+      endTime: '',
+      creator: '',
+
       choiceQuestions: [],
       essayQuestions: [],
       remainingTime: '', // 剩余时间
@@ -131,11 +117,17 @@ export default {
       debounceTimers: {} // 存储防抖定时器的ID
     }
   },
-  mounted() {
+  created() {
+    this.paperId = this.$route.query.paperId ? parseInt(this.$route.query.paperId) : null
+    const endTimeString = this.$route.query.endTime
+    this.endTime = endTimeString ? new Date(endTimeString) : null
+    this.creator = this.$route.query.creator || ''
     this.fetchQuestions()
     this.calculateRemainingTime()
     // 每秒钟更新剩余时间
     setInterval(this.calculateRemainingTime, 1000)
+  },
+  mounted() {
     window.addEventListener('beforeunload', this.handleBeforeUnload)
   },
   beforeDestroy() {
@@ -199,7 +191,7 @@ export default {
       if (timeLeft > 0) {
         this.remainingTime = formatTime(timeLeft)
       } else {
-        this.remainingTime = '作业已截止'
+        this.remainingTime = '作业时间结束'
         setInterval(() => this.$router.go(-1), 5000)
       }
     },
@@ -211,25 +203,26 @@ export default {
       try {
         const question = this.choiceQuestions.concat(this.essayQuestions).find(q => q.id === questionId)
         if (question) {
-          if (question.answerId) {
-            // 更新答案
-            await answerApi.updateAnswer({
-              paperId: this.paperId,
-              questionId: questionId,
-              id: question.answerId,
-              answer: answer,
-              score: -1
-            })
-          } else {
+          if (!question.answerId) {
             // 新增答案
             const response = await answerApi.addAnswer({
               paperId: this.paperId,
               questionId: questionId,
               answer: answer,
-              score: -1
+              score: '-1',
+              creator: this.creator
             })
             question.answerId = response.data // 存储答案ID
           }
+          // 更新答案
+          await answerApi.updateAnswer({
+            paperId: this.paperId,
+            questionId: questionId,
+            id: question.answerId,
+            answer: answer,
+            score: '-1',
+            creator: this.creator
+          })
           question.isError = false
           question.isAnswered = !!answer
         }
@@ -412,7 +405,6 @@ export default {
 .question-preview.error {
   background-color: #f56c6c; /* 错误时的红色背景 */
 }
-
 /* 题目区域样式 */
 
 .el-main {

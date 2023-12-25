@@ -69,7 +69,6 @@ export default {
       title: '',
       courseName: '',
       endDate: new Date(),
-      paperId: 0,
 
       remainingTime: '',
       classes: [],

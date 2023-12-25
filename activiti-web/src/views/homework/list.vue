@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 搜索表单，用于过滤作业列表 -->
     <el-form :inline="true" :model="query" size="small">
       <el-form-item label="作业名称：">
         <el-input v-model.trim="query.title" placeholder="请输入作业名称" />
@@ -13,9 +14,9 @@
       </el-form-item>
     </el-form>
     <el-row style="margin-bottom:20px">
-      <el-button icon="el-icon-plus" type="primary" size="small" @click="handleNewPaper">创建作业</el-button>
+      <el-button icon="el-icon-plus" type="primary" size="small" @click="handleNewPaper">新建作业</el-button>
     </el-row>
-    <!-- 试卷列表表格 -->
+    <!-- 作业列表表格 -->
     <el-table :data="papers" stripe border style="width: 100%">
       <el-table-column align="center" prop="id" label="ID" width="90" />
       <el-table-column align="center" prop="title" label="作业名称" min-width="150" />
@@ -37,6 +38,17 @@
             {{ getExamStatusAndTime(row.startDate, row.endDate).label }}
           </el-tag>
         </template>
+        <template v-slot="{ row }">
+          <el-tag :type="getExamStatusAndTime(row.startDate, row.endDate).type">
+            {{ getExamStatusAndTime(row.startDate, row.endDate).label }}
+          </el-tag>
+          <el-tag v-if="isAfterEnd(row.endDate) && row.allGraded" type="success">
+            已评分
+          </el-tag>
+          <el-tag v-else-if="isAfterEnd(row.endDate)" type="warning">
+            未评分
+          </el-tag>
+        </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="180">
         <template v-slot:default="{row}">
@@ -50,19 +62,19 @@
             v-if="isBeforeStart(row.startDate)"
             type="text"
             @click="editPaper(row)"
-          >作业内容
+          >编辑作业
           </el-button>
           <el-button
             v-else-if="isDuringExam(row.startDate, row.endDate)"
             type="text"
             @click="monitorPaper(row)"
-          >监控
+          >完成情况
           </el-button>
           <el-button
             v-else-if="isAfterEnd(row.endDate)"
             type="text"
             @click="gradePaper(row)"
-          >评分
+          >批改
           </el-button>
         </template>
       </el-table-column>
@@ -84,8 +96,10 @@
   </div>
 </template>
 <script>
-import request from '@/utils/request'
-import Examform from '@/views/exam/Form/examform.vue'
+import api from '@/api/paper'
+import capi from '@/api/course'
+import Examform from '@/views/homework/Form/examform.vue'
+import { checkStudentsPaper } from '@/utils/exam'
 
 export default {
   name: 'TeacherPapers',
@@ -113,17 +127,25 @@ export default {
   },
   methods: {
     async fetchData() {
-      const response = await request({
-        url: '/paper/list',
-        method: 'post',
-        data: {
-          ...this.query,
-          current: this.page.current,
-          type: 1,
-          size: this.page.size
-        }
+      const response = await api.listPage({
+        ...this.query,
+        current: this.page.current,
+        size: this.page.size,
+        type: 1 // 假设 type: 2 表示特定的作业类型
       })
       this.papers = response.data.records
+      this.papers = await Promise.all(response.data.records.map(async(paper) => {
+        // 获取与每份作业相关的学生名单
+        const studentsResponse = await capi.getAllStudents(paper.courseId)
+        const studentNames = studentsResponse.data.map(student => student.student_name)
+
+        // 检查每份作业的评分状态
+        const checkResults = await checkStudentsPaper(paper.id, studentNames)
+        const totalQuestions = checkResults.totalQuestions
+        paper.allGraded = Object.values(checkResults.studentResults).every(r => r.gradedAnswers === totalQuestions)
+
+        return paper
+      }))
       this.page.total = response.data.total
     },
     handleSizeChange(value) {
@@ -150,6 +172,7 @@ export default {
       return new Date() < new Date(startDate)
     },
 
+    // 判断当前时间是否在作业进行中（开始时间和结束时间之间）
     isDuringExam(startDate, endDate) {
       const now = new Date()
       return new Date(startDate) <= now && now <= new Date(endDate)
@@ -157,29 +180,34 @@ export default {
     isAfterEnd(endDate) {
       return new Date() > new Date(endDate)
     },
-
+    // 打开新建/编辑作业的弹窗
     openPaperDialog(paper = {}, formType = '添加') {
       this.currentPaper = paper
       this.formType = formType
       this.isDialogVisible = true
     },
+    // 关闭弹窗
     closePaperDialog() {
       this.isDialogVisible = false
       this.currentPaper = {}
       this.fetchData() // 刷新数据
     },
+    // 处理新建作业按钮点击
     handleNewPaper() {
       this.openPaperDialog({}, '添加')
     },
 
+    // 处理编辑作业按钮点击
     handleEditPaper(paper) {
       this.openPaperDialog(paper, '修改')
     },
+    // 格式化开始和结束时间
     formatStartEndDates(startDate, endDate) {
       const start = new Date(startDate).toLocaleString('zh-CN', { hour12: false })
       const end = new Date(endDate).toLocaleString('zh-CN', { hour12: false })
       return `${start} - ${end}`
     },
+    // 获取答题状态和距离开始/结束的时间
     getExamStatusAndTime(startDate, endDate) {
       const now = new Date()
       const start = new Date(startDate)
@@ -196,20 +224,24 @@ export default {
       }
 
       if (now < start) {
+        // 如果答题未开始
         const diff = start - now
         label = diff < 24 * 60 * 60 * 1000 ? `开始还有 ${formatTimeRemaining(diff)}` : `开始还有 ${Math.floor(diff / (1000 * 60 * 60 * 24))}天${Math.floor((diff / (1000 * 60 * 60)) % 24)}小时`
         type = 'warning'
       } else if (now >= start && now <= end) {
+        // 如果答题进行中
         const diff = end - now
         label = diff < 24 * 60 * 60 * 1000 ? `结束还有 ${formatTimeRemaining(diff)}` : `结束还有 ${Math.floor(diff / (1000 * 60 * 60 * 24))}天${Math.floor((diff / (1000 * 60 * 60)) % 24)}小时`
         type = 'success'
       } else {
+        // 如果答题已结束
         label = '已结束'
         type = 'info'
       }
 
       return { label, type }
     },
+    // 编辑作业的逻辑
     editPaper(row) {
       this.$router.push({
         path: '/exam/paper/edit',
@@ -217,12 +249,15 @@ export default {
       })
     },
 
+    // 监控作业的逻辑
     monitorPaper(row) {
       this.$router.push({
         path: '/exam/paper/monitor',
         query: { ...row }
       })
     },
+
+    // 评分作业的逻辑
     gradePaper(row) {
       this.$router.push({
         path: '/exam/paper/judge',
