@@ -14,17 +14,27 @@
       <el-select v-model="formData.name" filterable @change="handleCourseChange">
         <el-option
           v-for="item in options"
-          :key="item.name"
-          :label="item.name"
-          :value="item.name"
+          :key="item"
+          :label="item"
+          :value="item"
         />
       </el-select>
     </el-form-item>
     <el-form-item label="上课时间" prop="time">
-      <el-input v-model="formData.time" />
+      <el-select v-model="formData.time" filterable @change="handleTimeChange">
+        <el-option
+          v-for="time in timeOptions"
+          :key="time"
+          :label="time"
+          :value="time"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="班级名称">
+      <span>{{ classNames.join(', ') }}</span>
     </el-form-item>
     <el-form-item label="班级总人数" prop="student_num">
-      {{ student_num || formData.student_num }}
+      {{ student_num }}
     </el-form-item>
 
     <el-form-item v-if="operate != '详情'" align="right">
@@ -35,6 +45,7 @@
 </template>
 <script>
 import api from '@/api/attend'
+import capi from '@/api/course'
 
 export default {
 
@@ -51,25 +62,41 @@ export default {
   data() {
     return {
       options: [],
-      student_num: '',
+      timeOptions: [],
+      classNames: [],
+      courseData: {},
+      student_num: 0,
       loading: false,
       formData: {},
       rules: {
         name: [
-          { required: true, message: '请选择课程名称', trigger: 'change' }
+          { required: true, message: '请选择课程名称', trigger: 'submit' }
         ],
         time: [
-          { required: true, message: '请输入上课时间', trigger: 'change' }
+          { required: true, message: '请输入上课时间', trigger: 'submit' }
         ]
       }
     }
   },
+
   watch: {
     cont: {
-      immediate: true, // 很重要！！！
-      handler(content) {
-        console.log(content)
-        this.formData = content
+      immediate: true,
+      async handler(content) {
+        if (this.operate !== '编辑') {
+          // 如果不是编辑状态，则重置表单
+          this.resetForm()
+        } else if (content) {
+          // 如果是编辑状态，根据cont内容设置表单
+          this.formData = { ...content }
+          await this.getCourse()
+          if (this.formData.name) {
+            await this.handleCourseChange()
+            if (this.formData.time) {
+              await this.handleTimeChange()
+            }
+          }
+        }
       }
     }
   },
@@ -77,17 +104,48 @@ export default {
     this.getCourse()
   },
   methods: {
-    handleCourseChange() {
-      this.getStudentNum(this.formData.name)
-    },
-    async getStudentNum(prop) {
-      const { data } = await api.getStudentNum(prop)
-      this.student_num = data.length
-    },
     async getCourse() {
-      const { data } = await api.getCourse()
-      this.options = data
+      const { data } = await capi.listPage({}, 1, -1)
+      this.options = data.records.map(item => item.name).filter((value, index, self) => self.indexOf(value) === index)
+
+      // 处理课程数据，将每个课程的不同时间和班级关联起来
+      this.courseData = data.records.reduce((acc, record) => {
+        if (!acc[record.name]) {
+          acc[record.name] = []
+        }
+        acc[record.name].push({ time: record.time, class_name: record.class_name })
+        return acc
+      }, {})
     },
+
+    handleCourseChange() {
+      // 更新上课时间选项并确保时间去重
+      const courseInfo = this.courseData[this.formData.name] || []
+      const uniqueTimes = new Set(courseInfo.map(item => item.time))
+      this.timeOptions = Array.from(uniqueTimes)
+      this.formData.time = ''
+      this.student_num = 0
+      this.classNames = []
+      // 判断是否需要从 cont 中恢复时间选项
+      if (this.cont && this.cont.name === this.formData.name && this.cont.time) {
+        this.formData.time = this.cont.time
+      }
+    },
+
+    async handleTimeChange() {
+      // 获取选择的时间对应的所有班级信息
+      const selectedTimeClasses = this.courseData[this.formData.name].filter(item => item.time === this.formData.time)
+      this.classNames = selectedTimeClasses.map(item => item.class_name)
+
+      // 获取指定课程的所有学生并计算总数
+      const response = await capi.getAllStudents(this.formData.name)
+      if (response && response.data && response.data) {
+        this.student_num = response.data.length
+      } else {
+        this.student_num = 0
+      }
+    },
+
     // 提交表单数据
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
@@ -116,6 +174,12 @@ export default {
           }
         }
       })
+    },
+    resetForm() {
+      this.formData = { name: '', time: '', student_num: 0 } // 重置为初始状态
+      this.timeOptions = []
+      this.classNames = []
+      this.student_num = 0
     },
     clickClose(refresh = false) {
       // 将表单清空

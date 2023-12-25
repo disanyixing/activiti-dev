@@ -82,16 +82,10 @@
         label="创建时间"
         width="160"
       />
-      <el-table-column
-        align="center"
-        prop="updateDateStr"
-        label="修改时间"
-        width="160"
-      />
       <el-table-column align="center" label="操作" fixed="right" width="220">
         <template slot-scope="{ row }">
           <el-button
-            v-if="row.status == 0 || row.status == 1"
+            v-if="row.status == 0"
             type="text"
             @click="clickShowForm('编辑', row)"
           >编辑</el-button>

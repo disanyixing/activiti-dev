@@ -17,7 +17,7 @@ export default {
   },
 
   // 查询考勤详情列表
-  // 方法名: attendListPage, 接收参数: id (考勤表ID)
+  // 方法名: attendList, 接收参数: id (考勤表ID)
   // id:1 (form-data) 出勤0 事假1 病假2 迟到3 早退4 旷课5
   // {
   //     "code": 20000,
@@ -60,7 +60,7 @@ export default {
   //         }
   //     ]
   // }
-  attendListPage(id) {
+  attendList(id) {
     return request({
       url: '/attendList/list',
       method: 'post',
@@ -171,7 +171,25 @@ export default {
     })
   },
   // 根据课程名获取学生列表
-  getStudentNum(courseName) {
+  // 获取指定班级的所有学生
+  // 方法名: getStudentsByClass, 接收参数: classId (班级ID)
+  // classId: 202003101 (/courseManager/classes/202003101/students)
+  // {
+  //     "code": 20000,
+  //     "message": "操作成功",
+  //     "data": [
+  //         {
+  //             "id": "19",
+  //             "name": "xuesheng11",
+  //             "nick_name": "学生11",
+  //             "student_id": "20200310101",
+  //             "classid": "202003101",
+  //             "major": "计算机科学与技术"
+  //         },
+  //         ...
+  //     ]
+  // }
+  getStudentList(courseName) {
     return request({
       url: `/courseManager/${courseName}/allStudents`,
       method: 'get'

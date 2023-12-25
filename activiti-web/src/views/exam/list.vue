@@ -38,6 +38,17 @@
             {{ getExamStatusAndTime(row.startDate, row.endDate).label }}
           </el-tag>
         </template>
+        <template v-slot="{ row }">
+          <el-tag :type="getExamStatusAndTime(row.startDate, row.endDate).type">
+            {{ getExamStatusAndTime(row.startDate, row.endDate).label }}
+          </el-tag>
+          <el-tag v-if="isAfterEnd(row.endDate) && row.allGraded" type="success">
+            已评分
+          </el-tag>
+          <el-tag v-else-if="isAfterEnd(row.endDate)" type="warning">
+            未评分
+          </el-tag>
+        </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="180">
         <template v-slot:default="{row}">
@@ -86,7 +97,9 @@
 </template>
 <script>
 import api from '@/api/paper'
+import capi from '@/api/course'
 import Examform from '@/views/exam/Form/examform.vue'
+import { checkStudentsPaper } from '@/utils/exam'
 
 export default {
   name: 'TeacherPapers',
@@ -121,6 +134,18 @@ export default {
         type: 2 // 假设 type: 2 表示特定的试卷类型
       })
       this.papers = response.data.records
+      this.papers = await Promise.all(response.data.records.map(async(paper) => {
+        // 获取与每份试卷相关的学生名单
+        const studentsResponse = await capi.getAllStudents(paper.courseId)
+        const studentNames = studentsResponse.data.map(student => student.student_name)
+
+        // 检查每份试卷的评分状态
+        const checkResults = await checkStudentsPaper(paper.id, studentNames)
+        const totalQuestions = checkResults.totalQuestions
+        paper.allGraded = Object.values(checkResults.studentResults).every(r => r.gradedAnswers === totalQuestions)
+
+        return paper
+      }))
       this.page.total = response.data.total
     },
     handleSizeChange(value) {
@@ -155,7 +180,6 @@ export default {
     isAfterEnd(endDate) {
       return new Date() > new Date(endDate)
     },
-
     // 打开新建/编辑试卷的弹窗
     openPaperDialog(paper = {}, formType = '添加') {
       this.currentPaper = paper

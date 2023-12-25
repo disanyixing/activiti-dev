@@ -123,27 +123,6 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/stuleave',
-    component: Layout,
-    name: 'stuLeave',
-    meta: { title: '业务办理', icon: 'form' },
-    children: [
-      {
-        path: 'apply',
-        name: 'Leave',
-        component: () => import('@/views/stuleave/apply.vue'),
-        meta: { title: '请假申请', icon: 'table' }
-      },
-      {
-        path: 'attendance',
-        name: 'Attendance',
-        component: () =>
-          import ('@/views/workflow/apply/attendance'),
-        meta: { title: '考勤管理', icon: 'table' }
-      }
-    ]
-  },
   // 课程通知 (Course Notification)
   {
     path: '/message',
@@ -196,28 +175,29 @@ export const constantRoutes = [
       }
     ]
   },
-  // // 考勤管理 (Attendance Management)
-  // {
-  //   path: '/attendance-management',
-  //   component: Layout,
-  //   redirect: '/attendance-management/teacher',
-  //   name: 'AttendanceManagement',
-  //   meta: { title: '考勤管理', icon: 'attendance' },
-  //   children: [
-  //     {
-  //       path: 'teacher',
-  //       name: 'TeacherAttendanceManagement',
-  //       component: () => import('@/views/attendance/teacher/manage'),
-  //       meta: { title: '考勤管理', icon: 'attendance' }
-  //     },
-  //     {
-  //       path: 'student',
-  //       name: 'StudentLeaveManagement',
-  //       component: () => import('@/views/attendance/student/leave'),
-  //       meta: { title: '请假管理', icon: 'leave' }
-  //     }
-  //   ]
-  // },
+  // 考勤管理
+  {
+    path: '/attend',
+    component: Layout,
+    redirect: '/attend',
+    name: 'Attend',
+    meta: { title: '考勤管理', icon: 'attendance' },
+    children: [
+      {
+        path: 'stuleave/apply',
+        name: 'LeaveApply',
+        component: () => import('@/views/stuleave/apply.vue'),
+        meta: { title: '请假申请', icon: 'table' }
+      },
+      {
+        path: 'list',
+        name: 'Attend',
+        component: () =>
+          import ('@/views/workflow/apply/attendance'),
+        meta: { title: '考勤管理', icon: 'table' }
+      }
+    ]
+  },
   //
   // // 作业管理 (Homework Management)
   // {
@@ -348,12 +328,6 @@ export const constantRoutes = [
         component: () => import('@/views/teacherscore/stu.vue'),
         meta: { title: '学生评教', icon: 'feedback' }
       }
-      // {
-      //   path: 'student',
-      //   name: 'StudentTeachingFeedback',
-      //   component: () => import('@/views/feedback/student'),
-      //   meta: { title: '教学反馈', icon: 'feedback' }
-      // }
     ]
   },
   {

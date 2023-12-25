@@ -10,7 +10,7 @@
           <h3>考试监控</h3>
         </div>
         <div class="score-details">
-          <p>学生作答情况：{{ uncompletedCount }}/{{ students.length }}</p>
+          <p>学生作答情况：{{ completedCount }}/{{ students.length }}</p>
           <p>试卷名称：{{ title }}</p>
           <p>课程名：{{ courseName }}</p>
           <p>剩余时间：{{ remainingTime }}</p>
@@ -78,7 +78,7 @@ export default {
       filterStatus: '',
       filterClass: '',
       totalQuestions: 0,
-      uncompletedCount: 0
+      completedCount: 0
     }
   },
   created() {
@@ -133,8 +133,9 @@ export default {
         student.answeredQuestions = result.answeredQuestions
         student.completed = result.answeredQuestions === this.totalQuestions
       })
+      console.log(this.students)
       this.filteredStudents = this.students
-      this.uncompletedCount = this.students.filter(s => !s.completed).length
+      this.completedCount = this.students.filter(s => s.completed).length
     },
     async filterStudents() {
       await this.fetchStudents()
