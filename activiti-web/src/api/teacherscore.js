@@ -6,7 +6,7 @@ export default {
   // 参数含义:
   // - name: 课程名称
   // - tch_id: 用户名
-  // - nick_name: 教师姓名
+  // - username: 教师姓名
   // - score1: 教学内容
   // - score2: 教学方法
   // - score3: 教学状态
@@ -59,12 +59,12 @@ export default {
   //             "records": [
   //                 {
   //                     "name": "高等数学",
-  //                     "nick_name": "张三",
+  //                     "username": "张三",
   //                     "average_score": "64.50"
   //                 },
   //                 {
   //                     "name": "离散数学",
-  //                     "nick_name": "李四",
+  //                     "username": "李四",
   //                     "average_score": "50.00"
   //                 },
   //             ],
@@ -104,12 +104,12 @@ export default {
   //             "records": [
   //                 {
   //                     "name": "高等数学",
-  //                     "nick_name": "张三",
+  //                     "username": "张三",
   //                     "average_score": "64.50"
   //                 },
   //                 {
   //                     "name": "离散数学",
-  //                     "nick_name": "李四",
+  //                     "username": "李四",
   //                     "average_score": "50.00"
   //                 },
   //             ],

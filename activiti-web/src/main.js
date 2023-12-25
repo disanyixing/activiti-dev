@@ -32,8 +32,12 @@ router.beforeEach(async(to, from, next) => {
   const roles = await getUserPerm()
   setRouteVisibility(router.options.routes, roles)
 
-  // 确保调用 next() 进行路由导航
-  next()
+  // 检查即将进入的路由的元信息中是否有 noperm 属性且为 true
+  if (to.matched.some(record => record.meta.hidden === true)) {
+    next({ path: '/' })
+  } else {
+    next()
+  }
 })
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

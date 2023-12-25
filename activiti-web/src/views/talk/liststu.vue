@@ -5,6 +5,9 @@
       <el-form-item label="课程名称：">
         <el-input v-model="query.course" placeholder="请输入课程名称" />
       </el-form-item>
+      <el-form-item label="教师名称：">
+        <el-input v-model="query.teacher" placeholder="请输入教师名" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchAllCourses">查询</el-button>
         <el-button @click="resetQuery">重置</el-button>
@@ -48,7 +51,8 @@ export default {
         total: 0
       },
       query: {
-        course: ''
+        course: '',
+        teacher: ''
       }
     }
   },
@@ -57,18 +61,12 @@ export default {
   },
   methods: {
     async fetchAllCourses() {
-      const response = await courseApi.stuClassInfoList({}, this.page.current, this.page.size)
-
-      // 选择id最小的记录去重显示
-      const coursesMap = new Map()
-      for (const record of response.data.data.records) {
-        if (!coursesMap.has(record.name) || coursesMap.get(record.name).id > record.id) {
-          coursesMap.set(record.name, record)
-        }
-      }
-
-      this.courses = Array.from(coursesMap.values())
-      this.page.total = response.data.data.total
+      const response = await courseApi.classCourseNameAndTeacherAndClasslist({
+        current: this.page.current,
+        size: this.page.size
+      })
+      this.courses = response.data.records
+      this.page.total = response.data.total
     },
 
     resetQuery() {
@@ -88,12 +86,13 @@ export default {
       this.fetchAllCourses()
     },
 
-    enterDiscussionBoard(row) {
+    async enterDiscussionBoard(row) {
+      const res = await courseApi.viewById(row.id)
       this.$router.push({
         path: '/talk/topic',
         query: {
           courseId: row.id,
-          teacherUsername: row.tchId
+          teacherUsername: res.data.data[0].tchId
         }
       })
     }

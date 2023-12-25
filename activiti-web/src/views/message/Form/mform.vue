@@ -84,17 +84,18 @@ export default {
     cont: {
       immediate: true,
       handler(newVal) {
-        if (this.formType === '编辑') {
-          this.courseMessageForm = {
-            id: newVal.id,
-            course_name: newVal.course_name,
-            class_id: newVal.class_id,
-            message: newVal.message
-          }
-          if (newVal.course_name) {
+        this.loadCourses().then(() => {
+          if (this.formType === '编辑') {
+            this.courseMessageForm = {
+              id: newVal.id,
+              course_name: newVal.course_name,
+              class_id: newVal.class_id,
+              message: newVal.message
+            }
             this.onCourseChange(newVal.course_name)
           }
         }
+        )
       }
     },
     'courseMessageForm.course_name'(newVal, oldVal) {
@@ -102,9 +103,6 @@ export default {
         this.onCourseChange(newVal)
       }
     }
-  },
-  created() {
-    this.loadCourses()
   },
   methods: {
     async loadCourses() {

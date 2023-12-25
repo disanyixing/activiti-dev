@@ -181,7 +181,7 @@ export default {
   //         {
   //             "id": "19",
   //             "name": "xuesheng11",
-  //             "nick_name": "学生11",
+  //             "username": "学生11",
   //             "student_id": "20200310101",
   //             "classid": "202003101",
   //             "major": "计算机科学与技术"

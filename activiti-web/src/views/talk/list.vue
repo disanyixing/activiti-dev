@@ -16,7 +16,7 @@
       <el-table-column align="center" type="index" label="序号" min-width="80px" />
       <el-table-column align="center" prop="name" label="课程名称" min-width="150px" />
       <el-table-column align="center" prop="nick_name" label="任课老师" min-width="150px" />
-      <el-table-column align="center" prop="class_name" label="班级" min-width="150px" />
+      <el-table-column align="center" prop="name" label="班级" min-width="150px" />
       <el-table-column align="center" label="操作" min-width="100px">
         <template v-slot="{row}">
           <el-button type="text" @click="enterDiscussionBoard(row)">进入课程讨论区</el-button>
@@ -38,6 +38,7 @@
 </template>
 <script>
 import courseApi from '@/api/course'
+import { getInfo } from '@/api/user'
 
 export default {
   data() {
@@ -50,25 +51,27 @@ export default {
       },
       query: {
         course: ''
-      }
+      },
+      nick_name: '',
+      username: ''
     }
   },
   created() {
-    this.fetchAllCourses()
+    getInfo().then(res => {
+      this.nick_name = res.data.nickName
+      this.username = res.data.username
+      this.fetchAllCourses()
+    })
   },
   methods: {
     async fetchAllCourses() {
-      const response = await courseApi.listPage({}, this.page.current, this.page.size)
+      const response = await courseApi.allCourseNameAndTeacherAndClasslist({
+        teacher: this.nick_name,
+        current: this.page.current,
+        size: this.page.size
+      })
 
-      // 选择id最小的记录去重显示
-      const coursesMap = new Map()
-      for (const record of response.data.records) {
-        if (!coursesMap.has(record.name) || coursesMap.get(record.name).id > record.id) {
-          coursesMap.set(record.name, record)
-        }
-      }
-
-      this.courses = Array.from(coursesMap.values())
+      this.courses = response.data.records
       this.page.total = response.data.total
     },
 
@@ -94,7 +97,7 @@ export default {
         path: '/talk/topic',
         query: {
           courseId: row.id,
-          teacherUsername: row.tchId
+          teacherUsername: this.username
         }
       })
     }

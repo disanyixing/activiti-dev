@@ -105,7 +105,7 @@ export default {
       const { data } = await api.attendList(this.formData.id)
       this.list = data.map(record => ({
         student_id: record.student_id,
-        nick_name: record.student_name, // 使用 record.student_name 更新 nick_name
+        nick_name: record.student_name, // 使用 record.student_name 更新 username
         attend_status: record.status, // 使用 record.status 更新 attend_status
         id: record.id
       }))

@@ -9,7 +9,7 @@ export default {
   // - id: 课程管理ID (自动生成，不需传入)
   // - name: 课程名称
   // - tchId: 教师用户名
-  // - nick_name: 教师姓名
+  // - username: 教师姓名
   // - time: 上课时间
   // - room: 上课教室
   // - classId: 班级id
@@ -91,7 +91,7 @@ export default {
   //         {
   //             "name": "高等数学",
   //             "tchId": "zhangsan",
-  //             "nick_name": "学生15",
+  //             "username": "学生15",
   //             "classId": "202003101",
   //             "student_id": "20200310105",
   //             "student_name": "xuesheng15",
@@ -119,7 +119,7 @@ export default {
   //         {
   //             "id": "19",
   //             "name": "xuesheng11",
-  //             "nick_name": "学生11",
+  //             "username": "学生11",
   //             "student_id": "20200310101",
   //             "classid": "202003101",
   //             "major": "计算机科学与技术"
@@ -153,7 +153,7 @@ export default {
   //                 "id": "1737762817609584642",
   //                 "name": "线性代数",
   //                 "tchId": "zhangsan",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "time": "1-8周 周三 8:00-9:25",
   //                 "room": "C4-116",
   //                 "classId": "202003101",
@@ -189,7 +189,7 @@ export default {
   // - id: 课程管理ID (自动生成，不需传入)
   // - name: 课程名称
   // - tchId: 教师用户名
-  // - nick_name: 教师姓名
+  // - username: 教师姓名
   // - time: 上课时间
   // - room: 上课教室
   // - classId: 班级id
@@ -223,7 +223,7 @@ export default {
   //                 "id": "1",
   //                 "name": "高等数学",
   //                 "tchId": "zhangsan",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "time": "1-8周 周三 9:40-11:50",
   //                 "room": "C4-116",
   //                 "classId": "202003101",
@@ -248,8 +248,11 @@ export default {
 
   // 查询所有课程名称和任课老师唯一的列表
   // 实际上就是对每一个老师做了一个GROUP BY课程名
-  // 方法名: allCourseNameAndTeacherlist, 接收参数: req (分页请求基础类扩展)
+  // 方法名: allCourseNameAndTeacherlist,
   // 参数含义:
+  // - course: 课程名称
+  // - teacher: 任课老师
+  // - username: 所属的用户名
   // - current: 当前页码
   // - size: 每页显示数量
   // {"current": 1, "size": 2}
@@ -261,7 +264,7 @@ export default {
   //             {
   //                 "id": "1",
   //                 "name": "高等数学",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
   //                 "statusStr": ""
@@ -269,7 +272,7 @@ export default {
   //             {
   //                 "id": "1737762817609584642",
   //                 "name": "线性代数",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
   //                 "statusStr": ""
@@ -294,7 +297,10 @@ export default {
 
   // 查询班级的课程名称和任课老师唯一的列表
   // 实际上是查学生的班级，然后对每一个老师做了一个GROUP BY课程名
-  // 方法名: classCourseNameAndTeacherlist, 接收参数: req (分页请求基础类扩展)
+  // 方法名: classCourseNameAndTeacherlist, 接收参数: req
+  // - course: 课程名称
+  // - teacher: 任课老师
+  // - username: 所属的用户名
   // - current: 当前页码
   // - size: 每页显示数量
   // {"current": 1, "size": 10}
@@ -306,7 +312,7 @@ export default {
   //             {
   //                 "id": "1",
   //                 "name": "高等数学",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
   //                 "statusStr": ""
@@ -314,7 +320,7 @@ export default {
   //             {
   //                 "id": "1737762817609584642",
   //                 "name": "线性代数",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
   //                 "statusStr": ""
@@ -339,7 +345,10 @@ export default {
 
   // 查询所有课程名称和任课老师和班级唯一的列表
   // 同上，但是针对管理员的
-  // 方法名: allCourseNameAndTeacherAndClasslist, 接收参数: req (分页请求基础类扩展)
+  // 方法名: allCourseNameAndTeacherAndClasslist, 接收参数: req
+  // - course: 课程名称
+  // - teacher: 任课老师
+  // - username: 所属的用户名
   // - current: 当前页码
   // - size: 每页显示数量
   // {"current": 1, "size": 2}
@@ -351,7 +360,7 @@ export default {
   //             {
   //                 "id": "1",
   //                 "name": "高等数学",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "classId": "202003101",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
@@ -360,7 +369,7 @@ export default {
   //             {
   //                 "id": "1737762817609584642",
   //                 "name": "线性代数",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "classId": "202003101",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
@@ -385,7 +394,10 @@ export default {
 
   // 查询班级的课程名称和任课老师和班级唯一的列表
   // 查班级的课程列表
-  // 方法名: classCourseNameAndTeacherAndClasslist, 接收参数: req (分页请求基础类扩展)
+  // 方法名: classCourseNameAndTeacherAndClasslist, 接收参数: req
+  // - course: 课程名称
+  // - teacher: 任课老师
+  // - username: 所属的用户名
   // - current: 当前页码
   // - size: 每页显示数量
   // {"current": 1, "size": 1}
@@ -397,7 +409,7 @@ export default {
   //             {
   //                 "id": "1",
   //                 "name": "高等数学",
-  //                 "nick_name": "张三",
+  //                 "username": "张三",
   //                 "classId": "202003101",
   //                 "createDateStr": "",
   //                 "updateDateStr": "",
@@ -462,7 +474,7 @@ export default {
   //                     "id": "1",
   //                     "name": "高等数学",
   //                     "tchId": "zhangsan",
-  //                     "nick_name": "张三",
+  //                     "username": "张三",
   //                     "time": "1-8周 周三 9:40-11:50",
   //                     "room": "C4-116",
   //                     "classId": "202003101",
@@ -474,7 +486,7 @@ export default {
   //                     "id": "1737762817609584642",
   //                     "name": "线性代数",
   //                     "tchId": "zhangsan",
-  //                     "nick_name": "张三",
+  //                     "username": "张三",
   //                     "time": "1-8周 周三 8:00-9:25",
   //                     "room": "C4-116",
   //                     "classId": "202003101",
@@ -522,7 +534,7 @@ export default {
   //                     "id": "1000000",
   //                     "name": "创新思维训练",
   //                     "tchId": "zhangsan",
-  //                     "nick_name": "张三",
+  //                     "username": "张三",
   //                     "time": "1-8周 周三 9:40-11:50",
   //                     "room": "C4-116",
   //                     "createDateStr": "",

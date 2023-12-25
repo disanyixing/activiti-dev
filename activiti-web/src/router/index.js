@@ -142,14 +142,14 @@ export const constantRoutes = [
     meta: { title: '课程通知', icon: 'message-box' },
     children: [
       {
-        path: 'manage',
+        path: 'list',
         name: 'TeacherCourseNotification',
         component: () => import('@/views/message/list'),
         meta: { title: '课程通知', icon: 'message-box' },
         perm: teacher
       },
       {
-        path: 'list',
+        path: 'liststu',
         name: 'StudentCourseNotification',
         component: () => import('@/views/message/stulist'),
         meta: { title: '课程通知', icon: 'message-box' },
@@ -451,7 +451,9 @@ export function setRouteVisibility(routes, perm) {
     }
 
     if (route.perm) {
-      route.hidden = (perm & route.perm) === 0
+      const permit = (perm & route.perm) === 0
+      route.hidden = permit
+      route.meta.hidden = permit
     }
   })
 }
