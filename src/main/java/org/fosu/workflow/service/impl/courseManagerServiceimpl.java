@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.fosu.workflow.entities.Loan;
 import org.fosu.workflow.entities.Student;
+import org.fosu.workflow.entities.Teacher;
 import org.fosu.workflow.entities.courseManager;
 import org.fosu.workflow.mapper.LoanMapper;
+import org.fosu.workflow.mapper.TeacherMapper;
 import org.fosu.workflow.mapper.courseManagerMapper;
 import org.fosu.workflow.req.LoanREQ;
 import org.fosu.workflow.req.courseManagerREQ;
@@ -26,10 +28,14 @@ import java.util.Date;
 public class courseManagerServiceimpl extends ServiceImpl<courseManagerMapper, courseManager> implements courseManagerService {
     @Autowired
     private BusinessStatusService businessStatusService;
-
+    @Autowired
+    private TeacherMapper teacherMapper;
     @Override
     public Result add(courseManager CourseManager) {
         CourseManager.setTchId(UserUtils.getUsername());
+        // 获取教师的昵称
+        Teacher teacher = teacherMapper.getNickNameByTeacherName(CourseManager.getTchId());
+        CourseManager.setNick_name(teacher.getNick_name());
         int size = baseMapper.insert(CourseManager);
         if (size == 1) {
             businessStatusService.add(CourseManager.getId());

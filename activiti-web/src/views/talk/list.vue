@@ -16,7 +16,7 @@
       <el-table-column align="center" type="index" label="序号" min-width="80px" />
       <el-table-column align="center" prop="name" label="课程名称" min-width="150px" />
       <el-table-column align="center" prop="nick_name" label="任课老师" min-width="150px" />
-      <el-table-column align="center" prop="name" label="班级" min-width="150px" />
+      <el-table-column align="center" prop="class_name" label="班级" min-width="150px" />
       <el-table-column align="center" label="操作" min-width="100px">
         <template v-slot="{row}">
           <el-button type="text" @click="enterDiscussionBoard(row)">进入课程讨论区</el-button>
