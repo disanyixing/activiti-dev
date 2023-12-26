@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-           <!-- 条件查询 -->        
+           <!-- 条件查询 -->
         <el-form :inline="true" :model="query" size="mini">
             <el-form-item label="任务名称:">
                 <el-input v-model.trim="query.taskName" ></el-input>
@@ -29,7 +29,8 @@
                         <el-button slot="reference" type="text">签收 &nbsp;</el-button>
                     </el-popconfirm>
                     <el-button v-else type="text" @click="clickComplete(row)">通过</el-button>
-                    <el-button v-if="row.taskAssignee" type="text" @click="clickBack(row)">驳回</el-button>
+                  <el-button type="text" @click="clickCancelProcess(row)">撤回</el-button>
+                  <el-button v-if="row.taskAssignee" type="text" @click="clickBack(row)">驳回</el-button>
                     <el-button v-if="row.taskAssignee" type="text" @click="clickTurn(row)">转办</el-button>
                     <el-button type="text" @click="clickProcessHistory(row)">审批历史</el-button>
                 </template>
@@ -49,6 +50,8 @@
         <history ref="historyRef" :businessKey="row.businessKey" :processInstanceId="row.processInstanceId" ></history>
         <!-- 通过 -->
         <verify ref="verifyRef" :taskId="row.taskId" v-if="selectdata.length" :selectdata="selectdata"></verify>
+      <!-- 撤回申请 -->
+      <cancel-apply ref="cancelRef" :business-key="row.businessKey" :proc-inst-id="row.processInstanceId" />
         <!-- 转办 -->
         <turn ref="turnRef" :taskId="row.taskId" v-if="selectdata.length" :selectdata="selectdata"></turn>
         <!-- 驳回 -->
@@ -61,10 +64,11 @@ import History from '@/components/Process/History'
 import Verify from "./components/Verify.vue"
 import Turn from "./components/Turn.vue"
 import Back from "./components/Back.vue"
+import CancelApply from '@/views/workflow/apply/components/CancelApply'
 import {getall} from '@/api/getuser'
 export default {
     name: 'Await', // 和对应路由表中配置的name值一致
-     components: {History,Verify,Turn,Back},
+     components: {History,Verify,Turn,Back,CancelApply},
     data() {
        return {
             list: [
@@ -127,6 +131,11 @@ export default {
             this.page.size=10
             this.fetchData()
         },
+      // 撤回申请
+      clickCancelProcess(row) {
+        this.row = row
+        this.$refs.cancelRef.visible = true
+      },
         // 当每页显示多少条改变后触发
         handleSizeChange(val) {
             this.page.size = val
