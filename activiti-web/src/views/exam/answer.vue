@@ -118,7 +118,7 @@ export default {
     }
   },
   created() {
-    this.paperId = this.$route.query.paperId ? parseInt(this.$route.query.paperId) : null
+    this.paperId = this.$route.query.paperId
     const endTimeString = this.$route.query.endTime
     this.endTime = endTimeString ? new Date(endTimeString) : null
     this.creator = this.$route.query.creator || ''
