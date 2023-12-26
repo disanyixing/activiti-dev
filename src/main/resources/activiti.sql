@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 26/12/2023 16:37:12
+ Date: 26/12/2023 17:06:43
 */
 
 SET NAMES utf8mb4;
@@ -215,7 +215,7 @@ INSERT INTO `act_hi_actinst` VALUES ('b98caf9d-34a0-11ed-a5e5-283a4d3b4979', 'Le
 INSERT INTO `act_hi_actinst` VALUES ('b98de81e-34a0-11ed-a5e5-283a4d3b4979', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'b98a3e96-34a0-11ed-a5e5-283a4d3b4979', 'b98c3a6c-34a0-11ed-a5e5-283a4d3b4979', 'sid-B9B9B816-D9E3-4A0D-97A2-C504074C7DF7', 'b990a73f-34a0-11ed-a5e5-283a4d3b4979', NULL, '直属领导审批', 'userTask', 'admin', '2022-09-15 10:47:23.085', '2022-09-15 11:39:47.376', 3144291, NULL, '');
 INSERT INTO `act_hi_actinst` VALUES ('ba130c8f-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '27f3a1a0-91da-11ee-a869-6e6a773b7536', '27f7c056-91da-11ee-a869-6e6a773b7536', 'sid-C9AF2295-51A5-44C8-AF20-AA44B6446843', NULL, NULL, '结束', 'endEvent', NULL, '2023-12-26 15:38:14.089', '2023-12-26 15:38:14.089', 0, NULL, '');
 INSERT INTO `act_hi_actinst` VALUES ('bb362ed3-a3c1-11ee-aaa2-6e6a773b7536', 'Loan:1:1dfeff68-34bc-11ed-bd8b-283a4d3b4979', 'a3b0a08d-91af-11ee-9fdf-6e6a773b7536', 'a3b22733-91af-11ee-9fdf-6e6a773b7536', 'sid-431CD5BC-26BB-427E-BC8A-4DCC343D6B79', NULL, NULL, '结束', 'endEvent', NULL, '2023-12-26 15:38:15.997', '2023-12-26 15:38:15.997', 0, NULL, '');
-INSERT INTO `act_hi_actinst` VALUES ('bcce5b07-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', 'sid-95041659-921C-4647-AA7E-007DD53297BA', 'bcce8218-a3c1-11ee-aaa2-6e6a773b7536', NULL, '人事专员审批', 'userTask', NULL, '2023-12-26 15:38:18.672', NULL, NULL, NULL, '');
+INSERT INTO `act_hi_actinst` VALUES ('bcce5b07-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', 'sid-95041659-921C-4647-AA7E-007DD53297BA', 'bcce8218-a3c1-11ee-aaa2-6e6a773b7536', NULL, '人事专员审批', 'userTask', NULL, '2023-12-26 15:38:18.672', '2023-12-26 16:53:15.544', 4496872, 'admin 作废了当前流程申请', '');
 INSERT INTO `act_hi_actinst` VALUES ('c745766f-33c7-11ed-86cc-283a4d3b4979', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'c7443de8-33c7-11ed-86cc-283a4d3b4979', 'c745013e-33c7-11ed-86cc-283a4d3b4979', 'sid-3AAF069C-9D1F-4109-B5D0-F6F48FD36F44', NULL, NULL, '开始', 'startEvent', NULL, '2022-09-14 08:54:25.308', '2022-09-14 08:54:25.311', 3, NULL, '');
 INSERT INTO `act_hi_actinst` VALUES ('c74687e0-33c7-11ed-86cc-283a4d3b4979', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'c7443de8-33c7-11ed-86cc-283a4d3b4979', 'c745013e-33c7-11ed-86cc-283a4d3b4979', 'sid-B9B9B816-D9E3-4A0D-97A2-C504074C7DF7', 'c7491ff1-33c7-11ed-86cc-283a4d3b4979', NULL, '直属领导审批', 'userTask', 'admin', '2022-09-14 08:54:25.315', '2022-09-15 11:41:10.415', 96405100, NULL, '');
 INSERT INTO `act_hi_actinst` VALUES ('cdc8dbb1-6c20-11ee-a512-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', 'sid-2DCAD4A9-FAE9-4044-B7B5-BBADCA437929', 'cdc8dbb2-6c20-11ee-a512-6e6a773b7536', NULL, '部门经理审批', 'userTask', 'admin', '2023-10-16 20:37:44.231', '2023-12-26 15:38:18.672', 6116434441, NULL, '');
@@ -800,7 +800,7 @@ INSERT INTO `act_hi_procinst` VALUES ('029458f3-32fb-11ed-9c60-283a4d3b4979', '0
 INSERT INTO `act_hi_procinst` VALUES ('03b3ad95-a342-11ee-ade9-6e6a773b7536', '03b3ad95-a342-11ee-ade9-6e6a773b7536', '1739262434855665665', 'StudentLeave:2:a4637154-a322-11ee-ade9-6e6a773b7536', '2023-12-26 00:24:02.033', '2023-12-26 00:24:50.117', 48084, 'xuesheng11', 'sid-27ADD384-943E-4C24-A4AB-8415F1095266', 'sid-2922AC1E-C639-47A1-B67C-B05F7E6B9129', NULL, NULL, '', NULL);
 INSERT INTO `act_hi_procinst` VALUES ('05da0b4d-a3c3-11ee-aaa2-6e6a773b7536', '05da0b4d-a3c3-11ee-aaa2-6e6a773b7536', '6', 'courseManager:1:fc28f24c-91a4-11ee-9fdf-6e6a773b7536', '2023-12-26 15:47:30.719', '2023-12-26 15:57:18.222', 587503, 'zhangsan', 'sid-8E24BFE6-A0BA-4DDD-A99F-2D80F555522E', 'sid-DB70A998-59CE-40F0-9B9A-FD0D23196457', NULL, NULL, '', NULL);
 INSERT INTO `act_hi_procinst` VALUES ('078179cd-a3c3-11ee-aaa2-6e6a773b7536', '078179cd-a3c3-11ee-aaa2-6e6a773b7536', '7', 'courseManager:1:fc28f24c-91a4-11ee-9fdf-6e6a773b7536', '2023-12-26 15:47:33.494', '2023-12-26 15:57:15.666', 582172, 'zhangsan', 'sid-8E24BFE6-A0BA-4DDD-A99F-2D80F555522E', 'sid-DB70A998-59CE-40F0-9B9A-FD0D23196457', NULL, NULL, '', NULL);
-INSERT INTO `act_hi_procinst` VALUES ('18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '1702314547039215617', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '2023-09-24 20:22:58.769', NULL, NULL, 'admin', 'sid-3AAF069C-9D1F-4109-B5D0-F6F48FD36F44', NULL, NULL, NULL, '', '请假申请流程');
+INSERT INTO `act_hi_procinst` VALUES ('18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '1702314547039215617', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '2023-09-24 20:22:58.769', '2023-12-26 16:53:15.564', 8022616795, 'admin', 'sid-3AAF069C-9D1F-4109-B5D0-F6F48FD36F44', NULL, NULL, 'admin 作废了当前流程申请', '', '请假申请流程');
 INSERT INTO `act_hi_procinst` VALUES ('266b6a44-a293-11ee-b602-6e6a773b7536', '266b6a44-a293-11ee-b602-6e6a773b7536', '1739006075060912129', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '2023-12-25 03:32:18.353', '2023-12-26 15:37:52.534', 129934181, 'xuesheng11', 'sid-3AAF069C-9D1F-4109-B5D0-F6F48FD36F44', 'sid-C9AF2295-51A5-44C8-AF20-AA44B6446843', NULL, NULL, '', '请假申请流程');
 INSERT INTO `act_hi_procinst` VALUES ('27f3a1a0-91da-11ee-a869-6e6a773b7536', '27f3a1a0-91da-11ee-a869-6e6a773b7536', '1701485834856890369', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '2023-12-03 20:47:45.423', '2023-12-26 15:38:14.108', 1968628685, 'admin', 'sid-3AAF069C-9D1F-4109-B5D0-F6F48FD36F44', 'sid-C9AF2295-51A5-44C8-AF20-AA44B6446843', NULL, NULL, '', '请假申请流程');
 INSERT INTO `act_hi_procinst` VALUES ('2deb7a89-a342-11ee-ade9-6e6a773b7536', '2deb7a89-a342-11ee-ade9-6e6a773b7536', '1739223919455494145', 'StudentLeave:2:a4637154-a322-11ee-ade9-6e6a773b7536', '2023-12-26 00:25:12.864', '2023-12-26 00:25:37.930', 25066, 'xuesheng11', 'sid-27ADD384-943E-4C24-A4AB-8415F1095266', 'sid-2922AC1E-C639-47A1-B67C-B05F7E6B9129', NULL, NULL, '', NULL);
@@ -902,7 +902,7 @@ INSERT INTO `act_hi_taskinst` VALUES ('b623a9d2-a3c1-11ee-aaa2-6e6a773b7536', 'L
 INSERT INTO `act_hi_taskinst` VALUES ('b78adafc-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-E6384472-DFD1-4776-83CB-1F8733961BEE', '27f3a1a0-91da-11ee-a869-6e6a773b7536', '27f7c056-91da-11ee-a869-6e6a773b7536', '人事经理审批', NULL, NULL, NULL, 'admin', '2023-12-26 15:38:09.841', NULL, '2023-12-26 15:38:12.297', 2456, NULL, 50, NULL, NULL, NULL, '');
 INSERT INTO `act_hi_taskinst` VALUES ('b9032326-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-2B5363F4-D5A0-41C4-B626-E497657D21E4', '27f3a1a0-91da-11ee-a869-6e6a773b7536', '27f7c056-91da-11ee-a869-6e6a773b7536', '总经理审批', NULL, NULL, NULL, 'admin', '2023-12-26 15:38:12.307', NULL, '2023-12-26 15:38:14.080', 1773, NULL, 50, NULL, NULL, NULL, '');
 INSERT INTO `act_hi_taskinst` VALUES ('b990a73f-34a0-11ed-a5e5-283a4d3b4979', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-B9B9B816-D9E3-4A0D-97A2-C504074C7DF7', 'b98a3e96-34a0-11ed-a5e5-283a4d3b4979', 'b98c3a6c-34a0-11ed-a5e5-283a4d3b4979', '直属领导审批', NULL, NULL, NULL, 'admin', '2022-09-15 10:47:23.103', NULL, '2022-09-15 11:39:47.370', 3144267, NULL, 50, NULL, NULL, NULL, '');
-INSERT INTO `act_hi_taskinst` VALUES ('bcce8218-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-95041659-921C-4647-AA7E-007DD53297BA', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', '人事专员审批', NULL, NULL, NULL, NULL, '2023-12-26 15:38:18.673', NULL, NULL, NULL, NULL, 50, NULL, NULL, NULL, '');
+INSERT INTO `act_hi_taskinst` VALUES ('bcce8218-a3c1-11ee-aaa2-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-95041659-921C-4647-AA7E-007DD53297BA', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', '人事专员审批', NULL, NULL, NULL, NULL, '2023-12-26 15:38:18.673', NULL, '2023-12-26 16:53:15.536', 4496863, 'admin 作废了当前流程申请', 50, NULL, NULL, NULL, '');
 INSERT INTO `act_hi_taskinst` VALUES ('c7491ff1-33c7-11ed-86cc-283a4d3b4979', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-B9B9B816-D9E3-4A0D-97A2-C504074C7DF7', 'c7443de8-33c7-11ed-86cc-283a4d3b4979', 'c745013e-33c7-11ed-86cc-283a4d3b4979', '直属领导审批', NULL, NULL, NULL, 'admin', '2022-09-14 08:54:25.332', NULL, '2022-09-15 11:41:10.411', 96405079, NULL, 50, NULL, NULL, NULL, '');
 INSERT INTO `act_hi_taskinst` VALUES ('cdc8dbb2-6c20-11ee-a512-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', 'sid-2DCAD4A9-FAE9-4044-B7B5-BBADCA437929', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', '部门经理审批', NULL, NULL, NULL, 'admin', '2023-10-16 20:37:44.231', NULL, '2023-12-26 15:38:18.661', 6116434430, NULL, 50, NULL, NULL, NULL, '');
 INSERT INTO `act_hi_taskinst` VALUES ('d07f796b-a320-11ee-ade9-6e6a773b7536', 'courseManager:1:fc28f24c-91a4-11ee-9fdf-6e6a773b7536', 'sid-F0F2FA55-89B4-4A31-8F82-6A9C79487DFC', 'd077ff52-a320-11ee-ade9-6e6a773b7536', 'd079d418-a320-11ee-ade9-6e6a773b7536', '教务处审批', NULL, NULL, NULL, 'zhangsan', '2023-12-25 20:26:22.736', NULL, '2023-12-26 00:25:35.326', 14352590, NULL, 50, NULL, NULL, NULL, '');
@@ -1336,8 +1336,6 @@ CREATE TABLE `act_ru_execution`  (
 -- ----------------------------
 -- Records of act_ru_execution
 -- ----------------------------
-INSERT INTO `act_ru_execution` VALUES ('18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 2, '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '1702314547039215617', NULL, 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', NULL, '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', NULL, 1, 0, 1, 0, 0, 1, NULL, '', '请假申请流程', '2023-09-24 20:22:58.769', 'admin', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL);
-INSERT INTO `act_ru_execution` VALUES ('18ecf410-5ad5-11ee-bbd0-6e6a773b7536', 3, '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', NULL, '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', NULL, '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 'sid-95041659-921C-4647-AA7E-007DD53297BA', 1, 0, 0, 0, 0, 1, NULL, '', NULL, '2023-09-24 20:22:58.778', NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL);
 
 -- ----------------------------
 -- Table structure for act_ru_identitylink
@@ -1366,7 +1364,6 @@ CREATE TABLE `act_ru_identitylink`  (
 -- ----------------------------
 -- Records of act_ru_identitylink
 -- ----------------------------
-INSERT INTO `act_ru_identitylink` VALUES ('18eb947b-5ad5-11ee-bbd0-6e6a773b7536', 1, NULL, 'starter', 'admin', NULL, '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', NULL);
 
 -- ----------------------------
 -- Table structure for act_ru_integration
@@ -1541,7 +1538,6 @@ CREATE TABLE `act_ru_task`  (
 -- ----------------------------
 -- Records of act_ru_task
 -- ----------------------------
-INSERT INTO `act_ru_task` VALUES ('bcce8218-a3c1-11ee-aaa2-6e6a773b7536', 1, '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 'Leave:1:ecc98b0e-2fe9-11ed-aa68-283a4d3b4979', '人事专员审批', '1702314547039215617', NULL, NULL, 'sid-95041659-921C-4647-AA7E-007DD53297BA', NULL, NULL, NULL, 50, '2023-12-26 15:38:18.673', NULL, NULL, 1, '', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for act_ru_timer_job
@@ -1610,10 +1606,6 @@ CREATE TABLE `act_ru_variable`  (
 -- ----------------------------
 -- Records of act_ru_variable
 -- ----------------------------
-INSERT INTO `act_ru_variable` VALUES ('18ec7edc-5ad5-11ee-bbd0-6e6a773b7536', 1, 'json', 'entity', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', NULL, NULL, NULL, NULL, '{\"id\":\"1702314547039215617\",\"username\":\"admin\",\"leaveType\":1,\"title\":\"测试3\",\"leaveReason\":\"121212\",\"startDate\":\"2023-09-13T16:00:00.000+00:00\",\"endDate\":\"2023-10-16T15:59:59.000+00:00\",\"duration\":33,\"createDate\":\"2023-09-14T13:33:10.000+00:00\",\"updateDate\":\"2023-09-14T13:33:40.000+00:00\",\"processInstanceId\":\"\",\"status\":0,\"endDateStr\":\"2023-10-16 23:59:59\",\"leaveTypeStr\":\"病假\",\"startDateStr\":\"2023-09-14 00:00:00\",\"updateDateStr\":\"2023-09-14 21:33:40\",\"createDateStr\":\"2023-09-14 21:33:10\",\"statusStr\":\"已撤回\"}', 'java.util.LinkedHashMap');
-INSERT INTO `act_ru_variable` VALUES ('18ecccfe-5ad5-11ee-bbd0-6e6a773b7536', 1, 'string', 'formName', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', NULL, NULL, NULL, NULL, 'LeaveForm', NULL);
-INSERT INTO `act_ru_variable` VALUES ('bccef749-a3c1-11ee-aaa2-6e6a773b7536', 1, 'string', 'formName', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 'bcce8218-a3c1-11ee-aaa2-6e6a773b7536', NULL, NULL, NULL, 'LeaveForm', NULL);
-INSERT INTO `act_ru_variable` VALUES ('bccef74b-a3c1-11ee-aaa2-6e6a773b7536', 1, 'json', 'entity', '18ecf410-5ad5-11ee-bbd0-6e6a773b7536', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 'bcce8218-a3c1-11ee-aaa2-6e6a773b7536', NULL, NULL, NULL, '{\"id\":\"1702314547039215617\",\"username\":\"admin\",\"leaveType\":1,\"title\":\"测试3\",\"leaveReason\":\"121212\",\"startDate\":\"2023-09-13T16:00:00.000+00:00\",\"endDate\":\"2023-10-16T15:59:59.000+00:00\",\"duration\":33,\"createDate\":\"2023-09-14T13:33:10.000+00:00\",\"updateDate\":\"2023-09-14T13:33:40.000+00:00\",\"processInstanceId\":\"\",\"status\":0,\"endDateStr\":\"2023-10-16 23:59:59\",\"leaveTypeStr\":\"病假\",\"startDateStr\":\"2023-09-14 00:00:00\",\"updateDateStr\":\"2023-09-14 21:33:40\",\"createDateStr\":\"2023-09-14 21:33:10\",\"statusStr\":\"已撤回\"}', 'java.util.LinkedHashMap');
 
 -- ----------------------------
 -- Table structure for mxg_answer
@@ -1781,7 +1773,7 @@ INSERT INTO `mxg_business_status` VALUES ('1570250806270881793', '', 5, '2022-09
 INSERT INTO `mxg_business_status` VALUES ('1570294851227549698', NULL, 1, '2022-09-15 14:14:01', '2022-09-15 14:14:01');
 INSERT INTO `mxg_business_status` VALUES ('1701485834856890369', '27f3a1a0-91da-11ee-a869-6e6a773b7536', 3, '2023-09-12 14:40:09', '2023-12-26 15:38:14');
 INSERT INTO `mxg_business_status` VALUES ('1701486245785436161', '', 0, '2023-09-12 14:41:47', '2023-12-08 02:19:51');
-INSERT INTO `mxg_business_status` VALUES ('1702314547039215617', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 2, '2023-09-14 21:33:10', '2023-09-24 20:22:59');
+INSERT INTO `mxg_business_status` VALUES ('1702314547039215617', '18eb947a-5ad5-11ee-bbd0-6e6a773b7536', 4, '2023-09-14 21:33:10', '2023-12-26 16:53:16');
 INSERT INTO `mxg_business_status` VALUES ('1702319100916690946', '', 0, '2023-09-14 21:51:15', '2023-12-02 02:37:06');
 INSERT INTO `mxg_business_status` VALUES ('1702319186837008386', '88de36f7-952f-11ee-95a1-6e6a773b7536', 3, '2023-09-14 21:51:36', '2023-12-08 02:36:47');
 INSERT INTO `mxg_business_status` VALUES ('1702473098554519553', '', 5, '2023-09-15 08:03:11', '2023-12-03 22:46:30');
@@ -1804,6 +1796,7 @@ INSERT INTO `mxg_business_status` VALUES ('1739552246976225282', '6193c08d-a3c2-
 INSERT INTO `mxg_business_status` VALUES ('1739553229315776513', 'f5be3419-a3c2-11ee-aaa2-6e6a773b7536', 3, '2023-12-26 15:46:23', '2023-12-26 15:47:09');
 INSERT INTO `mxg_business_status` VALUES ('1739553951688171522', '57e4e453-a3c4-11ee-9623-6e6a773b7536', 3, '2023-12-26 15:49:16', '2023-12-26 15:57:14');
 INSERT INTO `mxg_business_status` VALUES ('1739555247233269762', '568f3f53-a3c4-11ee-9623-6e6a773b7536', 3, '2023-12-26 15:54:24', '2023-12-26 15:57:17');
+INSERT INTO `mxg_business_status` VALUES ('1739568055777767425', NULL, 1, '2023-12-26 16:45:18', '2023-12-26 16:45:18');
 INSERT INTO `mxg_business_status` VALUES ('2', '9b1fb9b1-9fd2-11ee-9ff6-6e6a773b7536', 3, '2023-12-17 08:11:35', '2023-12-25 03:44:29');
 INSERT INTO `mxg_business_status` VALUES ('3', '70c4c2a1-a3c2-11ee-aaa2-6e6a773b7536', 3, '2023-12-17 08:11:35', '2023-12-26 15:43:32');
 INSERT INTO `mxg_business_status` VALUES ('4', '6f72ee31-a3c2-11ee-aaa2-6e6a773b7536', 3, '2023-12-17 08:11:35', '2023-12-26 15:43:35');
@@ -2065,7 +2058,7 @@ CREATE TABLE `mxg_question_choice`  (
 -- Records of mxg_question_choice
 -- ----------------------------
 INSERT INTO `mxg_question_choice` VALUES ('123', '1', '测试选择题5', '选项A', '选项B', '选项C', '正确选项D', 4, 5, '2023-12-15 00:00:00');
-INSERT INTO `mxg_question_choice` VALUES ('123123123', '3', '测试选择题4', '选项A', '选项B', '正确选项C', '选项D', 3, 5, NULL);
+INSERT INTO `mxg_question_choice` VALUES ('123123123', '3', '测试选择题4', '选项A', '选项B', '正确选项C', '选项D', 3, 5, '2023-12-26 17:05:35');
 INSERT INTO `mxg_question_choice` VALUES ('1703503730749', '1739246667976269826', '选择题1', '正确答案A', 'B', 'C', 'D', 1, 5, '2023-12-25 19:30:34');
 INSERT INTO `mxg_question_choice` VALUES ('1703503809077', '1739246667976269826', '选择题2', 'A', '正确答案B', 'C', 'D', 2, 5, '2023-12-25 19:30:33');
 INSERT INTO `mxg_question_choice` VALUES ('1703572433887', '1739534951579226113', '选择题1', '正确答案A', 'B', 'C', 'D', 1, 5, '2023-12-26 14:34:10');
@@ -2119,9 +2112,6 @@ CREATE TABLE `mxg_speak`  (
 -- ----------------------------
 -- Records of mxg_speak
 -- ----------------------------
-INSERT INTO `mxg_speak` VALUES ('1', '1', '66623', 'admin', '2023-12-06 00:00:00');
-INSERT INTO `mxg_speak` VALUES ('1732778348219310081', '1', 'text0', 'admin', '2023-12-07 00:00:00');
-INSERT INTO `mxg_speak` VALUES ('1735753519748657153', '0', '测试', 'admin', '2023-12-16 04:07:42');
 INSERT INTO `mxg_speak` VALUES ('1738234482844073986', '1', 'hello', 'zhangsan', '2023-12-23 00:26:10');
 INSERT INTO `mxg_speak` VALUES ('1738978689187590145', '1', '老师你好', 'xuesheng11', '2023-12-25 01:43:23');
 INSERT INTO `mxg_speak` VALUES ('1738978743461883905', '1', '同学你好', 'xuesheng11', '2023-12-25 01:43:36');
@@ -2131,7 +2121,8 @@ INSERT INTO `mxg_speak` VALUES ('1739540373786689537', '1739540310301704194', '�
 INSERT INTO `mxg_speak` VALUES ('1739540574215700481', '1739540310301704194', '收到', 'xuesheng11', '2023-12-26 14:56:07');
 INSERT INTO `mxg_speak` VALUES ('1739542709976268801', '1739542662010208258', '收到', 'xuesheng21', '2023-12-26 15:04:36');
 INSERT INTO `mxg_speak` VALUES ('1739557247865946114', '1739557050582663169', 'xuesheng21平时分扣10分', 'zhangsan', '2023-12-26 16:02:22');
-INSERT INTO `mxg_speak` VALUES ('2', '1732049547533283329', '222', 'admin', '2023-12-06 00:00:00');
+INSERT INTO `mxg_speak` VALUES ('1739572082674511873', '2', '测试', 'zhangsan', '2023-12-26 17:01:19');
+INSERT INTO `mxg_speak` VALUES ('1739572552474308610', '1739572467455766530', '了解', 'xuesheng11', '2023-12-26 17:03:11');
 
 -- ----------------------------
 -- Table structure for mxg_student
@@ -2259,10 +2250,10 @@ CREATE TABLE `mxg_talk`  (
 -- ----------------------------
 -- Records of mxg_talk
 -- ----------------------------
-INSERT INTO `mxg_talk` VALUES ('0', '1', 'title0', 'text0', 'admin', '2023-12-07 00:00:00');
-INSERT INTO `mxg_talk` VALUES ('1', '1', 'talk1', 'text1', 'admin', '2023-12-01 00:00:00');
-INSERT INTO `mxg_talk` VALUES ('1732049547533283329', '1', 'title2', 'text2', 'admin', '2023-12-05 00:00:00');
-INSERT INTO `mxg_talk` VALUES ('1735753984402042882', '7', '测试内容', '测试标题', 'admin', '2023-12-16 04:09:33');
+INSERT INTO `mxg_talk` VALUES ('0', '1', 'title0', 'text0', 'zhangsan', '2023-12-07 00:00:00');
+INSERT INTO `mxg_talk` VALUES ('1', '1', 'talk1', 'text1', 'zhangsan', '2023-12-01 00:00:00');
+INSERT INTO `mxg_talk` VALUES ('1732049547533283329', '1', 'title2', 'text2', 'zhangsan', '2023-12-05 00:00:00');
+INSERT INTO `mxg_talk` VALUES ('1735753984402042882', '7', '测试内容', '测试标题', 'zhangsan', '2023-12-16 04:09:33');
 INSERT INTO `mxg_talk` VALUES ('1738983697626968066', '1', '考试范围', '不透露', 'zhangsan', '2023-12-25 02:03:17');
 INSERT INTO `mxg_talk` VALUES ('1739540310301704194', '7', '考试通知', '18周周三考试', 'zhangsan', '2023-12-26 14:55:04');
 INSERT INTO `mxg_talk` VALUES ('1739542662010208258', '2', '调课通知', '第八周课程调整到第九周上', 'zhangsan', '2023-12-26 15:04:24');
@@ -2270,10 +2261,11 @@ INSERT INTO `mxg_talk` VALUES ('1739542926595293186', '3', '离散数学', '测�
 INSERT INTO `mxg_talk` VALUES ('1739542971591786497', '4', '数值分析', '测试', 'lisi', '2023-12-26 15:05:38');
 INSERT INTO `mxg_talk` VALUES ('1739557050582663169', '1739553951688171522', '灌水', '灌水灌水灌水灌水灌水', 'xuesheng21', '2023-12-26 16:01:35');
 INSERT INTO `mxg_talk` VALUES ('1739557486140162050', '1739553951688171522', '考试通知', '详情', 'zhangsan', '2023-12-26 16:03:19');
-INSERT INTO `mxg_talk` VALUES ('2', '1', 'talk2', 'text2', 'admin', '2023-12-05 00:00:00');
+INSERT INTO `mxg_talk` VALUES ('1739572467455766530', '1738962708247666690', '小测', '问题', 'zhangsan', '2023-12-26 17:02:51');
+INSERT INTO `mxg_talk` VALUES ('2', '1', 'talk2', 'text2', 'zhangsan', '2023-12-05 00:00:00');
 INSERT INTO `mxg_talk` VALUES ('3', '2', 'talk1', 'text1', 'zhangsan', '2023-12-01 00:00:00');
-INSERT INTO `mxg_talk` VALUES ('4', '1', 'title2', 'text2', 'admin', '2023-12-05 00:00:00');
-INSERT INTO `mxg_talk` VALUES ('4123', '1', 'title666', 'text666', 'admin', '2023-12-07 00:00:00');
+INSERT INTO `mxg_talk` VALUES ('4', '1', 'title2', 'text2', 'zhangsan', '2023-12-05 00:00:00');
+INSERT INTO `mxg_talk` VALUES ('4123', '1', 'title666', 'text666', 'zhangsan', '2023-12-07 00:00:00');
 
 -- ----------------------------
 -- Table structure for mxg_teacher

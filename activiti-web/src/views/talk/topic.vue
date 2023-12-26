@@ -37,15 +37,11 @@
       >
         <!-- ID列 -->
         <el-table-column
-          prop="id"
+          type="index"
           label="ID"
           max-width="80"
           align="center"
-        >
-          <template v-slot="scope">
-            <div class="text-ellipsis">{{ scope.row.id }}</div>
-          </template>
-        </el-table-column>
+        />
 
         <!-- 创建者列 -->
         <el-table-column
