@@ -28,19 +28,23 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+let isRouteVisibilitySet = false
+
 router.beforeEach(async(to, from, next) => {
   if (to.path === '/login') {
+    // 当用户进入登录页面时，重置路由可见性标志
+    isRouteVisibilitySet = false
     next()
     return
   }
 
-  const roles = await getUserPerm()
-  if (roles === -1) {
-    next({ path: '/login' })
+  if (!isRouteVisibilitySet) {
+    const roles = await getUserPerm()
+    setRouteVisibility(router.options.routes, roles)
+    isRouteVisibilitySet = true
   }
-  setRouteVisibility(router.options.routes, roles)
 
-  // 检查即将进入的路由的元信息中是否有 noperm 属性且为 true
+  // 检查即将进入的路由的元信息中是否有 hidden 属性且为 true
   if (to.matched.some(record => record.meta.hidden === true)) {
     next({ path: '/' })
   } else {

@@ -421,31 +421,33 @@ export const constantRoutes = [
 
 import capi from '@/api/course'
 import { getInfo } from '@/api/user'
+import store from '@/store'
 
 // 获取用户角色
 export async function getUserPerm() {
   let perm = 0
 
-  const studentfetch = await capi.isStudent()
-  if (studentfetch.data) {
-    perm |= student // 如果是学生，添加学生权限
+  try {
+    const studentfetch = await capi.isStudent()
+    if (studentfetch.data) {
+      perm |= student // 如果是学生，添加学生权限
+    }
+
+    const teacherfetch = await capi.getCurrentTeacher()
+    if (teacherfetch.data && teacherfetch.data.post === '教师') {
+      perm |= teacher // 如果是教师，添加教师权限
+    }
+
+    const adminfetch = await getInfo()
+
+    if (adminfetch.data && adminfetch.data.username === 'admin') {
+      perm |= admin // 添加权限
+    }
+  } catch (e) {
+    store.dispatch('user/resetToken').then(() => {
+      location.reload()
+    })
   }
-
-  const teacherfetch = await capi.getCurrentTeacher()
-  if (teacherfetch.data && teacherfetch.data.post === '教师') {
-    perm |= teacher // 如果是教师，添加教师权限
-  }
-
-  const adminfetch = await getInfo()
-
-  if (adminfetch.data && adminfetch.data.username === 'admin') {
-    perm |= admin // 添加权限
-  }
-
-  if (studentfetch.code === 50008 || teacherfetch === 50008 || adminfetch === 50008) {
-    return -1
-  }
-
   return perm
 }
 
