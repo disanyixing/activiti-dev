@@ -37,7 +37,7 @@
       <el-table-column align="center" label="操作" fixed="right" width="220">
         <template slot-scope="{row}">
           <!-- 0已撤回，1未提交，2处理中，3已完成 4已作废-->
-          <el-button v-if="row.status == 0 || row.status == 1" type="text" @click="clickShowForm('编辑', row)">编辑
+          <el-button v-if="row.status == 0 || row.status == 1 || row.status == 3" type="text" @click="clickShowForm('编辑', row)">编辑
           </el-button>
           <el-button
             v-if="row.status == 2 || row.status == 3 || row.status == 5"
