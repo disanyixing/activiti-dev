@@ -131,7 +131,7 @@ export default {
             })
             if (this.operate === '提交考勤') {
               // 新建考勤，调用 addList 方法
-              response = await api.addList(data)
+              response = await api.addList(data,this.formData.id)
             } else if (this.operate === '编辑考勤') {
               // 编辑考勤，调用 updateAttendList 方法
               response = await api.updateAttendList(data)
