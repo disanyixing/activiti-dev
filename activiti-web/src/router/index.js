@@ -427,23 +427,23 @@ import store from '@/store'
 export async function getUserPerm() {
   let perm = 0
 
-  try {
-    const studentfetch = await capi.isStudent()
-    if (studentfetch.data) {
-      perm |= student // 如果是学生，添加学生权限
-    }
+  const studentfetch = await capi.isStudent()
+  if (studentfetch.data) {
+    perm |= student // 如果是学生，添加学生权限
+  }
 
-    const teacherfetch = await capi.getCurrentTeacher()
-    if (teacherfetch.data && teacherfetch.data.post === '教师') {
-      perm |= teacher // 如果是教师，添加教师权限
-    }
+  const teacherfetch = await capi.getCurrentTeacher()
+  if (teacherfetch.data && teacherfetch.data.post === '教师') {
+    perm |= teacher // 如果是教师，添加教师权限
+  }
 
-    const adminfetch = await getInfo()
+  const adminfetch = await getInfo()
 
-    if (adminfetch.data && adminfetch.data.username === 'admin') {
-      perm |= admin // 添加权限
-    }
-  } catch (e) {
+  if (adminfetch.data && adminfetch.data.username === 'admin') {
+    perm |= admin // 添加权限
+  }
+
+  if (adminfetch.code === 50008 || teacherfetch.code === 50008 || studentfetch.code === 50008) {
     store.dispatch('user/resetToken').then(() => {
       location.reload()
     })
