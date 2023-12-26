@@ -18,7 +18,7 @@
     </el-row>
     <!-- 试卷列表表格 -->
     <el-table :data="papers" stripe border style="width: 100%">
-      <el-table-column align="center" prop="id" label="ID" width="90" />
+      <el-table-column align="center" type="index" prop="id" label="ID" width="90" />
       <el-table-column align="center" prop="title" label="试卷名称" min-width="150" />
       <el-table-column align="center" prop="courseId" label="课程名" min-width="120" />
       <el-table-column align="center" prop="createDate" label="创建时间" min-width="180">

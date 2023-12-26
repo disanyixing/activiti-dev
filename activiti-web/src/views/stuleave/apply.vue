@@ -19,7 +19,7 @@
       <el-button icon="el-icon-plus" size="small" type="primary" @click="clickShowForm('新增')">新增申请</el-button>
     </el-row>
     <el-table :data="list" stripe border style="width: 100%">
-      <el-table-column align="center" prop="id" label="序号" width="90" />
+      <el-table-column align="center" type="index" prop="id" label="序号" width="90" />
       <el-table-column align="center" prop="name" label="学生姓名" min-width="80" />
       <el-table-column align="center" prop="course_name" label="课程名称" min-width="120" />
       <el-table-column align="center" prop="teacher_nick_name" label="任课老师" min-width="100" />

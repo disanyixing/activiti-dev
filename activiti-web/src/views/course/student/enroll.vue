@@ -14,7 +14,7 @@
       </el-form-item>
     </el-form>
     <el-table :data="list" stripe border style="width: 100%">
-      <el-table-column align="center" prop="id" label="序号" width="90" />
+      <el-table-column align="center" type="index" prop="id" label="序号" width="90" />
       <el-table-column align="center" prop="name" label="课程名称" min-width="150" />
       <el-table-column align="center" prop="nick_name" label="任课老师" min-width="90" />
       <el-table-column align="center" prop="time" label="上课时间" min-width="200" />
