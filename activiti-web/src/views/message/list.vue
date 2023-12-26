@@ -21,7 +21,7 @@
       <el-table-column align="center" prop="teacher_nick_name" label="任课老师" min-width="60" />
       <el-table-column align="center" prop="class_name" label="班级" min-width="100" />
       <el-table-column align="center" prop="message" label="通知内容" min-width="250" />
-      <!--      <el-table-column align="center" prop="createDateStr" label="创建时间" min-width="150" />-->
+      <el-table-column align="center" prop="createDateStr" label="创建时间" min-width="150" />
       <el-table-column align="center" label="操作">
         <template slot-scope="{row}">
           <el-button type="text" @click="openForm(row)">编辑</el-button>

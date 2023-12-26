@@ -21,7 +21,7 @@
       <el-table-column align="center" prop="teacher_nick_name" label="任课老师" />
       <el-table-column align="center" prop="class_name" label="班级" />
       <el-table-column align="center" prop="message" label="通知内容" />
-      <el-table-column align="center" prop="create_date" label="创建时间" />
+      <el-table-column align="center" prop="createDateStr" label="创建时间" />
     </el-table>
 
     <!-- 分页器 -->
