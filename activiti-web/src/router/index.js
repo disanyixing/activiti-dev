@@ -426,8 +426,8 @@ import { getInfo } from '@/api/user'
 export async function getUserPerm() {
   let perm = 0
 
-  const studentfetch = (await capi.isStudent()).data
-  if (studentfetch) {
+  const studentfetch = await capi.isStudent()
+  if (studentfetch.data) {
     perm |= student // 如果是学生，添加学生权限
   }
 
@@ -441,6 +441,11 @@ export async function getUserPerm() {
   if (adminfetch.data && adminfetch.data.username === 'admin') {
     perm |= admin // 添加权限
   }
+
+  if (studentfetch.code === 50008 || teacherfetch === 50008 || adminfetch === 50008) {
+    return -1
+  }
+
   return perm
 }
 

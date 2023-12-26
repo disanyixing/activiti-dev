@@ -29,7 +29,15 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 router.beforeEach(async(to, from, next) => {
+  if (to.path === '/login') {
+    next()
+    return
+  }
+
   const roles = await getUserPerm()
+  if (roles === -1) {
+    next({ path: '/login' })
+  }
   setRouteVisibility(router.options.routes, roles)
 
   // 检查即将进入的路由的元信息中是否有 noperm 属性且为 true

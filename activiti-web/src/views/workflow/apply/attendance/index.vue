@@ -32,7 +32,7 @@
       >新建考勤</el-button>
     </el-row>
     <el-table :data="list" stripe border style="width: 100%">
-      <el-table-column align="center" prop="id" label="序号" width="50" />
+      <el-table-column align="center" prop="id" label="序号" min-width="50" />
       <el-table-column
         align="center"
         prop="name"
