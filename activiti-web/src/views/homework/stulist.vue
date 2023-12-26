@@ -38,10 +38,10 @@
         <template v-slot:default="{ row }">
           <el-button
             type="text"
-            :disabled="!isDuringExam(row.startDate, row.endDate) && !row.graded"
+            :disabled="(row.graded && isAfterEnd(row.endDate)) || (!isDuringExam(row.startDate, row.endDate) && !row.graded)"
             @click="row.graded && isAfterEnd(row.endDate) ? viewDetail(row) : enterExam(row)"
           >
-            {{ row.graded && isAfterEnd(row.endDate) ? '查看作业情况' : '去完成作业' }}
+            {{ row.graded && isAfterEnd(row.endDate) ? '作业时间已截止' : '去完成作业' }}
           </el-button>
         </template>
       </el-table-column>
