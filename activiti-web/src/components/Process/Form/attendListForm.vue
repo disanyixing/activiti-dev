@@ -83,8 +83,9 @@ export default {
       async handler(newVal) {
         this.formData = newVal
         if (this.operate === '编辑考勤') {
+          this.formData.id = newVal.id
           await this.getStudentNum(newVal.name)
-          await this.getListDetail(newVal.id)
+          await this.getListDetail()
         } else {
           await this.getStudentNum(newVal.name)
         }

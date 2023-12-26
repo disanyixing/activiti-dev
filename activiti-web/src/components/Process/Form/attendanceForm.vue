@@ -65,7 +65,7 @@ export default {
       timeOptions: [],
       classNames: [],
       courseData: {},
-      student_num: 0,
+      student_num: '',
       loading: false,
       formData: {},
       rules: {
@@ -139,8 +139,9 @@ export default {
 
       // 获取指定课程的所有学生并计算总数
       const response = await capi.getAllStudents(this.formData.name)
-      if (response && response.data && response.data) {
+      if (response && response.data) {
         this.student_num = response.data.length
+        console.log(this.student_num)
       } else {
         this.student_num = 0
       }
@@ -155,10 +156,13 @@ export default {
           try {
             let response = {}
             if (this.operate === '新增') {
-              const data = { student_num: this.student_num, ...this.formData }
+              const data = { ...this.formData }
+              data.student_num = this.student_num
+              console.log(data)
               response = await api.add(data)
             } else if (this.operate === '编辑') {
-              const data = { student_num: this.student_num, ...this.formData }
+              const data = { ...this.formData }
+              data.student_num = this.student_num
               response = await api.update(data)
             }
             if (response.code === 20000) {
