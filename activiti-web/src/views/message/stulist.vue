@@ -5,8 +5,8 @@
       <el-form-item label="课程名称：">
         <el-input v-model="query.courseName" placeholder="请输入课程名称" />
       </el-form-item>
-      <el-form-item label="班级名称：">
-        <el-input v-model="query.className" placeholder="请输入班级名称" />
+      <el-form-item label="任课老师：">
+        <el-input v-model="query.teacher_nick_name" placeholder="请输入任课老师" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchClassMessages">查询</el-button>
@@ -51,7 +51,7 @@ export default {
       },
       query: {
         courseName: '',
-        className: ''
+        teacher_nick_name: ''
       }
     }
   },
@@ -62,7 +62,7 @@ export default {
     async fetchClassMessages() {
       const response = await cmapi.classMessageList({
         course: this.query.courseName,
-        classes: this.query.className,
+        teacher_nick_name: this.query.teacher_nick_name,
         current: this.page.current,
         size: this.page.size
       })
@@ -73,7 +73,7 @@ export default {
     resetQuery() {
       this.query = {
         courseName: '',
-        className: ''
+        teacher_nick_name: ''
       }
       this.fetchClassMessages()
     },

@@ -42,6 +42,9 @@
         <if test="req.course != null and req.course != ''">
             AND t1.course_name LIKE CONCAT('%', #{req.course}, '%')
         </if>
+        <if test="req.teacher_nick_name != null and req.teacher_nick_name != ''">
+            AND t1.teacher_nick_name LIKE CONCAT('%', #{req.teacher_nick_name}, '%')
+        </if>
         <if test="req.classes != null and req.classes != ''">
             AND t3.name LIKE CONCAT('%', #{req.classes}, '%')
         </if>

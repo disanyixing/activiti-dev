@@ -9,6 +9,8 @@ import lombok.Data;
 public class CourseMessageREQ extends BaseRequest{
     @ApiModelProperty("课程名称")
     private String course;
+    @ApiModelProperty("课程教师")
+    private String teacher_nick_name;
     @ApiModelProperty("班级")
     private String classes;
     @ApiModelProperty("所属的用户名")
