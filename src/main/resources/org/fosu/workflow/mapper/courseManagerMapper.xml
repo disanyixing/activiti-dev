@@ -149,10 +149,10 @@
         ON t1.class_id = t3.id
         WHERE 1=1
         <if test="req.course != null and req.course != ''">
-            AND name LIKE CONCAT('%', #{req.course}, '%')
+            AND t1.name LIKE CONCAT('%', #{req.course}, '%')
         </if>
         <if test="req.teacher != null and req.teacher != ''">
-            AND nick_name LIKE CONCAT('%', #{req.teacher}, '%')
+            AND t1.nick_name LIKE CONCAT('%', #{req.teacher}, '%')
         </if>
         GROUP BY t1.name,t1.nick_name,t1.class_id,t3.name
     </select>

@@ -3,10 +3,10 @@
     <!-- 查询组件 -->
     <el-form :inline="true" :model="query" size="small">
       <el-form-item label="课程名称：">
-        <el-input v-model="query.course" placeholder="请输入课程名称" />
+        <el-input v-model="query.name" placeholder="请输入课程名称" />
       </el-form-item>
       <el-form-item label="教师名称：">
-        <el-input v-model="query.teacher" placeholder="请输入教师名" />
+        <el-input v-model="query.nick_name" placeholder="请输入教师名" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchAllCourses">查询</el-button>
@@ -52,7 +52,7 @@ export default {
       },
       query: {
         course: '',
-        teacher: ''
+        nick_name: ''
       }
     }
   },
@@ -62,6 +62,8 @@ export default {
   methods: {
     async fetchAllCourses() {
       const response = await courseApi.classCourseNameAndTeacherAndClasslist({
+        course: this.query.name,
+        teacher: this.query.nick_name,
         current: this.page.current,
         size: this.page.size
       })
@@ -71,7 +73,8 @@ export default {
 
     resetQuery() {
       this.query = {
-        course: ''
+        course: '',
+        teacher: ''
       }
       this.fetchAllCourses()
     },

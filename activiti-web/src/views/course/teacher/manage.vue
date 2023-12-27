@@ -5,11 +5,6 @@
       <el-form-item label="课程名称:">
         <el-input v-model.trim="query.course" placeholder="请输入" />
       </el-form-item>
-      <el-form-item label="状态:">
-        <el-select v-model="query.status" clearable placeholder="请选择">
-          <el-option v-for="item in processStatus" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" @click="queryData">查询</el-button>
         <el-button icon="el-icon-refresh" @click="reload">重置</el-button>

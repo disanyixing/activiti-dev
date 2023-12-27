@@ -8,14 +8,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任课老师：">
-        <el-select v-model="query.teacher" placeholder="请选择老师" @change="fetchAllCourses">
-          <el-option
-            v-for="teacher in teacherList"
-            :key="teacher.tchId"
-            :label="teacher.nick_name"
-            :value="teacher.tchId"
-          />
-        </el-select>
+        <el-input v-model.trim="query.teacher" placeholder="请输入任课老师" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchAllCourses">查询</el-button>

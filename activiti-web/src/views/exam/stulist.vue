@@ -6,7 +6,7 @@
         <el-input v-model.trim="query.title" placeholder="请输入试卷名称" />
       </el-form-item>
       <el-form-item label="课程名：">
-        <el-input v-model.trim="query.courseId" placeholder="请输入课程ID" />
+        <el-input v-model.trim="query.courseId" placeholder="请输入课程名称" />
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" @click="fetchData">查询</el-button>
