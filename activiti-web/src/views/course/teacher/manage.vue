@@ -5,6 +5,9 @@
       <el-form-item label="课程名称:">
         <el-input v-model.trim="query.course" placeholder="请输入" />
       </el-form-item>
+      <el-form-item label="班级名称：">
+        <el-input v-model="query.class_name" placeholder="请输入班级名称" />
+      </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" @click="queryData">查询</el-button>
         <el-button icon="el-icon-refresh" @click="reload">重置</el-button>

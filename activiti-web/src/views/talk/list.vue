@@ -5,6 +5,9 @@
       <el-form-item label="课程名称：">
         <el-input v-model="query.name" placeholder="请输入课程名称" />
       </el-form-item>
+      <el-form-item label="班级名称：">
+        <el-input v-model="query.class_name" placeholder="请输入班级名称" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchAllCourses">查询</el-button>
         <el-button @click="resetQuery">重置</el-button>
@@ -50,7 +53,8 @@ export default {
         total: 0
       },
       query: {
-        course: ''
+        course: '',
+        class_name: ''
       },
       nick_name: '',
       username: ''
@@ -67,6 +71,7 @@ export default {
     async fetchAllCourses() {
       const response = await courseApi.allCourseNameAndTeacherAndClasslist({
         course: this.query.name,
+        class_name: this.query.class_name,
         teacher: this.nick_name,
         current: this.page.current,
         size: this.page.size
@@ -78,7 +83,8 @@ export default {
 
     resetQuery() {
       this.query = {
-        course: ''
+        course: '',
+        class_name: ''
       }
       this.fetchAllCourses()
     },

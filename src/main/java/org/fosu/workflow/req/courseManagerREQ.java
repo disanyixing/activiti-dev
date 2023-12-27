@@ -11,6 +11,8 @@ public class courseManagerREQ extends BaseRequest {
     private String course;
     @ApiModelProperty("任课老师")
     private String teacher;
+    @ApiModelProperty("班级名称")
+    private String class_name;
     @ApiModelProperty("所属的用户名")
     private String username;
     @ApiModelProperty("流程状态")

@@ -5,8 +5,8 @@
       <el-form-item label="课程名称：">
         <el-input v-model="query.courseName" placeholder="请输入课程名称" />
       </el-form-item>
-      <el-form-item label="班级：">
-        <el-input v-model="query.className" placeholder="请输入班级" />
+      <el-form-item label="班级名称：">
+        <el-input v-model="query.className" placeholder="请输入班级名称" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchClassMessages">查询</el-button>
