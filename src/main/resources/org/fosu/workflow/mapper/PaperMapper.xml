@@ -46,9 +46,8 @@
         ON t4.name=t3.creator
         LEFT JOIN mxg_student t5
         ON t5.name=#{req.creator}
-        LEFT JOIN mxg_course t6
-        ON t6.class_id=t5.class
-        WHERE t3.creator = t6.tch_id
+        INNER JOIN mxg_course t6
+        ON t6.name=t3.course_id AND t6.class_id=t5.class
         <if test="req.courseId != null and req.courseId != ''">
             AND t3.course_id LIKE CONCAT('%', #{req.courseId}, '%')
         </if>
